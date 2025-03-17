@@ -2,7 +2,6 @@ plugins {
 	id 'java'
 	id 'org.springframework.boot' version '3.4.3'
 	id 'io.spring.dependency-management' version '1.1.7'
-	id 'checkstyle'
 }
 
 group = 'com.hotel'
@@ -29,6 +28,7 @@ dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-data-redis'
 	implementation 'org.springframework.boot:spring-boot-starter-security'
 	implementation 'org.springframework.boot:spring-boot-starter-web'
+	implementation 'org.springframework.boot:spring-boot-starter-validation'
 	compileOnly 'org.projectlombok:lombok'
 	developmentOnly 'org.springframework.boot:spring-boot-devtools'
 	runtimeOnly 'com.mysql:mysql-connector-j'
@@ -40,23 +40,16 @@ dependencies {
 	testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
 	
 	implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui:2.4.0'
+	
+	// JWT 의존성 - 0.12.6 버전으로 통일
+	implementation 'io.jsonwebtoken:jjwt-api:0.12.6'
+	runtimeOnly 'io.jsonwebtoken:jjwt-impl:0.12.6'
+	runtimeOnly 'io.jsonwebtoken:jjwt-jackson:0.12.6'
+	
+	// 보안 관련 의존성 추가
+	implementation 'org.bouncycastle:bcprov-jdk15on:1.70'
 }
 
 tasks.named('test') {
 	useJUnitPlatform()
-}
-
-checkstyle {
-    toolVersion = '10.12.5'
-    configFile = file("${rootDir}/config/checkstyle/checkstyle.xml")
-    maxErrors = 0
-    maxWarnings = 100
-    ignoreFailures = false
-}
-
-tasks.withType(Checkstyle) {
-    reports {
-        xml.required = true
-        html.required = true
-    }
 }

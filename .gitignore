@@ -1,0 +1,69 @@
+# 프로젝트 로드맵 파일 제외
+project-roadmap.md
+
+# 백엔드 관련
+back-end/HELP.md
+back-end/.gradle
+back-end/build/
+back-end/!gradle/wrapper/gradle-wrapper.jar
+back-end/!**/src/main/**/build/
+back-end/!**/src/test/**/build/
+
+# 프론트엔드 관련
+front-end/node_modules/
+front-end/.next/
+front-end/out/
+front-end/.pnp
+front-end/.pnp.js
+front-end/coverage
+front-end/.DS_Store
+front-end/*.pem
+front-end/npm-debug.log*
+front-end/yarn-debug.log*
+front-end/yarn-error.log*
+front-end/.env*.local
+front-end/.vercel
+front-end/*.tsbuildinfo
+front-end/next-env.d.ts
+
+# IDE 관련
+.idea/
+.vscode/
+*.iws
+*.iml
+*.ipr
+.project
+.classpath
+.settings/
+
+# 운영체제 관련
+.DS_Store
+Thumbs.db
+*.swp
+*.swo
+
+# 로그 파일
+*.log
+logs/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# 환경 설정 파일
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+
+# 기타
+*.class
+*.jar
+*.war
+*.nar
+*.ear
+*.zip
+*.tar.gz
+*.rar
+hs_err_pid*
+replay_pid* 
