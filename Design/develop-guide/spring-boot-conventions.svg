@@ -1,0 +1,122 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 1000">
+  <!-- 배경 -->
+  <rect width="800" height="1000" fill="#f8f9fa" />
+  
+  <!-- 제목 부분 -->
+  <rect x="50" y="30" width="700" height="70" rx="10" fill="#6db33f" />
+  <text x="400" y="75" font-family="Arial, sans-serif" font-size="28" font-weight="bold" text-anchor="middle" fill="white">Spring Boot 코드 컨벤션 가이드</text>
+  
+  <!-- 패키지 구조 섹션 -->
+  <rect x="50" y="120" width="700" height="180" rx="10" fill="white" stroke="#ddd" stroke-width="2" />
+  <text x="70" y="150" font-family="Arial, sans-serif" font-size="22" font-weight="bold" fill="#333">1. 패키지 구조</text>
+  
+  <!-- 패키지 구조 트리 그림 -->
+  <rect x="90" y="165" width="620" height="120" rx="5" fill="#f5f5f5" />
+  <text x="110" y="185" font-family="Consolas, monospace" font-size="14" fill="#333">com.company.project</text>
+  <text x="130" y="205" font-family="Consolas, monospace" font-size="14" fill="#333">├── config      // 애플리케이션 설정 클래스</text>
+  <text x="130" y="225" font-family="Consolas, monospace" font-size="14" fill="#333">├── controller  // REST API 및 MVC 컨트롤러</text>
+  <text x="130" y="245" font-family="Consolas, monospace" font-size="14" fill="#333">├── domain      // 엔티티 클래스</text>
+  <text x="130" y="265" font-family="Consolas, monospace" font-size="14" fill="#333">├── repository  // JPA 리포지토리 및 QueryDSL</text>
+  <text x="130" y="285" font-family="Consolas, monospace" font-size="14" fill="#333">└── service     // 비즈니스 로직</text>
+  
+  <!-- 클래스 명명 규칙 섹션 -->
+  <rect x="50" y="320" width="700" height="180" rx="10" fill="white" stroke="#ddd" stroke-width="2" />
+  <text x="70" y="350" font-family="Arial, sans-serif" font-size="22" font-weight="bold" fill="#333">2. 클래스 명명 규칙</text>
+  
+  <!-- 클래스 명명 규칙 테이블 -->
+  <rect x="90" y="365" width="620" height="120" rx="5" fill="#f5f5f5" />
+  <line x1="90" y1="385" x2="710" y2="385" stroke="#ddd" stroke-width="1" />
+  <text x="100" y="380" font-family="Arial, sans-serif" font-size="14" font-weight="bold" fill="#333">타입</text>
+  <text x="300" y="380" font-family="Arial, sans-serif" font-size="14" font-weight="bold" fill="#333">명명 패턴</text>
+  <text x="480" y="380" font-family="Arial, sans-serif" font-size="14" font-weight="bold" fill="#333">예시</text>
+  
+  <line x1="90" y1="405" x2="710" y2="405" stroke="#ddd" stroke-width="1" />
+  <text x="100" y="400" font-family="Arial, sans-serif" font-size="14" fill="#333">Controller</text>
+  <text x="300" y="400" font-family="Arial, sans-serif" font-size="14" fill="#333">명사 + Controller</text>
+  <text x="480" y="400" font-family="Arial, sans-serif" font-size="14" fill="#333">UserController</text>
+  
+  <line x1="90" y1="425" x2="710" y2="425" stroke="#ddd" stroke-width="1" />
+  <text x="100" y="420" font-family="Arial, sans-serif" font-size="14" fill="#333">Service</text>
+  <text x="300" y="420" font-family="Arial, sans-serif" font-size="14" fill="#333">명사 + Service</text>
+  <text x="480" y="420" font-family="Arial, sans-serif" font-size="14" fill="#333">UserService</text>
+  
+  <line x1="90" y1="445" x2="710" y2="445" stroke="#ddd" stroke-width="1" />
+  <text x="100" y="440" font-family="Arial, sans-serif" font-size="14" fill="#333">Repository</text>
+  <text x="300" y="440" font-family="Arial, sans-serif" font-size="14" fill="#333">명사 + Repository</text>
+  <text x="480" y="440" font-family="Arial, sans-serif" font-size="14" fill="#333">UserRepository</text>
+  
+  <line x1="90" y1="465" x2="710" y2="465" stroke="#ddd" stroke-width="1" />
+  <text x="100" y="460" font-family="Arial, sans-serif" font-size="14" fill="#333">Entity</text>
+  <text x="300" y="460" font-family="Arial, sans-serif" font-size="14" fill="#333">명사 (단수형)</text>
+  <text x="480" y="460" font-family="Arial, sans-serif" font-size="14" fill="#333">User, Product</text>
+  
+  <line x1="90" y1="485" x2="710" y2="485" stroke="#ddd" stroke-width="1" />
+  <text x="100" y="480" font-family="Arial, sans-serif" font-size="14" fill="#333">DTO</text>
+  <text x="300" y="480" font-family="Arial, sans-serif" font-size="14" fill="#333">명사 + DTO 또는 Request/Response</text>
+  <text x="480" y="480" font-family="Arial, sans-serif" font-size="14" fill="#333">UserDTO, UserRequest</text>
+  
+  <!-- 메소드 명명 섹션 -->
+  <rect x="50" y="520" width="700" height="200" rx="10" fill="white" stroke="#ddd" stroke-width="2" />
+  <text x="70" y="550" font-family="Arial, sans-serif" font-size="22" font-weight="bold" fill="#333">3. 메소드 명명 규칙</text>
+  
+  <!-- 메소드 명명 테이블 -->
+  <rect x="90" y="565" width="620" height="140" rx="5" fill="#f5f5f5" />
+  <line x1="90" y1="585" x2="710" y2="585" stroke="#ddd" stroke-width="1" />
+  <text x="100" y="580" font-family="Arial, sans-serif" font-size="14" font-weight="bold" fill="#333">유형</text>
+  <text x="240" y="580" font-family="Arial, sans-serif" font-size="14" font-weight="bold" fill="#333">접두사</text>
+  <text x="400" y="580" font-family="Arial, sans-serif" font-size="14" font-weight="bold" fill="#333">예시</text>
+  <text x="550" y="580" font-family="Arial, sans-serif" font-size="14" font-weight="bold" fill="#333">설명</text>
+  
+  <line x1="90" y1="605" x2="710" y2="605" stroke="#ddd" stroke-width="1" />
+  <text x="100" y="600" font-family="Arial, sans-serif" font-size="14" fill="#333">조회</text>
+  <text x="240" y="600" font-family="Arial, sans-serif" font-size="14" fill="#333">get, find, search</text>
+  <text x="400" y="600" font-family="Arial, sans-serif" font-size="14" fill="#333">getUserById</text>
+  <text x="550" y="600" font-family="Arial, sans-serif" font-size="14" fill="#333">데이터 조회</text>
+  
+  <line x1="90" y1="625" x2="710" y2="625" stroke="#ddd" stroke-width="1" />
+  <text x="100" y="620" font-family="Arial, sans-serif" font-size="14" fill="#333">등록</text>
+  <text x="240" y="620" font-family="Arial, sans-serif" font-size="14" fill="#333">create, save, add</text>
+  <text x="400" y="620" font-family="Arial, sans-serif" font-size="14" fill="#333">createUser</text>
+  <text x="550" y="620" font-family="Arial, sans-serif" font-size="14" fill="#333">데이터 생성</text>
+  
+  <line x1="90" y1="645" x2="710" y2="645" stroke="#ddd" stroke-width="1" />
+  <text x="100" y="640" font-family="Arial, sans-serif" font-size="14" fill="#333">수정</text>
+  <text x="240" y="640" font-family="Arial, sans-serif" font-size="14" fill="#333">update, modify</text>
+  <text x="400" y="640" font-family="Arial, sans-serif" font-size="14" fill="#333">updateUserProfile</text>
+  <text x="550" y="640" font-family="Arial, sans-serif" font-size="14" fill="#333">데이터 수정</text>
+  
+  <line x1="90" y1="665" x2="710" y2="665" stroke="#ddd" stroke-width="1" />
+  <text x="100" y="660" font-family="Arial, sans-serif" font-size="14" fill="#333">삭제</text>
+  <text x="240" y="660" font-family="Arial, sans-serif" font-size="14" fill="#333">delete, remove</text>
+  <text x="400" y="660" font-family="Arial, sans-serif" font-size="14" fill="#333">deleteUser</text>
+  <text x="550" y="660" font-family="Arial, sans-serif" font-size="14" fill="#333">데이터 삭제</text>
+  
+  <line x1="90" y1="685" x2="710" y2="685" stroke="#ddd" stroke-width="1" />
+  <text x="100" y="680" font-family="Arial, sans-serif" font-size="14" fill="#333">변환</text>
+  <text x="240" y="680" font-family="Arial, sans-serif" font-size="14" fill="#333">to, convert</text>
+  <text x="400" y="680" font-family="Arial, sans-serif" font-size="14" fill="#333">toUserDTO</text>
+  <text x="550" y="680" font-family="Arial, sans-serif" font-size="14" fill="#333">데이터 변환</text>
+  
+  <line x1="90" y1="705" x2="710" y2="705" stroke="#ddd" stroke-width="1" />
+  <text x="100" y="700" font-family="Arial, sans-serif" font-size="14" fill="#333">검증</text>
+  <text x="240" y="700" font-family="Arial, sans-serif" font-size="14" fill="#333">validate, check</text>
+  <text x="400" y="700" font-family="Arial, sans-serif" font-size="14" fill="#333">validateUserInput</text>
+  <text x="550" y="700" font-family="Arial, sans-serif" font-size="14" fill="#333">유효성 검사</text>
+  
+  <!-- Lombok 사용 섹션 -->
+  <rect x="50" y="740" width="700" height="140" rx="10" fill="white" stroke="#ddd" stroke-width="2" />
+  <text x="70" y="770" font-family="Arial, sans-serif" font-size="22" font-weight="bold" fill="#333">4. Lombok 어노테이션 사용</text>
+  
+  <rect x="90" y="785" width="620" height="80" rx="5" fill="#f5f5f5" />
+  <text x="100" y="805" font-family="Consolas, monospace" font-size="14" fill="#333">@Getter                // 모든 필드에 getter 메소드 생성</text>
+  <text x="100" y="825" font-family="Consolas, monospace" font-size="14" fill="#333">@Setter                // 필요한 경우만 제한적으로 사용</text>
+  <text x="100" y="845" font-family="Consolas, monospace" font-size="14" fill="#333">@RequiredArgsConstructor // final 필드에 대한 생성자 자동 생성</text>
+  <text x="100" y="865" font-family="Consolas, monospace" font-size="14" fill="#333">@Builder               // 빌더 패턴 사용 (불변 객체 생성에 권장)</text>
+  
+  <!-- QueryDSL 컨벤션 섹션 -->
+  <rect x="50" y="900" width="700" height="80" rx="10" fill="white" stroke="#ddd" stroke-width="2" />
+  <text x="70" y="930" font-family="Arial, sans-serif" font-size="22" font-weight="bold" fill="#333">5. QueryDSL 컨벤션</text>
+  
+  <rect x="90" y="945" width="620" height="20" rx="5" fill="#f5f5f5" />
+  <text x="100" y="960" font-family="Consolas, monospace" font-size="14" fill="#333">Q엔티티 변수는 소문자로 시작: QUser user = QUser.user;</text>
+</svg>

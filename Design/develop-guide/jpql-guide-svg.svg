@@ -1,0 +1,297 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 2600" width="1000" height="2600">
+  <!-- 배경 스타일 -->
+  <defs>
+    <style>
+      @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700&amp;display=swap');
+      
+      text {
+        font-family: 'Noto Sans KR', sans-serif;
+      }
+      .title {
+        font-size: 28px;
+        font-weight: 700;
+        fill: #2c3e50;
+      }
+      .section-title {
+        font-size: 24px;
+        font-weight: 700;
+        fill: #3498db;
+      }
+      .normal-text {
+        font-size: 14px;
+        fill: #333;
+      }
+      .code-text {
+        font-size: 12px;
+        font-family: monospace;
+        fill: #333;
+      }
+      .highlight {
+        font-weight: 700;
+        fill: #e74c3c;
+      }
+      .note {
+        font-style: italic;
+        fill: #7f8c8d;
+      }
+      .code-block {
+        fill: #f5f5f5;
+        stroke: #ddd;
+        stroke-width: 1;
+        rx: 5;
+        ry: 5;
+      }
+      .table-header {
+        fill: #3498db;
+        stroke: #2980b9;
+      }
+      .table-row-even {
+        fill: #ecf0f1;
+      }
+      .table-row-odd {
+        fill: #fff;
+      }
+      .table-text {
+        font-size: 12px;
+        fill: #333;
+      }
+      .table-header-text {
+        font-size: 12px;
+        fill: white;
+        font-weight: 700;
+      }
+      .icon {
+        fill: #3498db;
+      }
+    </style>
+    
+    <!-- 재사용할 컴포넌트들 -->
+    <g id="code-icon">
+      <path d="M0,5 L2,0 L10,0 L8,5 Z" fill="#f39c12"/>
+      <rect x="0" y="5" width="10" height="13" fill="#f1c40f"/>
+      <text x="3" y="14" fill="#7f8c8d" font-size="8">{}</text>
+    </g>
+    
+    <g id="db-icon">
+      <rect x="0" y="0" width="15" height="3" fill="#3498db"/>
+      <rect x="0" y="4" width="15" height="10" fill="#3498db"/>
+      <rect x="2" y="6" width="11" height="1" fill="#ecf0f1"/>
+      <rect x="2" y="9" width="11" height="1" fill="#ecf0f1"/>
+      <rect x="2" y="12" width="11" height="1" fill="#ecf0f1"/>
+    </g>
+    
+    <g id="join-icon">
+      <circle cx="5" cy="5" r="5" fill="#3498db" opacity="0.7"/>
+      <circle cx="10" cy="5" r="5" fill="#e74c3c" opacity="0.7"/>
+    </g>
+    
+    <g id="note-icon">
+      <path d="M0,0 L12,0 L15,3 L15,18 L0,18 Z" fill="#f5f5f5" stroke="#ddd"/>
+      <path d="M12,0 L12,3 L15,3" fill="none" stroke="#ddd"/>
+      <line x1="3" y1="5" x2="12" y2="5" stroke="#3498db"/>
+      <line x1="3" y1="8" x2="12" y2="8" stroke="#3498db"/>
+      <line x1="3" y1="11" x2="12" y2="11" stroke="#3498db"/>
+      <line x1="3" y1="14" x2="8" y2="14" stroke="#3498db"/>
+    </g>
+  </defs>
+
+  <!-- 배경 -->
+  <rect width="100%" height="100%" fill="#fff"/>
+  
+  <!-- 헤더 -->
+  <rect width="100%" height="70" fill="#3498db"/>
+  <text x="500" y="45" text-anchor="middle" font-size="32" fill="white" font-weight="700">초보자를 위한 JPQL 가이드</text>
+  
+  <!-- 1. JPQL 정의 섹션 -->
+  <rect x="50" y="90" width="900" height="200" fill="#ecf0f1" rx="10" ry="10"/>
+  <text x="70" y="120" class="section-title">1. JPQL 정의</text>
+  
+  <text x="70" y="150" class="normal-text">
+    <tspan x="70" dy="0">JPQL(Java Persistence Query Language)은 JPA(Java Persistence API)에서 사용하는 객체지향 쿼리 언어입니다.</tspan>
+    <tspan x="70" dy="20">이는 SQL과 유사하지만, 테이블이 아닌 엔티티 객체를 대상으로 쿼리를 작성합니다.</tspan>
+  </text>
+  
+  <!-- SQL vs JPQL 비교 테이블 -->
+  <rect x="70" y="190" width="400" height="30" class="table-header"/>
+  <rect x="470" y="190" width="400" height="30" class="table-header"/>
+  <text x="270" y="210" text-anchor="middle" class="table-header-text">SQL (테이블 중심)</text>
+  <text x="670" y="210" text-anchor="middle" class="table-header-text">JPQL (객체 중심)</text>
+  
+  <rect x="70" y="220" width="400" height="30" class="table-row-odd"/>
+  <rect x="470" y="220" width="400" height="30" class="table-row-odd"/>
+  <text x="270" y="240" text-anchor="middle" class="table-text">SELECT * FROM MEMBER WHERE NAME = 'Kim'</text>
+  <text x="670" y="240" text-anchor="middle" class="table-text">SELECT m FROM Member m WHERE m.name = 'Kim'</text>
+  
+  <!-- 2. JPQL 기본내용 섹션 -->
+  <rect x="50" y="310" width="900" height="250" fill="#ecf0f1" rx="10" ry="10"/>
+  <text x="70" y="340" class="section-title">2. JPQL 기본내용</text>
+  
+  <text x="70" y="370" class="normal-text">
+    <tspan x="70" dy="0">• 기본 구조: SQL과 유사한 SELECT, FROM, WHERE, GROUP BY, HAVING, ORDER BY 사용</tspan>
+    <tspan x="70" dy="25">• 객체 지향적: 객체 모델을 기반으로 쿼리 작성</tspan>
+    <tspan x="70" dy="25">• 데이터베이스 독립적: 특정 데이터베이스에 종속되지 않음</tspan>
+    <tspan x="70" dy="25">• 타입 안전성: 컴파일 시점에 오류 확인 가능 (TypedQuery 사용 시)</tspan>
+    <tspan x="70" dy="25">• 동적 쿼리 지원: 실행 시점에 쿼리 조건 변경 가능</tspan>
+  </text>
+  
+  <!-- JPQL과 SQL 차이점 강조 박스 -->
+  <rect x="500" y="370" width="400" height="140" rx="5" ry="5" fill="#d6eaf8" stroke="#3498db"/>
+  <text x="520" y="395" class="normal-text" font-weight="700">JPQL과 SQL 주요 차이점:</text>
+  <text x="520" y="420" class="normal-text">• JPQL: 엔티티 객체 대상 (FROM Member m)</text>
+  <text x="520" y="445" class="normal-text">• SQL: 데이터베이스 테이블 대상 (FROM MEMBER m)</text>
+  <text x="520" y="470" class="normal-text">• JPQL: 객체 속성 접근 (m.name)</text>
+  <text x="520" y="495" class="normal-text">• SQL: 테이블 컬럼 접근 (m.NAME)</text>
+  
+  <!-- 3. 의존성 주입 섹션 -->
+  <rect x="50" y="580" width="900" height="340" fill="#ecf0f1" rx="10" ry="10"/>
+  <text x="70" y="610" class="section-title">3. 의존성 주입</text>
+  
+  <!-- Maven 의존성 -->
+  <text x="70" y="640" class="normal-text" font-weight="700">Maven (pom.xml):</text>
+  <rect x="70" y="650" width="400" height="110" class="code-block"/>
+  <text x="85" y="670" class="code-text">
+    <tspan x="85" dy="0">&lt;!-- Spring Data JPA --&gt;</tspan>
+    <tspan x="85" dy="20">&lt;dependency&gt;</tspan>
+    <tspan x="85" dy="20">    &lt;groupId&gt;org.springframework.boot&lt;/groupId&gt;</tspan>
+    <tspan x="85" dy="20">    &lt;artifactId&gt;spring-boot-starter-data-jpa&lt;/artifactId&gt;</tspan>
+    <tspan x="85" dy="20">&lt;/dependency&gt;</tspan>
+  </text>
+  
+  <!-- Gradle 의존성 -->
+  <text x="500" y="640" class="normal-text" font-weight="700">Gradle (build.gradle):</text>
+  <rect x="500" y="650" width="400" height="70" class="code-block"/>
+  <text x="515" y="670" class="code-text">
+    <tspan x="515" dy="0">implementation 'org.springframework.boot:</tspan>
+    <tspan x="515" dy="20">                 spring-boot-starter-data-jpa'</tspan>
+    <tspan x="515" dy="20">implementation 'mysql:mysql-connector-java'</tspan>
+  </text>
+  
+  <!-- application.properties 설정 -->
+  <text x="70" y="790" class="normal-text" font-weight="700">application.properties:</text>
+  <rect x="70" y="800" width="830" height="100" class="code-block"/>
+  <text x="85" y="820" class="code-text">
+    <tspan x="85" dy="0">spring.datasource.url=jdbc:mysql://localhost:3306/mydb</tspan>
+    <tspan x="85" dy="20">spring.datasource.username=root</tspan>
+    <tspan x="85" dy="20">spring.datasource.password=password</tspan>
+    <tspan x="85" dy="20">spring.jpa.hibernate.ddl-auto=update</tspan>
+    <tspan x="85" dy="20">spring.jpa.show-sql=true</tspan>
+  </text>
+  
+  <!-- 4. 기본 예제 섹션 -->
+  <rect x="50" y="940" width="900" height="600" fill="#ecf0f1" rx="10" ry="10"/>
+  <text x="70" y="970" class="section-title">4. JPQL 기본 예제 5가지</text>
+  
+  <!-- 예제 1: 전체 회원 조회 -->
+  <text x="70" y="1000" class="normal-text" font-weight="700">예제 1: 전체 회원 조회</text>
+  <rect x="70" y="1010" width="830" height="70" class="code-block"/>
+  <text x="85" y="1030" class="code-text">
+    <tspan x="85" dy="0">// Repository에서 사용</tspan>
+    <tspan x="85" dy="20">@Query("SELECT m FROM Member m")</tspan>
+    <tspan x="85" dy="20">List&lt;Member&gt; findAllMembers();</tspan>
+  </text>
+  
+  <!-- 예제 2: 이름으로 회원 조회 -->
+  <text x="70" y="1100" class="normal-text" font-weight="700">예제 2: 이름으로 회원 조회</text>
+  <rect x="70" y="1110" width="830" height="70" class="code-block"/>
+  <text x="85" y="1130" class="code-text">
+    <tspan x="85" dy="0">@Query("SELECT m FROM Member m WHERE m.name = :name")</tspan>
+    <tspan x="85" dy="20">List&lt;Member&gt; findByName(@Param("name") String name);</tspan>
+  </text>
+  
+  <!-- 예제 3: 나이 조건 조회 -->
+  <text x="70" y="1200" class="normal-text" font-weight="700">예제 3: 나이가 특정 값 이상인 회원 조회 (페이징)</text>
+  <rect x="70" y="1210" width="830" height="90" class="code-block"/>
+  <text x="85" y="1230" class="code-text">
+    <tspan x="85" dy="0">@Query("SELECT m FROM Member m WHERE m.age >= :age")</tspan>
+    <tspan x="85" dy="20">Page&lt;Member&gt; findByAgeGreaterThan(</tspan>
+    <tspan x="85" dy="20">    @Param("age") int age, </tspan>
+    <tspan x="85" dy="20">    Pageable pageable);</tspan>
+  </text>
+  
+  <!-- 예제 4: 회원 수 카운트 -->
+  <text x="70" y="1320" class="normal-text" font-weight="700">예제 4: 회원 수 카운트</text>
+  <rect x="70" y="1330" width="830" height="70" class="code-block"/>
+  <text x="85" y="1350" class="code-text">
+    <tspan x="85" dy="0">@Query("SELECT COUNT(m) FROM Member m")</tspan>
+    <tspan x="85" dy="20">long countMembers();</tspan>
+  </text>
+  
+  <!-- 예제 5: DTO 사용 -->
+  <text x="70" y="1420" class="normal-text" font-weight="700">예제 5: 이름과 나이만 조회 (DTO 사용)</text>
+  <rect x="70" y="1430" width="830" height="90" class="code-block"/>
+  <text x="85" y="1450" class="code-text">
+    <tspan x="85" dy="0">@Query("SELECT new com.example.demo.dto.MemberDTO(m.name, m.age) FROM Member m")</tspan>
+    <tspan x="85" dy="20">List&lt;MemberDTO&gt; findMemberNameAndAge();</tspan>
+  </text>
+  
+  <!-- 5. 조인 예제 섹션 -->
+  <rect x="50" y="1560" width="900" height="320" fill="#ecf0f1" rx="10" ry="10"/>
+  <text x="70" y="1590" class="section-title">5. JPQL 조인 예제 3가지</text>
+  
+  <!-- 예제 1: 내부 조인 -->
+  <text x="70" y="1620" class="normal-text" font-weight="700">예제 1: 내부 조인 (Inner Join)</text>
+  <rect x="70" y="1630" width="830" height="70" class="code-block"/>
+  <text x="85" y="1650" class="code-text">
+    <tspan x="85" dy="0">@Query("SELECT m FROM Member m JOIN m.team t WHERE t.name = :teamName")</tspan>
+    <tspan x="85" dy="20">List&lt;Member&gt; findMembersByTeamName(@Param("teamName") String teamName);</tspan>
+  </text>
+  
+  <!-- 예제 2: 외부 조인 -->
+  <text x="70" y="1720" class="normal-text" font-weight="700">예제 2: 외부 조인 (Left Outer Join)</text>
+  <rect x="70" y="1730" width="830" height="70" class="code-block"/>
+  <text x="85" y="1750" class="code-text">
+    <tspan x="85" dy="0">@Query("SELECT m FROM Member m LEFT JOIN m.team t")</tspan>
+    <tspan x="85" dy="20">List&lt;Member&gt; findAllMembersWithTeam();</tspan>
+  </text>
+  
+  <!-- 예제 3: 페치 조인 -->
+  <text x="70" y="1820" class="normal-text" font-weight="700">예제 3: 페치 조인 (Fetch Join)</text>
+  <rect x="70" y="1830" width="830" height="30" class="code-block"/>
+  <text x="85" y="1850" class="code-text">@Query("SELECT m FROM Member m JOIN FETCH m.team")</text>
+  
+  <!-- 6. 다이나믹 쿼리 섹션 -->
+  <rect x="50" y="1900" width="900" height="350" fill="#ecf0f1" rx="10" ry="10"/>
+  <text x="70" y="1930" class="section-title">6. JPQL 다이나믹 쿼리 예제 2가지</text>
+  
+  <!-- 예제 1: String 연결 -->
+  <text x="70" y="1960" class="normal-text" font-weight="700">예제 1: String 연결을 사용한 동적 쿼리</text>
+  <rect x="70" y="1970" width="830" height="130" class="code-block"/>
+  <text x="85" y="1990" class="code-text">
+    <tspan x="85" dy="0">StringBuilder jpql = new StringBuilder("SELECT m FROM Member m");</tspan>
+    <tspan x="85" dy="20">boolean hasCondition = false;</tspan>
+    <tspan x="85" dy="20">if (name != null) {</tspan>
+    <tspan x="85" dy="20">    jpql.append(" WHERE m.name = :name");</tspan>
+    <tspan x="85" dy="20">    hasCondition = true;</tspan>
+    <tspan x="85" dy="20">}</tspan>
+  </text>
+  
+  <!-- 예제 2: Criteria API -->
+  <text x="70" y="2120" class="normal-text" font-weight="700">예제 2: Criteria API를 사용한 동적 쿼리 (권장)</text>
+  <rect x="70" y="2130" width="830" height="100" class="code-block"/>
+  <text x="85" y="2150" class="code-text">
+    <tspan x="85" dy="0">CriteriaBuilder cb = entityManager.getCriteriaBuilder();</tspan>
+    <tspan x="85" dy="20">CriteriaQuery&lt;Member&gt; cq = cb.createQuery(Member.class);</tspan>
+    <tspan x="85" dy="20">Root&lt;Member&gt; member = cq.from(Member.class);</tspan>
+    <tspan x="85" dy="20">List&lt;Predicate&gt; predicates = new ArrayList&lt;&gt;();</tspan>
+  </text>
+  
+  <!-- 7. 주의사항 및 요약 섹션 -->
+  <rect x="50" y="2270" width="900" height="310" fill="#ecf0f1" rx="10" ry="10"/>
+  <text x="70" y="2300" class="section-title">7. JPQL 사용 시 주의사항 및 요약</text>
+  
+  <!-- 주의사항 -->
+  <text x="70" y="2330" class="normal-text" font-weight="700">주의사항:</text>
+  <text x="70" y="2355" class="normal-text">• N+1 문제: 연관된 엔티티를 조회할 때 발생하는 성능 이슈 (페치 조인으로 해결)</text>
+  <text x="70" y="2380" class="normal-text">• 파라미터 바인딩: 문자열 연결이 아닌 파라미터 바인딩 사용</text>
+  <text x="70" y="2405" class="normal-text">• 벌크 연산: 여러 레코드를 한 번에 수정/삭제할 때 영속성 컨텍스트 초기화 필요</text>
+  
+  <!-- 요약 -->
+  <text x="70" y="2435" class="normal-text" font-weight="700">요약:</text>
+  <text x="70" y="2460" class="normal-text">• JPQL은 객체지향 쿼리 언어로, 엔티티 객체를 대상으로 합니다.</text>
+  <text x="70" y="2485" class="normal-text">• 기본 구문은 SQL과 유사하지만, 테이블이 아닌 엔티티를 사용합니다.</text>
+  <text x="70" y="2510" class="normal-text">• 복잡한 쿼리는 네이티브 SQL이나 QueryDSL을 고려하세요.</text>
+  <text x="70" y="2535" class="normal-text">• JPQL은 JPA의 핵심 기능으로, 객체지향적 데이터 접근을 가능하게 합니다.</text>
+  
+  <!-- 푸터 -->
+  <rect width="100%" height="25" y="2575" fill="#3498db"/>
+</svg>

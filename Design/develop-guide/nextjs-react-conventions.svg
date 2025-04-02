@@ -1,0 +1,53 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 1100">
+  <!-- 배경 -->
+  <rect width="800" height="1100" fill="#f5f5f5"/>
+  
+  <!-- 제목 -->
+  <rect x="40" y="30" width="720" height="70" rx="10" fill="#000000"/>
+  <text x="400" y="75" fill="#ffffff" font-family="Arial, sans-serif" font-size="28" text-anchor="middle" font-weight="bold">Next.js, React, JavaScript 코딩 컨벤션 가이드</text>
+  
+  <!-- 파일 및 폴더 구조 섹션 -->
+  <rect x="40" y="120" width="720" height="180" rx="10" fill="#0070f3"/>
+  <text x="60" y="155" fill="#ffffff" font-family="Arial, sans-serif" font-size="24" font-weight="bold">파일 및 폴더 구조</text>
+  
+  <rect x="60" y="170" width="680" height="110" rx="5" fill="#ffffff"/>
+  <text x="80" y="195" fill="#333333" font-family="Arial, sans-serif" font-size="16">• 컴포넌트 파일명: <tspan font-weight="bold">PascalCase</tspan> (UserProfile.jsx, LoginForm.tsx)</text>
+  <text x="80" y="225" fill="#333333" font-family="Arial, sans-serif" font-size="16">• 유틸리티/함수 파일명: <tspan font-weight="bold">camelCase</tspan> (formatDate.js, apiUtils.ts)</text>
+  <text x="80" y="255" fill="#333333" font-family="Arial, sans-serif" font-size="16">• 페이지 파일명: <tspan font-weight="bold">kebab-case</tspan> (user-profile.jsx) 또는 폴더명</text>
+  
+  <!-- JavaScript/TypeScript 스타일 섹션 -->
+  <rect x="40" y="320" width="720" height="220" rx="10" fill="#5a29e4"/>
+  <text x="60" y="355" fill="#ffffff" font-family="Arial, sans-serif" font-size="24" font-weight="bold">JavaScript/TypeScript 코딩 스타일</text>
+  
+  <rect x="60" y="370" width="680" height="150" rx="5" fill="#ffffff"/>
+  <text x="80" y="395" fill="#333333" font-family="Arial, sans-serif" font-size="16">• 들여쓰기: <tspan font-weight="bold">2칸</tspan> (대부분의 React 프로젝트 표준)</text>
+  <text x="80" y="425" fill="#333333" font-family="Arial, sans-serif" font-size="16">• 세미콜론: <tspan font-weight="bold">항상 사용</tspan> (모든 구문 종료 시)</text>
+  <text x="80" y="455" fill="#333333" font-family="Arial, sans-serif" font-size="16">• 따옴표: <tspan font-weight="bold">작은따옴표(')</tspan> 선호 (프로젝트 내 일관성 유지)</text>
+  <text x="80" y="485" fill="#333333" font-family="Arial, sans-serif" font-size="16">• 변수명: <tspan font-weight="bold">camelCase</tspan> (userName, isLoading)</text>
+  <text x="80" y="515" fill="#333333" font-family="Arial, sans-serif" font-size="16">• 상수: <tspan font-weight="bold">대문자와 언더스코어</tspan> (MAX_RETRY_COUNT, API_URL)</text>
+  
+  <!-- React/JSX 컨벤션 섹션 -->
+  <rect x="40" y="560" width="720" height="210" rx="10" fill="#ee4644"/>
+  <text x="60" y="595" fill="#ffffff" font-family="Arial, sans-serif" font-size="24" font-weight="bold">React/JSX 컨벤션</text>
+  
+  <rect x="60" y="610" width="680" height="140" rx="5" fill="#ffffff"/>
+  <text x="80" y="635" fill="#333333" font-family="Arial, sans-serif" font-size="16">• 컴포넌트 속성(props): <tspan font-weight="bold">camelCase</tspan> (onClick, userName)</text>
+  <text x="80" y="665" fill="#333333" font-family="Arial, sans-serif" font-size="16">• 이벤트 핸들러: <tspan font-weight="bold">handle + 이벤트명</tspan> (handleClick, handleSubmit)</text>
+  <text x="80" y="695" fill="#333333" font-family="Arial, sans-serif" font-size="16">• 불리언 props: <tspan font-weight="bold">축약형</tspan> (disabled는 disabled={true}와 동일)</text>
+  <text x="80" y="725" fill="#333333" font-family="Arial, sans-serif" font-size="16">• HTML 표준 태그: <tspan font-weight="bold">HTML 컨벤션</tspan> (대시 사용: data-testid="example")</text>
+  
+  <!-- CSS/스타일링 컨벤션 섹션 -->
+  <rect x="40" y="790" width="720" height="140" rx="10" fill="#34c759"/>
+  <text x="60" y="825" fill="#ffffff" font-family="Arial, sans-serif" font-size="24" font-weight="bold">CSS/스타일링 컨벤션</text>
+  
+  <rect x="60" y="840" width="680" height="70" rx="5" fill="#ffffff"/>
+  <text x="80" y="865" fill="#333333" font-family="Arial, sans-serif" font-size="16">• 클래스명: <tspan font-weight="bold">kebab-case</tspan> (button-primary, user-avatar)</text>
+  <text x="80" y="895" fill="#333333" font-family="Arial, sans-serif" font-size="16">• CSS-in-JS: <tspan font-weight="bold">camelCase</tspan> (backgroundColor, fontSize)</text>
+  
+  <!-- 도구 및 자동화 섹션 -->
+  <rect x="40" y="950" width="720" height="120" rx="10" fill="#ff9500"/>
+  <text x="60" y="985" fill="#ffffff" font-family="Arial, sans-serif" font-size="24" font-weight="bold">권장 도구 및 자동화</text>
+  
+  <rect x="60" y="1000" width="680" height="50" rx="5" fill="#ffffff"/>
+  <text x="80" y="1030" fill="#333333" font-family="Arial, sans-serif" font-size="16">• ESLint + Prettier + EditorConfig로 <tspan font-weight="bold">코드 스타일 자동화</tspan></text>
+</svg>
