@@ -48,26 +48,76 @@ CREATE TABLE payment_methods (
 
 -- 2. 객실 예약 관련 테이블
 
--- 객실 유형 테이블 (필수 필드만 포함)
+-- 객실 유형 테이블
 CREATE TABLE room_types (
     room_types_id BIGINT PRIMARY KEY AUTO_INCREMENT,
     name VARCHAR(100) NOT NULL,
+    description TEXT NOT NULL,
+    size INT NOT NULL,
     max_adults INT NOT NULL,
     max_children INT NOT NULL,
     weekday_price DECIMAL(10, 2) NOT NULL,
     weekend_price DECIMAL(10, 2) NOT NULL,
-    INDEX idx_name (name)
+    peak_season_price DECIMAL(10, 2) NOT NULL,
+    building CHAR(1) NOT NULL,
+    floor_count INT NOT NULL,
+    rooms_per_floor INT NOT NULL,
+    view_type VARCHAR(50) NOT NULL,
+    image_url VARCHAR(255) DEFAULT '/images/rooms/placeholder.jpg',
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    INDEX idx_building (building),
+    INDEX idx_view_type (view_type)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
--- 객실 테이블 (필수 필드만 포함)
+-- 어메니티 그룹 테이블
+CREATE TABLE amenity_groups (
+    amenity_groups_id BIGINT PRIMARY KEY AUTO_INCREMENT,
+    name VARCHAR(50) NOT NULL,
+    icon_name VARCHAR(50) NOT NULL,
+    sort_order INT NOT NULL DEFAULT 0,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    UNIQUE KEY uk_name (name),
+    INDEX idx_sort_order (sort_order)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- 어메니티 아이템 테이블
+CREATE TABLE amenity_items (
+    amenity_items_id BIGINT PRIMARY KEY AUTO_INCREMENT,
+    amenity_groups_id BIGINT NOT NULL,
+    name VARCHAR(100) NOT NULL,
+    icon_name VARCHAR(50) NOT NULL,
+    sort_order INT NOT NULL DEFAULT 0,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (amenity_groups_id) REFERENCES amenity_groups (amenity_groups_id),
+    UNIQUE KEY uk_name_group (name, amenity_groups_id),
+    INDEX idx_sort_order (sort_order)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- 객실 유형별 어메니티 그룹 연결 테이블
+CREATE TABLE room_type_amenity_groups (
+    room_types_id BIGINT NOT NULL,
+    amenity_groups_id BIGINT NOT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    PRIMARY KEY (room_types_id, amenity_groups_id),
+    FOREIGN KEY (room_types_id) REFERENCES room_types (room_types_id),
+    FOREIGN KEY (amenity_groups_id) REFERENCES amenity_groups (amenity_groups_id)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- 객실 테이블
 CREATE TABLE rooms (
     rooms_id BIGINT PRIMARY KEY AUTO_INCREMENT,
     room_types_id BIGINT NOT NULL,
     room_number VARCHAR(10) NOT NULL UNIQUE,
     status VARCHAR(20) NOT NULL DEFAULT 'AVAILABLE',
+    floor INT GENERATED ALWAYS AS (CAST(SUBSTRING(room_number, 2, 1) AS SIGNED)) STORED,
+    room_order INT GENERATED ALWAYS AS (CAST(SUBSTRING(room_number, 3, 2) AS SIGNED)) STORED,
     FOREIGN KEY (room_types_id) REFERENCES room_types (room_types_id),
+    CONSTRAINT check_room_number_format CHECK (room_number REGEXP '^[A-F][1-4][0-9]{2}$'),
     INDEX idx_room_number (room_number),
-    INDEX idx_status (status)
+    INDEX idx_status (status),
+    INDEX idx_floor (floor),
+    INDEX idx_room_order (room_order)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- 예약 테이블 (필수 필드만 포함)

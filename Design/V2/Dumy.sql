@@ -51,14 +51,97 @@ INSERT INTO payment_methods (users_id, card_type, last_four_digits, is_default) 
 
 
 
--- 4. 객실 유형 테이블 데이터
-INSERT INTO room_types (name, max_adults, max_children, weekday_price, weekend_price) VALUES
-('Chill Comfort Room', 2, 1, 220000, 270000),
-('Chill Harmony Room', 2, 1, 280000, 350000),
-('Chill Serenity Room', 2, 2, 380000, 450000),
-('Chill Family Suite', 4, 2, 520000, 650000),
-('Chill Lake Suite', 2, 2, 680000, 820000),
-('Ultimate Chill Suite', 4, 4, 950000, 1200000);
+-- 어메니티 그룹 데이터
+INSERT INTO amenity_groups (name, icon_name, sort_order) VALUES
+('공통 어메니티', 'BedDouble', 1),
+('디럭스 어메니티', 'Coffee', 2),
+('프리미엄 어메니티', 'Tablet', 3),
+('프레지덴셜 어메니티', 'UserCog', 4);
+
+-- 어메니티 아이템 데이터
+INSERT INTO amenity_items (amenity_groups_id, name, icon_name, sort_order) VALUES
+-- 공통 어메니티
+(1, '고급 침구', 'BedDouble', 1),
+(1, '43인치 스마트 TV', 'Tv', 2),
+(1, '고속 무선 인터넷', 'Wifi', 3),
+(1, '객실 내 금고', 'Lock', 4),
+(1, '미니바/미니 냉장고', 'Coffee', 5),
+(1, '친환경 욕실 용품 세트', 'ShowerHead', 6),
+(1, '슬리퍼 및 목욕 가운', 'Footprints', 7),
+(1, 'USB 충전 포트 및 멀티 어댑터', 'BatteryCharging', 8),
+(1, '헤어 드라이어', 'Scissors', 9),
+(1, '커피/차 메이커', 'Coffee', 10),
+
+-- 디럭스 어메니티
+(2, '에스프레소 머신', 'Coffee', 1),
+(2, '필로우 미스트', 'Droplets', 2),
+(2, '욕실 체중계', 'Scale', 3),
+(2, '추가 욕실 용품', 'Bath', 4),
+(2, '블루투스 스피커', 'Speaker', 5),
+(2, '다회용 텀블러', 'Coffee', 6),
+
+-- 프리미엄 어메니티
+(3, '태블릿 객실 컨트롤 시스템', 'Tablet', 1),
+(3, '개별 공기청정기', 'Wind', 2),
+(3, '전용 라운지 이용권', 'Lounge', 3),
+(3, '턴다운 서비스', 'Moon', 4),
+(3, '조식 무료 제공', 'Utensils', 5),
+(3, '웰컴 과일 또는 스낵', 'Apple', 6),
+
+-- 프레지덴셜 어메니티
+(4, '개인 집사 서비스', 'UserCog', 1),
+(4, '프라이빗 체크인/체크아웃', 'Key', 2),
+(4, '객실 내 자쿠지', 'Waves', 3),
+(4, '프리미엄 와인/주류 셀렉션', 'Wine', 4),
+(4, '프라이빗 다이닝 옵션', 'ChefHat', 5),
+(4, '스페셜 스파 트리트먼트 패키지', 'Heart', 6);
+
+
+
+-- 객실 유형 데이터
+INSERT INTO room_types (
+    name, description, size, max_adults, max_children,
+    weekday_price, weekend_price, peak_season_price,
+    building, floor_count, rooms_per_floor, view_type
+) VALUES
+('Chill Comfort Room', 
+ '심플하고 편안한 기본형 객실로, 자연적 요소가 가미된 인테리어와 가든 뷰를 제공하는 30㎡ 크기의 객실입니다.',
+ 30, 2, 1, 220000, 270000, 320000, 'F', 4, 30, '가든 뷰'),
+
+('Chill Harmony Room',
+ '넓은 공간과 고급스러운 인테리어, 휴식을 위한 전용 소파 공간이 있는 45㎡ 크기의 객실입니다.',
+ 45, 2, 1, 280000, 350000, 400000, 'E', 4, 25, '가든 뷰'),
+
+('Chill Serenity Room',
+ '고급 침구와 가구, 넓은 욕실, 일부 객실 테라스가 포함된 70㎡ 크기의 객실입니다.',
+ 70, 2, 2, 380000, 450000, 520000, 'D', 4, 15, '가든 뷰'),
+
+('Chill Family Suite',
+ '가족 단위 투숙객을 위한 분리된 거실과 침실, 울창한 숲과 아름다운 오솔길 전망을 제공하는 90㎡ 크기의 객실입니다.',
+ 90, 4, 2, 520000, 650000, 750000, 'C', 4, 10, '숲 & 오솔길 뷰'),
+
+('Chill Lake Suite',
+ '비즈니스와 휴식을 동시에, 넓은 업무공간과 휴식공간, 호수와 산이 어우러진 아름다운 전망을 제공하는 100㎡ 크기의 객실입니다.',
+ 100, 2, 2, 680000, 820000, 950000, 'B', 4, 5, '호수 & 산 뷰'),
+
+('Ultimate Chill Suite',
+ '최고급 시설과 개인 맞춤 서비스, 넓은 공간, 고객이 선호하는 프리미엄 전망 선택이 가능한 120㎡ 크기의 객실입니다.',
+ 120, 4, 4, 950000, 1200000, 1500000, 'A', 2, 4, '선택 가능 프리미엄 뷰');
+
+
+
+-- 객실 유형별 어메니티 그룹 연결
+INSERT INTO room_type_amenity_groups (room_types_id, amenity_groups_id)
+SELECT rt.room_types_id, ag.amenity_groups_id
+FROM room_types rt
+CROSS JOIN amenity_groups ag
+WHERE 
+    (rt.name = 'Chill Comfort Room' AND ag.name = '공통 어메니티')
+    OR (rt.name = 'Chill Harmony Room' AND ag.name IN ('공통 어메니티', '디럭스 어메니티'))
+    OR (rt.name IN ('Chill Serenity Room', 'Chill Family Suite', 'Chill Lake Suite') 
+        AND ag.name IN ('공통 어메니티', '디럭스 어메니티', '프리미엄 어메니티'))
+    OR (rt.name = 'Ultimate Chill Suite' 
+        AND ag.name IN ('공통 어메니티', '디럭스 어메니티', '프리미엄 어메니티', '프레지덴셜 어메니티'));
 
 
 
