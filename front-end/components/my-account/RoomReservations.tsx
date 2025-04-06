@@ -3,8 +3,9 @@
 import { Badge } from '@/components/common/ui/Badge';
 import { Button } from '@/components/common/ui/Button';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/common/ui/Tabs';
+import { reservationService } from '@/services/reservationService';
+import { RoomReservation } from '@/types/room';
 import {
-  Bed,
   CalendarCheck,
   CalendarIcon,
   CalendarPlus,
@@ -15,354 +16,271 @@ import {
   Users,
   X,
 } from 'lucide-react';
-import Image from 'next/image';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 
-// Mock reservation data
-const upcomingReservations = [
-  {
-    id: 'res-123456',
-    roomType: 'Chill Serenity Room',
-    image: '/placeholder.svg?height=400&width=600',
-    checkIn: '2025-03-25T15:00:00',
-    checkOut: '2025-03-28T11:00:00',
-    guests: {
-      adults: 2,
-      children: 0,
-    },
-    status: 'confirmed',
-    totalAmount: 1140000,
-    specialRequests: 'High floor room with lake view if available',
-    roomNumber: null,
-    isExpanded: true,
-  },
-];
+interface RoomReservationsProps {
+  userId: number;
+}
 
-const pastReservations = [
-  {
-    id: 'res-111222',
-    roomType: 'Chill Lake Suite',
-    image: '/placeholder.svg?height=400&width=600',
-    checkIn: '2025-01-10T15:00:00',
-    checkOut: '2025-01-15T11:00:00',
-    guests: {
-      adults: 2,
-      children: 1,
-    },
-    status: 'completed',
-    totalAmount: 4100000,
-    specialRequests: 'Early check-in requested',
-    roomNumber: '734',
-    isExpanded: false,
-  },
-  {
-    id: 'res-098765',
-    roomType: 'Chill Harmony Room',
-    image: '/placeholder.svg?height=400&width=600',
-    checkIn: '2024-11-22T15:00:00',
-    checkOut: '2024-11-24T11:00:00',
-    guests: {
-      adults: 2,
-      children: 0,
-    },
-    status: 'completed',
-    totalAmount: 700000,
-    specialRequests: 'Birthday celebration - cake ordered',
-    roomNumber: '318',
-    isExpanded: false,
-  },
-  {
-    id: 'res-087654',
-    roomType: 'Chill Comfort Room',
-    image: '/placeholder.svg?height=400&width=600',
-    checkIn: '2024-09-05T15:00:00',
-    checkOut: '2024-09-07T11:00:00',
-    guests: {
-      adults: 1,
-      children: 0,
-    },
-    status: 'completed',
-    totalAmount: 440000,
-    specialRequests: '',
-    roomNumber: '215',
-    isExpanded: false,
-  },
-];
-
-const cancelledReservations = [
-  {
-    id: 'res-076543',
-    roomType: 'Chill Family Suite',
-    image: '/placeholder.svg?height=400&width=600',
-    checkIn: '2024-12-24T15:00:00',
-    checkOut: '2024-12-28T11:00:00',
-    guests: {
-      adults: 2,
-      children: 2,
-    },
-    status: 'cancelled',
-    totalAmount: 2600000,
-    specialRequests: 'Connecting rooms if possible',
-    roomNumber: null,
-    cancellationDate: '2024-12-15T09:45:00',
-    cancellationReason: 'Change of plans',
-    refundAmount: 2340000,
-    isExpanded: false,
-  },
-];
-
-export default function RoomReservations() {
+export default function RoomReservations({ userId }: RoomReservationsProps) {
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
   const [activeTab, setActiveTab] = useState('upcoming');
 
-  const [upcoming, setUpcoming] = useState(upcomingReservations);
-  const [past, setPast] = useState(pastReservations);
-  const [cancelled, setCancelled] = useState(cancelledReservations);
+  const [upcomingReservations, setUpcomingReservations] = useState<RoomReservation[]>([]);
+  const [pastReservations, setPastReservations] = useState<RoomReservation[]>([]);
+  const [cancelledReservations, setCancelledReservations] = useState<RoomReservation[]>([]);
 
-  const toggleExpand = (reservationId: string, tab: string) => {
-    if (tab === 'upcoming') {
-      setUpcoming(
-        upcoming.map((res) =>
-          res.id === reservationId ? { ...res, isExpanded: !res.isExpanded } : res
-        )
+  const [expandedReservations, setExpandedReservations] = useState<Set<string>>(new Set());
+
+  useEffect(() => {
+    const fetchReservations = async () => {
+      try {
+        setIsLoading(true);
+        setError(null);
+
+        // 예정된 예약 조회
+        const upcoming = await reservationService.getReservationsByStatus(userId, [
+          'confirmed',
+          'pending',
+        ]);
+        setUpcomingReservations(upcoming);
+
+        // 완료된 예약 조회
+        const past = await reservationService.getReservationsByStatus(userId, ['checked_out']);
+        setPastReservations(past);
+
+        // 취소된 예약 조회
+        const cancelled = await reservationService.getReservationsByStatus(userId, ['cancelled']);
+        setCancelledReservations(cancelled);
+      } catch (err) {
+        setError('예약 정보를 불러오는데 실패했습니다.');
+        console.error('Failed to fetch reservations:', err);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    fetchReservations();
+  }, [userId]);
+
+  const toggleReservationExpand = (reservationId: string) => {
+    const newExpanded = new Set(expandedReservations);
+    if (newExpanded.has(reservationId)) {
+      newExpanded.delete(reservationId);
+    } else {
+      newExpanded.add(reservationId);
+    }
+    setExpandedReservations(newExpanded);
+  };
+
+  const handleCancelReservation = async (reservationId: string) => {
+    if (!window.confirm('예약을 취소하시겠습니까?')) return;
+
+    try {
+      const reason = prompt('취소 사유를 입력해주세요:');
+      if (!reason) return;
+
+      const cancelledReservation = await reservationService.cancelReservation(
+        reservationId,
+        reason
       );
-    } else if (tab === 'past') {
-      setPast(
-        past.map((res) =>
-          res.id === reservationId ? { ...res, isExpanded: !res.isExpanded } : res
-        )
-      );
-    } else if (tab === 'cancelled') {
-      setCancelled(
-        cancelled.map((res) =>
-          res.id === reservationId ? { ...res, isExpanded: !res.isExpanded } : res
-        )
-      );
+      if (cancelledReservation) {
+        // 예약 목록 업데이트
+        setUpcomingReservations((prev) => prev.filter((r) => r.id !== reservationId));
+        setCancelledReservations((prev) => [...prev, cancelledReservation]);
+      }
+    } catch (err) {
+      console.error('Failed to cancel reservation:', err);
+      alert('예약 취소에 실패했습니다. 다시 시도해주세요.');
     }
   };
 
   const formatDate = (dateString: string) => {
-    const date = new Date(dateString);
-    return new Intl.DateTimeFormat('en-US', {
+    return new Date(dateString).toLocaleDateString('ko-KR', {
       year: 'numeric',
-      month: 'short',
+      month: 'long',
       day: 'numeric',
-    }).format(date);
+      hour: '2-digit',
+      minute: '2-digit',
+    });
   };
 
-  const formatTime = (dateString: string) => {
-    const date = new Date(dateString);
-    return new Intl.DateTimeFormat('en-US', {
-      hour: 'numeric',
-      minute: 'numeric',
-      hour12: true,
-    }).format(date);
+  const getDaysUntil = (dateString: string) => {
+    const diff = new Date(dateString).getTime() - new Date().getTime();
+    return Math.ceil(diff / (1000 * 60 * 60 * 24));
   };
 
   const getStatusBadge = (status: string) => {
     switch (status) {
       case 'confirmed':
-        return <Badge className="bg-green-100 text-green-800 hover:bg-green-100">Confirmed</Badge>;
+        return <Badge className="bg-green-100 text-green-800 hover:bg-green-100">예약 확정</Badge>;
       case 'pending':
-        return <Badge className="bg-yellow-100 text-yellow-800 hover:bg-yellow-100">Pending</Badge>;
-      case 'completed':
-        return <Badge className="bg-blue-100 text-blue-800 hover:bg-blue-100">Completed</Badge>;
+        return (
+          <Badge className="bg-yellow-100 text-yellow-800 hover:bg-yellow-100">예약 대기</Badge>
+        );
+      case 'checked_out':
+        return <Badge className="bg-blue-100 text-blue-800 hover:bg-blue-100">이용 완료</Badge>;
       case 'cancelled':
-        return <Badge className="bg-red-100 text-red-800 hover:bg-red-100">Cancelled</Badge>;
+        return <Badge className="bg-red-100 text-red-800 hover:bg-red-100">예약 취소</Badge>;
       default:
         return null;
     }
   };
 
-  const getDaysUntil = (dateString: string) => {
-    const date = new Date(dateString);
-    const today = new Date();
-    const diffTime = date.getTime() - today.getTime();
-    const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
-    return diffDays;
-  };
+  if (error) {
+    return (
+      <div className="text-center py-8">
+        <p className="text-red-500">{error}</p>
+        <button
+          onClick={() => window.location.reload()}
+          className="mt-4 px-4 py-2 bg-primary text-white rounded-md hover:bg-primary/90"
+        >
+          다시 시도
+        </button>
+      </div>
+    );
+  }
+
+  if (isLoading) {
+    return (
+      <div className="flex justify-center items-center py-8">
+        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div>
+      </div>
+    );
+  }
 
   return (
-    <div className="p-6">
-      <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center mb-6">
-        <h1 className="text-2xl font-bold mb-2 sm:mb-0">My Reservations</h1>
-        <Button className="bg-primary hover:bg-primary/90 text-white">
-          <CalendarPlus className="h-4 w-4 mr-2" />
-          Book New Stay
-        </Button>
-      </div>
-
-      <Tabs
-        defaultValue="upcoming"
-        value={activeTab}
-        onValueChange={setActiveTab}
-        className="w-full"
-      >
-        <TabsList className="grid w-full grid-cols-3 mb-6">
-          <TabsTrigger value="upcoming">Upcoming</TabsTrigger>
-          <TabsTrigger value="past">Past</TabsTrigger>
-          <TabsTrigger value="cancelled">Cancelled</TabsTrigger>
+    <div className="bg-white rounded-lg shadow-sm">
+      <Tabs defaultValue={activeTab} onValueChange={setActiveTab}>
+        <TabsList className="w-full border-b">
+          <TabsTrigger value="upcoming" className="flex-1">
+            예정된 예약 ({upcomingReservations.length})
+          </TabsTrigger>
+          <TabsTrigger value="past" className="flex-1">
+            이용 완료 ({pastReservations.length})
+          </TabsTrigger>
+          <TabsTrigger value="cancelled" className="flex-1">
+            취소된 예약 ({cancelledReservations.length})
+          </TabsTrigger>
         </TabsList>
 
         <TabsContent value="upcoming">
-          {upcoming.length === 0 ? (
-            <div className="text-center py-12 bg-neutral-50 rounded-lg">
-              <CalendarCheck className="h-12 w-12 mx-auto text-neutral-400 mb-4" />
-              <h3 className="text-lg font-medium text-neutral-600 mb-2">
-                No Upcoming Reservations
-              </h3>
-              <p className="text-neutral-500 mb-6">
-                You don't have any upcoming stays at Chill Haven.
-              </p>
-              <Button className="bg-primary hover:bg-primary/90 text-white">Book a Stay</Button>
-            </div>
+          {upcomingReservations.length === 0 ? (
+            <div className="text-center py-8 text-neutral-500">예정된 예약이 없습니다.</div>
           ) : (
-            <div className="space-y-6">
-              {upcoming.map((reservation) => (
-                <div key={reservation.id} className="bg-neutral-50 rounded-lg overflow-hidden">
-                  <div className="grid grid-cols-1 md:grid-cols-5 gap-6 p-6">
-                    {/* Room Image */}
-                    <div className="md:col-span-1">
-                      <div className="relative h-48 md:h-full rounded-lg overflow-hidden">
-                        <Image
-                          src={reservation.image || '/placeholder.svg'}
-                          alt={reservation.roomType}
-                          fill
-                          className="object-cover"
-                        />
+            <div className="divide-y">
+              {upcomingReservations.map((reservation) => (
+                <div key={reservation.id} className="group">
+                  <div
+                    className="p-4 cursor-pointer hover:bg-neutral-50"
+                    onClick={() => toggleReservationExpand(reservation.id)}
+                  >
+                    <div className="flex justify-between items-start mb-4">
+                      <div>
+                        <h3 className="text-lg font-bold">{reservation.roomType}</h3>
+                        <p className="text-neutral-600">
+                          예약 번호: {reservation.reservationNumber}
+                        </p>
+                      </div>
+                      <div className="flex gap-2">
+                        {getStatusBadge(reservation.status)}
+                        <Badge className="bg-yellow-100 text-yellow-800">
+                          {getDaysUntil(reservation.checkIn)}일 남음
+                        </Badge>
                       </div>
                     </div>
 
-                    {/* Reservation Details */}
-                    <div className="md:col-span-4">
-                      <div className="flex flex-col md:flex-row md:justify-between md:items-start mb-4">
-                        <div>
-                          <h3 className="text-lg font-bold">{reservation.roomType}</h3>
-                          <p className="text-neutral-600">Reservation #{reservation.id}</p>
-                        </div>
-                        <div className="mt-2 md:mt-0 flex flex-wrap gap-2">
-                          {getStatusBadge(reservation.status)}
-                          {reservation.status === 'confirmed' && (
-                            <Badge className="bg-yellow-100 text-yellow-800 hover:bg-yellow-100">
-                              {getDaysUntil(reservation.checkIn)} days to go
-                            </Badge>
-                          )}
-                        </div>
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">
+                      <div className="flex items-center gap-2">
+                        <CalendarCheck className="h-4 w-4 text-primary" />
+                        <span>체크인: {formatDate(reservation.checkIn)}</span>
                       </div>
-
-                      <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-4">
-                        <div>
-                          <p className="text-sm text-neutral-500">Check-in</p>
-                          <p className="font-medium">{formatDate(reservation.checkIn)}</p>
-                          <p className="text-sm">After {formatTime(reservation.checkIn)}</p>
-                        </div>
-                        <div>
-                          <p className="text-sm text-neutral-500">Check-out</p>
-                          <p className="font-medium">{formatDate(reservation.checkOut)}</p>
-                          <p className="text-sm">Before {formatTime(reservation.checkOut)}</p>
-                        </div>
-                        <div>
-                          <p className="text-sm text-neutral-500">Guests</p>
-                          <p className="font-medium">{reservation.guests.adults} Adults</p>
-                          {reservation.guests.children > 0 && (
-                            <p className="text-sm">{reservation.guests.children} Children</p>
-                          )}
-                        </div>
-                        <div>
-                          <p className="text-sm text-neutral-500">Total Amount</p>
-                          <p className="font-medium">₩{reservation.totalAmount.toLocaleString()}</p>
-                          <p className="text-sm text-green-600">
-                            Earn {Math.floor(reservation.totalAmount / 10000)} points
-                          </p>
-                        </div>
-                      </div>
-
-                      <div className="flex flex-wrap gap-3">
-                        <Button
-                          variant="outline"
-                          className="border-primary text-primary hover:bg-primary/10"
-                        >
-                          <Edit className="h-4 w-4 mr-2" />
-                          Modify
-                        </Button>
-                        <Button
-                          variant="outline"
-                          className="border-neutral-200 hover:bg-neutral-100"
-                        >
-                          <Download className="h-4 w-4 mr-2" />
-                          Add to Calendar
-                        </Button>
-                        <Button
-                          variant="outline"
-                          className="border-red-200 text-red-600 hover:bg-red-50"
-                        >
-                          <X className="h-4 w-4 mr-2" />
-                          Cancel
-                        </Button>
-                        <Button
-                          variant="ghost"
-                          className="ml-auto"
-                          onClick={() => toggleExpand(reservation.id, 'upcoming')}
-                        >
-                          {reservation.isExpanded ? (
-                            <>
-                              <ChevronUp className="h-4 w-4 mr-2" />
-                              Less Details
-                            </>
-                          ) : (
-                            <>
-                              <ChevronDown className="h-4 w-4 mr-2" />
-                              More Details
-                            </>
-                          )}
-                        </Button>
+                      <div className="flex items-center gap-2">
+                        <CalendarPlus className="h-4 w-4 text-primary" />
+                        <span>체크아웃: {formatDate(reservation.checkOut)}</span>
                       </div>
                     </div>
+
+                    {expandedReservations.has(reservation.id) ? (
+                      <ChevronUp className="h-5 w-5 mt-2 text-neutral-400" />
+                    ) : (
+                      <ChevronDown className="h-5 w-5 mt-2 text-neutral-400" />
+                    )}
                   </div>
 
-                  {/* Expanded Details */}
-                  {reservation.isExpanded && (
-                    <div className="px-6 pb-6 pt-0 border-t border-neutral-200 mt-6">
-                      <div className="grid grid-cols-1 md:grid-cols-2 gap-6 pt-6">
+                  {expandedReservations.has(reservation.id) && (
+                    <div className="p-4 bg-neutral-50">
+                      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                         <div>
-                          <h4 className="font-medium mb-2">Special Requests</h4>
-                          <div className="bg-white rounded-md p-4 min-h-[100px]">
-                            {reservation.specialRequests ? (
-                              <p className="text-neutral-600">{reservation.specialRequests}</p>
-                            ) : (
-                              <p className="text-neutral-400 italic">No special requests</p>
-                            )}
+                          <h4 className="font-medium mb-2">예약 상세</h4>
+                          <div className="bg-white rounded-md p-4">
+                            <div className="space-y-4">
+                              <div className="flex items-start space-x-4">
+                                <Users className="h-5 w-5 text-primary mt-0.5" />
+                                <div>
+                                  <p className="font-medium">투숙객</p>
+                                  <p className="text-sm text-neutral-600">
+                                    성인 {reservation.guests.adults}명
+                                    {reservation.guests.children > 0 &&
+                                      `, 어린이 ${reservation.guests.children}명`}
+                                  </p>
+                                </div>
+                              </div>
+                              <div className="flex items-start space-x-4">
+                                <CalendarIcon className="h-5 w-5 text-primary mt-0.5" />
+                                <div>
+                                  <p className="font-medium">객실 번호</p>
+                                  <p className="text-sm text-neutral-600">
+                                    {reservation.roomNumber || '체크인 시 배정'}
+                                  </p>
+                                </div>
+                              </div>
+                              {reservation.specialRequests && (
+                                <div className="flex items-start space-x-4">
+                                  <Edit className="h-5 w-5 text-primary mt-0.5" />
+                                  <div>
+                                    <p className="font-medium">특별 요청사항</p>
+                                    <p className="text-sm text-neutral-600">
+                                      {reservation.specialRequests}
+                                    </p>
+                                  </div>
+                                </div>
+                              )}
+                            </div>
                           </div>
                         </div>
+
                         <div>
-                          <h4 className="font-medium mb-2">Room Details</h4>
+                          <h4 className="font-medium mb-2">결제 정보</h4>
                           <div className="bg-white rounded-md p-4">
-                            <div className="flex items-start space-x-4">
-                              <Bed className="h-5 w-5 text-primary mt-0.5" />
-                              <div>
-                                <p className="font-medium">{reservation.roomType}</p>
-                                <p className="text-sm text-neutral-600">
-                                  King bed with premium linens
-                                </p>
+                            <div className="space-y-2">
+                              <div className="flex justify-between">
+                                <span>객실 요금</span>
+                                <span>{reservation.totalAmount.toLocaleString()}원</span>
+                              </div>
+                              <div className="border-t pt-2 mt-2">
+                                <div className="flex justify-between font-medium">
+                                  <span>총 결제금액</span>
+                                  <span>{reservation.totalAmount.toLocaleString()}원</span>
+                                </div>
                               </div>
                             </div>
-                            <div className="flex items-start space-x-4 mt-4">
-                              <Users className="h-5 w-5 text-primary mt-0.5" />
-                              <div>
-                                <p className="font-medium">Max Occupancy</p>
-                                <p className="text-sm text-neutral-600">2 adults, 2 children</p>
-                              </div>
-                            </div>
-                            <div className="flex items-start space-x-4 mt-4">
-                              <CalendarIcon className="h-5 w-5 text-primary mt-0.5" />
-                              <div>
-                                <p className="font-medium">Room Assignment</p>
-                                <p className="text-sm text-neutral-600">
-                                  {reservation.roomNumber
-                                    ? `Room #${reservation.roomNumber}`
-                                    : 'Room will be assigned at check-in'}
-                                </p>
-                              </div>
-                            </div>
+                          </div>
+
+                          <div className="flex justify-end gap-2 mt-4">
+                            <Button variant="outline" size="sm">
+                              <Download className="h-4 w-4 mr-2" />
+                              예약 확인서
+                            </Button>
+                            <Button
+                              variant="destructive"
+                              size="sm"
+                              onClick={() => handleCancelReservation(reservation.id)}
+                            >
+                              <X className="h-4 w-4 mr-2" />
+                              예약 취소
+                            </Button>
                           </div>
                         </div>
                       </div>
@@ -375,142 +293,108 @@ export default function RoomReservations() {
         </TabsContent>
 
         <TabsContent value="past">
-          {past.length === 0 ? (
-            <div className="text-center py-12 bg-neutral-50 rounded-lg">
-              <CalendarCheck className="h-12 w-12 mx-auto text-neutral-400 mb-4" />
-              <h3 className="text-lg font-medium text-neutral-600 mb-2">No Past Reservations</h3>
-              <p className="text-neutral-500 mb-6">You don't have any past stays at Chill Haven.</p>
-              <Button className="bg-primary hover:bg-primary/90 text-white">
-                Book Your First Stay
-              </Button>
-            </div>
+          {pastReservations.length === 0 ? (
+            <div className="text-center py-8 text-neutral-500">이용 완료된 예약이 없습니다.</div>
           ) : (
-            <div className="space-y-6">
-              {past.map((reservation) => (
-                <div key={reservation.id} className="bg-neutral-50 rounded-lg overflow-hidden">
-                  <div className="grid grid-cols-1 md:grid-cols-5 gap-6 p-6">
-                    {/* Room Image */}
-                    <div className="md:col-span-1">
-                      <div className="relative h-48 md:h-full rounded-lg overflow-hidden">
-                        <Image
-                          src={reservation.image || '/placeholder.svg'}
-                          alt={reservation.roomType}
-                          fill
-                          className="object-cover"
-                        />
+            <div className="divide-y">
+              {pastReservations.map((reservation) => (
+                <div key={reservation.id} className="group">
+                  <div
+                    className="p-4 cursor-pointer hover:bg-neutral-50"
+                    onClick={() => toggleReservationExpand(reservation.id)}
+                  >
+                    <div className="flex justify-between items-start mb-4">
+                      <div>
+                        <h3 className="text-lg font-bold">{reservation.roomType}</h3>
+                        <p className="text-neutral-600">
+                          예약 번호: {reservation.reservationNumber}
+                        </p>
+                      </div>
+                      <div>{getStatusBadge(reservation.status)}</div>
+                    </div>
+
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">
+                      <div className="flex items-center gap-2">
+                        <CalendarCheck className="h-4 w-4 text-primary" />
+                        <span>체크인: {formatDate(reservation.checkIn)}</span>
+                      </div>
+                      <div className="flex items-center gap-2">
+                        <CalendarPlus className="h-4 w-4 text-primary" />
+                        <span>체크아웃: {formatDate(reservation.checkOut)}</span>
                       </div>
                     </div>
 
-                    {/* Reservation Details */}
-                    <div className="md:col-span-4">
-                      <div className="flex flex-col md:flex-row md:justify-between md:items-start mb-4">
-                        <div>
-                          <h3 className="text-lg font-bold">{reservation.roomType}</h3>
-                          <p className="text-neutral-600">Reservation #{reservation.id}</p>
-                        </div>
-                        <div className="mt-2 md:mt-0">{getStatusBadge(reservation.status)}</div>
-                      </div>
-
-                      <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
-                        <div>
-                          <p className="text-sm text-neutral-500">Stay Period</p>
-                          <p className="font-medium">
-                            {formatDate(reservation.checkIn)} - {formatDate(reservation.checkOut)}
-                          </p>
-                          <p className="text-sm">Room #{reservation.roomNumber}</p>
-                        </div>
-                        <div>
-                          <p className="text-sm text-neutral-500">Guests</p>
-                          <p className="font-medium">{reservation.guests.adults} Adults</p>
-                          {reservation.guests.children > 0 && (
-                            <p className="text-sm">{reservation.guests.children} Children</p>
-                          )}
-                        </div>
-                        <div>
-                          <p className="text-sm text-neutral-500">Total Amount</p>
-                          <p className="font-medium">₩{reservation.totalAmount.toLocaleString()}</p>
-                          <p className="text-sm text-green-600">
-                            Earned {Math.floor(reservation.totalAmount / 10000)} points
-                          </p>
-                        </div>
-                      </div>
-
-                      <div className="flex flex-wrap gap-3">
-                        <Button
-                          variant="outline"
-                          className="border-primary text-primary hover:bg-primary/10"
-                        >
-                          Download Receipt
-                        </Button>
-                        <Button
-                          variant="outline"
-                          className="border-primary text-primary hover:bg-primary/10"
-                        >
-                          Write Review
-                        </Button>
-                        <Button
-                          variant="outline"
-                          className="border-primary text-primary hover:bg-primary/10"
-                        >
-                          Book Again
-                        </Button>
-                        <Button
-                          variant="ghost"
-                          className="ml-auto"
-                          onClick={() => toggleExpand(reservation.id, 'past')}
-                        >
-                          {reservation.isExpanded ? (
-                            <>
-                              <ChevronUp className="h-4 w-4 mr-2" />
-                              Less Details
-                            </>
-                          ) : (
-                            <>
-                              <ChevronDown className="h-4 w-4 mr-2" />
-                              More Details
-                            </>
-                          )}
-                        </Button>
-                      </div>
-                    </div>
+                    {expandedReservations.has(reservation.id) ? (
+                      <ChevronUp className="h-5 w-5 mt-2 text-neutral-400" />
+                    ) : (
+                      <ChevronDown className="h-5 w-5 mt-2 text-neutral-400" />
+                    )}
                   </div>
 
-                  {/* Expanded Details */}
-                  {reservation.isExpanded && (
-                    <div className="px-6 pb-6 pt-0 border-t border-neutral-200 mt-6">
-                      <div className="grid grid-cols-1 md:grid-cols-2 gap-6 pt-6">
+                  {expandedReservations.has(reservation.id) && (
+                    <div className="p-4 bg-neutral-50">
+                      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                         <div>
-                          <h4 className="font-medium mb-2">Special Requests</h4>
-                          <div className="bg-white rounded-md p-4 min-h-[100px]">
-                            {reservation.specialRequests ? (
-                              <p className="text-neutral-600">{reservation.specialRequests}</p>
-                            ) : (
-                              <p className="text-neutral-400 italic">No special requests</p>
-                            )}
+                          <h4 className="font-medium mb-2">예약 상세</h4>
+                          <div className="bg-white rounded-md p-4">
+                            <div className="space-y-4">
+                              <div className="flex items-start space-x-4">
+                                <Users className="h-5 w-5 text-primary mt-0.5" />
+                                <div>
+                                  <p className="font-medium">투숙객</p>
+                                  <p className="text-sm text-neutral-600">
+                                    성인 {reservation.guests.adults}명
+                                    {reservation.guests.children > 0 &&
+                                      `, 어린이 ${reservation.guests.children}명`}
+                                  </p>
+                                </div>
+                              </div>
+                              <div className="flex items-start space-x-4">
+                                <CalendarIcon className="h-5 w-5 text-primary mt-0.5" />
+                                <div>
+                                  <p className="font-medium">객실 번호</p>
+                                  <p className="text-sm text-neutral-600">
+                                    {reservation.roomNumber}
+                                  </p>
+                                </div>
+                              </div>
+                              {reservation.specialRequests && (
+                                <div className="flex items-start space-x-4">
+                                  <Edit className="h-5 w-5 text-primary mt-0.5" />
+                                  <div>
+                                    <p className="font-medium">특별 요청사항</p>
+                                    <p className="text-sm text-neutral-600">
+                                      {reservation.specialRequests}
+                                    </p>
+                                  </div>
+                                </div>
+                              )}
+                            </div>
                           </div>
                         </div>
+
                         <div>
-                          <h4 className="font-medium mb-2">Room Details</h4>
+                          <h4 className="font-medium mb-2">결제 정보</h4>
                           <div className="bg-white rounded-md p-4">
-                            <div className="flex items-start space-x-4">
-                              <Bed className="h-5 w-5 text-primary mt-0.5" />
-                              <div>
-                                <p className="font-medium">{reservation.roomType}</p>
-                                <p className="text-sm text-neutral-600">
-                                  Room #{reservation.roomNumber}
-                                </p>
+                            <div className="space-y-2">
+                              <div className="flex justify-between">
+                                <span>객실 요금</span>
+                                <span>{reservation.totalAmount.toLocaleString()}원</span>
+                              </div>
+                              <div className="border-t pt-2 mt-2">
+                                <div className="flex justify-between font-medium">
+                                  <span>총 결제금액</span>
+                                  <span>{reservation.totalAmount.toLocaleString()}원</span>
+                                </div>
                               </div>
                             </div>
-                            <div className="flex items-start space-x-4 mt-4">
-                              <Users className="h-5 w-5 text-primary mt-0.5" />
-                              <div>
-                                <p className="font-medium">Guests</p>
-                                <p className="text-sm text-neutral-600">
-                                  {reservation.guests.adults} Adults, {reservation.guests.children}{' '}
-                                  Children
-                                </p>
-                              </div>
-                            </div>
+                          </div>
+
+                          <div className="flex justify-end gap-2 mt-4">
+                            <Button variant="outline" size="sm">
+                              <Download className="h-4 w-4 mr-2" />
+                              예약 확인서
+                            </Button>
                           </div>
                         </div>
                       </div>
@@ -523,146 +407,101 @@ export default function RoomReservations() {
         </TabsContent>
 
         <TabsContent value="cancelled">
-          {cancelled.length === 0 ? (
-            <div className="text-center py-12 bg-neutral-50 rounded-lg">
-              <CalendarCheck className="h-12 w-12 mx-auto text-neutral-400 mb-4" />
-              <h3 className="text-lg font-medium text-neutral-600 mb-2">
-                No Cancelled Reservations
-              </h3>
-              <p className="text-neutral-500 mb-6">
-                You don't have any cancelled stays at Chill Haven.
-              </p>
-              <Button className="bg-primary hover:bg-primary/90 text-white">
-                Book Your First Stay
-              </Button>
-            </div>
+          {cancelledReservations.length === 0 ? (
+            <div className="text-center py-8 text-neutral-500">취소된 예약이 없습니다.</div>
           ) : (
-            <div className="space-y-6">
-              {cancelled.map((reservation) => (
-                <div key={reservation.id} className="bg-neutral-50 rounded-lg overflow-hidden">
-                  <div className="grid grid-cols-1 md:grid-cols-5 gap-6 p-6">
-                    {/* Room Image */}
-                    <div className="md:col-span-1">
-                      <div className="relative h-48 md:h-full rounded-lg overflow-hidden">
-                        <Image
-                          src={reservation.image || '/placeholder.svg'}
-                          alt={reservation.roomType}
-                          fill
-                          className="object-cover"
-                        />
+            <div className="divide-y">
+              {cancelledReservations.map((reservation) => (
+                <div key={reservation.id} className="group">
+                  <div
+                    className="p-4 cursor-pointer hover:bg-neutral-50"
+                    onClick={() => toggleReservationExpand(reservation.id)}
+                  >
+                    <div className="flex justify-between items-start mb-4">
+                      <div>
+                        <h3 className="text-lg font-bold">{reservation.roomType}</h3>
+                        <p className="text-neutral-600">
+                          예약 번호: {reservation.reservationNumber}
+                        </p>
+                      </div>
+                      <div>{getStatusBadge(reservation.status)}</div>
+                    </div>
+
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">
+                      <div className="flex items-center gap-2">
+                        <CalendarCheck className="h-4 w-4 text-primary" />
+                        <span>취소일: {formatDate(reservation.cancellationDate!)}</span>
+                      </div>
+                      <div className="flex items-center gap-2">
+                        <Edit className="h-4 w-4 text-primary" />
+                        <span>취소 사유: {reservation.cancellationReason}</span>
                       </div>
                     </div>
 
-                    {/* Reservation Details */}
-                    <div className="md:col-span-4">
-                      <div className="flex flex-col md:flex-row md:justify-between md:items-start mb-4">
-                        <div>
-                          <h3 className="text-lg font-bold">{reservation.roomType}</h3>
-                          <p className="text-neutral-600">Reservation #{reservation.id}</p>
-                        </div>
-                        <div className="mt-2 md:mt-0">{getStatusBadge(reservation.status)}</div>
-                      </div>
-
-                      <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
-                        <div>
-                          <p className="text-sm text-neutral-500">Stay Period</p>
-                          <p className="font-medium">
-                            {formatDate(reservation.checkIn)} - {formatDate(reservation.checkOut)}
-                          </p>
-                          <p className="text-sm">Room #{reservation.roomNumber}</p>
-                        </div>
-                        <div>
-                          <p className="text-sm text-neutral-500">Guests</p>
-                          <p className="font-medium">{reservation.guests.adults} Adults</p>
-                          {reservation.guests.children > 0 && (
-                            <p className="text-sm">{reservation.guests.children} Children</p>
-                          )}
-                        </div>
-                        <div>
-                          <p className="text-sm text-neutral-500">Total Amount</p>
-                          <p className="font-medium">₩{reservation.totalAmount.toLocaleString()}</p>
-                          <p className="text-sm text-green-600">
-                            Earned {Math.floor(reservation.totalAmount / 10000)} points
-                          </p>
-                        </div>
-                      </div>
-
-                      <div className="flex flex-wrap gap-3">
-                        <Button
-                          variant="outline"
-                          className="border-primary text-primary hover:bg-primary/10"
-                        >
-                          Download Receipt
-                        </Button>
-                        <Button
-                          variant="outline"
-                          className="border-primary text-primary hover:bg-primary/10"
-                        >
-                          Write Review
-                        </Button>
-                        <Button
-                          variant="outline"
-                          className="border-primary text-primary hover:bg-primary/10"
-                        >
-                          Book Again
-                        </Button>
-                        <Button
-                          variant="ghost"
-                          className="ml-auto"
-                          onClick={() => toggleExpand(reservation.id, 'cancelled')}
-                        >
-                          {reservation.isExpanded ? (
-                            <>
-                              <ChevronUp className="h-4 w-4 mr-2" />
-                              Less Details
-                            </>
-                          ) : (
-                            <>
-                              <ChevronDown className="h-4 w-4 mr-2" />
-                              More Details
-                            </>
-                          )}
-                        </Button>
-                      </div>
-                    </div>
+                    {expandedReservations.has(reservation.id) ? (
+                      <ChevronUp className="h-5 w-5 mt-2 text-neutral-400" />
+                    ) : (
+                      <ChevronDown className="h-5 w-5 mt-2 text-neutral-400" />
+                    )}
                   </div>
 
-                  {/* Expanded Details */}
-                  {reservation.isExpanded && (
-                    <div className="px-6 pb-6 pt-0 border-t border-neutral-200 mt-6">
-                      <div className="grid grid-cols-1 md:grid-cols-2 gap-6 pt-6">
+                  {expandedReservations.has(reservation.id) && (
+                    <div className="p-4 bg-neutral-50">
+                      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                         <div>
-                          <h4 className="font-medium mb-2">Special Requests</h4>
-                          <div className="bg-white rounded-md p-4 min-h-[100px]">
-                            {reservation.specialRequests ? (
-                              <p className="text-neutral-600">{reservation.specialRequests}</p>
-                            ) : (
-                              <p className="text-neutral-400 italic">No special requests</p>
-                            )}
+                          <h4 className="font-medium mb-2">예약 상세</h4>
+                          <div className="bg-white rounded-md p-4">
+                            <div className="space-y-4">
+                              <div className="flex items-start space-x-4">
+                                <Users className="h-5 w-5 text-primary mt-0.5" />
+                                <div>
+                                  <p className="font-medium">투숙객</p>
+                                  <p className="text-sm text-neutral-600">
+                                    성인 {reservation.guests.adults}명
+                                    {reservation.guests.children > 0 &&
+                                      `, 어린이 ${reservation.guests.children}명`}
+                                  </p>
+                                </div>
+                              </div>
+                              <div className="flex items-start space-x-4">
+                                <CalendarIcon className="h-5 w-5 text-primary mt-0.5" />
+                                <div>
+                                  <p className="font-medium">예약 기간</p>
+                                  <p className="text-sm text-neutral-600">
+                                    {formatDate(reservation.checkIn)} ~{' '}
+                                    {formatDate(reservation.checkOut)}
+                                  </p>
+                                </div>
+                              </div>
+                            </div>
                           </div>
                         </div>
+
                         <div>
-                          <h4 className="font-medium mb-2">Room Details</h4>
+                          <h4 className="font-medium mb-2">환불 정보</h4>
                           <div className="bg-white rounded-md p-4">
-                            <div className="flex items-start space-x-4">
-                              <Bed className="h-5 w-5 text-primary mt-0.5" />
-                              <div>
-                                <p className="font-medium">{reservation.roomType}</p>
-                                <p className="text-sm text-neutral-600">
-                                  Room #{reservation.roomNumber}
-                                </p>
+                            <div className="space-y-2">
+                              <div className="flex justify-between">
+                                <span>취소 수수료</span>
+                                <span>
+                                  {(
+                                    reservation.totalAmount - (reservation.refundAmount || 0)
+                                  ).toLocaleString()}
+                                  원
+                                </span>
+                              </div>
+                              <div className="flex justify-between">
+                                <span>환불 금액</span>
+                                <span>{reservation.refundAmount?.toLocaleString()}원</span>
                               </div>
                             </div>
-                            <div className="flex items-start space-x-4 mt-4">
-                              <Users className="h-5 w-5 text-primary mt-0.5" />
-                              <div>
-                                <p className="font-medium">Guests</p>
-                                <p className="text-sm text-neutral-600">
-                                  {reservation.guests.adults} Adults, {reservation.guests.children}{' '}
-                                  Children
-                                </p>
-                              </div>
-                            </div>
+                          </div>
+
+                          <div className="flex justify-end gap-2 mt-4">
+                            <Button variant="outline" size="sm">
+                              <Download className="h-4 w-4 mr-2" />
+                              취소 확인서
+                            </Button>
                           </div>
                         </div>
                       </div>

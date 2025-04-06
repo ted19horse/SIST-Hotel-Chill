@@ -1,26 +1,16 @@
 import LoadingSpinner from '@/components/common/LoadingSpinner';
-import { Room, RoomAvailability, RoomFilters } from '@/types/room';
+import { RoomDisplay } from '@/types/room';
 import { Suspense } from 'react';
 import RoomBookingPageContent from './RoomBookingPageContent';
 
 interface RoomBookingPageProps {
-  rooms: Room[];
-  availability: RoomAvailability;
-  initialFilters: RoomFilters;
+  initialRooms?: RoomDisplay[];
 }
 
-export default function RoomBookingPage({
-  rooms,
-  availability,
-  initialFilters,
-}: RoomBookingPageProps) {
+export default function RoomBookingPage({ initialRooms }: RoomBookingPageProps) {
   return (
     <Suspense fallback={<LoadingSpinner />}>
-      <RoomBookingPageContent
-        rooms={rooms}
-        availability={availability}
-        initialFilters={initialFilters}
-      />
+      <RoomBookingPageContent initialRooms={initialRooms} />
     </Suspense>
   );
 }

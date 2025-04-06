@@ -3,17 +3,12 @@ import Footer from '@/components/common/layout/Footer';
 import Header from '@/components/common/layout/Header';
 import RoomFilters from '@/components/rooms/RoomFilters';
 import RoomList from '@/components/rooms/RoomList';
-import { RoomFilters as RoomFiltersType } from '@/types/room';
+import { rooms as mockRooms } from '@/data/rooms/types/rooms';
 import { ChevronRight } from 'lucide-react';
 import Link from 'next/link';
 import { Suspense } from 'react';
 
 export default function RoomsPage() {
-  const handleFilterChange = (filters: RoomFiltersType) => {
-    // TODO: Implement filter change handling
-    console.log('Filters changed:', filters);
-  };
-
   return (
     <main className="min-h-screen">
       <ScrollToTop />
@@ -69,7 +64,7 @@ export default function RoomsPage() {
                 </div>
               }
             >
-              <RoomList />
+              <RoomList rooms={mockRooms} />
             </Suspense>
           </main>
         </div>

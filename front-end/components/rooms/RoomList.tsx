@@ -1,11 +1,13 @@
 import ClientComponentWrapper from '@/components/common/ClientComponentWrapper';
-import { Room } from '@/types/room';
+import { RoomDisplay } from '@/types/room';
 import RoomListContent from './RoomListContent';
 
 interface RoomListProps {
-  rooms?: Room[];
-  onViewDetails?: (room: Room) => void;
-  onBookNow?: (room: Room) => void;
+  rooms?: RoomDisplay[];
+  isLoading?: boolean;
+  error?: string;
+  onViewDetails?: (room: RoomDisplay) => void;
+  onBookNow?: (room: RoomDisplay) => void;
 }
 
 export default function RoomList(props: RoomListProps) {

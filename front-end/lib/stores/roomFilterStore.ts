@@ -1,37 +1,47 @@
+import { MAX_OCCUPANCY, PRICE_RANGE } from '@/data/rooms/constants/filters';
+import { RoomGrade } from '@/types/room';
 import { create } from 'zustand';
 
-// 필터 타입 정의
-interface FilterState {
+interface RoomFilters {
   priceRange: [number, number];
-  roomType: string[];
-  checkIn: Date | null;
-  checkOut: Date | null;
+  roomGrades: RoomGrade[];
   guests: number;
+  checkIn: Date | undefined;
+  checkOut: Date | undefined;
+  isFiltering: boolean;
 }
 
-interface FilterStore {
-  filters: FilterState;
-  updateFilter: <K extends keyof FilterState>(filterName: K, value: FilterState[K]) => void;
+interface RoomFilterStore {
+  filters: RoomFilters;
+  updateFilter: <K extends keyof RoomFilters>(key: K, value: RoomFilters[K]) => void;
   resetFilters: () => void;
+  applyFilters: () => void;
 }
 
-const initialState: FilterState = {
-  priceRange: [0, 1000000],
-  roomType: [],
-  checkIn: null,
-  checkOut: null,
-  guests: 1,
+const initialFilters: RoomFilters = {
+  priceRange: [PRICE_RANGE.MIN, PRICE_RANGE.MAX],
+  roomGrades: [],
+  guests: MAX_OCCUPANCY.MIN,
+  checkIn: undefined,
+  checkOut: undefined,
+  isFiltering: false,
 };
 
-// 타입 어서션을 명시적으로 사용하여 타입 오류 방지
-export const useRoomFilterStore = create<FilterStore>()((set) => ({
-  filters: initialState,
-  updateFilter: (filterName, value) =>
+export const useRoomFilterStore = create<RoomFilterStore>((set) => ({
+  filters: initialFilters,
+  updateFilter: (key, value) =>
     set((state) => ({
       filters: {
         ...state.filters,
-        [filterName]: value,
+        [key]: value,
       },
     })),
-  resetFilters: () => set({ filters: initialState }),
+  resetFilters: () => set({ filters: initialFilters }),
+  applyFilters: () =>
+    set((state) => ({
+      filters: {
+        ...state.filters,
+        isFiltering: true,
+      },
+    })),
 }));

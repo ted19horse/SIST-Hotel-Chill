@@ -2,7 +2,7 @@
 
 import { Button } from '@/components/common/ui/Button';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/common/ui/Tabs';
-import { Room } from '@/types/room';
+import { RoomDisplay } from '@/types/room';
 import {
   Bath,
   Check,
@@ -21,16 +21,21 @@ import {
   X,
 } from 'lucide-react';
 import Image from 'next/image';
-import { useState } from 'react';
 
 interface RoomDetailModalProps {
-  room: Room;
+  room: RoomDisplay;
   onClose: () => void;
-  onBookNow: (room: Room) => void;
+  onBookNow: (room: RoomDisplay) => void;
+  isOpen: boolean;
 }
 
-export default function RoomDetailModal({ room, onClose, onBookNow }: RoomDetailModalProps) {
-  const [activeTab, setActiveTab] = useState('description');
+export default function RoomDetailModal({
+  room,
+  onClose,
+  onBookNow,
+  isOpen,
+}: RoomDetailModalProps) {
+  if (!isOpen) return null;
 
   // Helper function to get icon for amenity
   const getAmenityIcon = (amenity: string) => {
@@ -111,14 +116,14 @@ export default function RoomDetailModal({ room, onClose, onBookNow }: RoomDetail
               <TabsContent value="amenities" className="space-y-4">
                 <div>
                   <h3 className="font-semibold mb-2">객실 내 시설</h3>
-                  <ul className="grid grid-cols-2 gap-2">
-                    {room.amenities.map((amenity: string) => (
-                      <li key={amenity} className="flex items-center">
+                  <div className="grid grid-cols-2 gap-2">
+                    {room.amenityGroups.map((amenity: string) => (
+                      <div key={amenity} className="flex items-center">
                         <Check className="h-4 w-4 mr-2 text-teal-600" />
                         {amenity}
-                      </li>
+                      </div>
                     ))}
-                  </ul>
+                  </div>
                 </div>
               </TabsContent>
 
@@ -144,7 +149,14 @@ export default function RoomDetailModal({ room, onClose, onBookNow }: RoomDetail
           <div className="flex items-center justify-between">
             <div>
               <p className="text-sm text-neutral-600">1박 요금</p>
-              <p className="text-2xl font-bold text-teal-800">₩{room.price.toLocaleString()}</p>
+              <div className="space-y-1">
+                <p className="text-lg font-semibold">
+                  주중: ₩{room.price.weekday.toLocaleString()}
+                </p>
+                <p className="text-lg font-semibold">
+                  주말: ₩{room.price.weekend.toLocaleString()}
+                </p>
+              </div>
             </div>
             <div className="space-x-2">
               <Button variant="outline" onClick={onClose}>
