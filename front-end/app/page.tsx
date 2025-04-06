@@ -1,11 +1,11 @@
-import ReservationPanel from "@/components/reservation-panel"
-import MainCarousel from "@/components/main-carousel"
-import RoomSection from "@/components/room-section"
-import DiningSection from "@/components/dining-section"
-import GiftShopSection from "@/components/gift-shop-section"
-import Header from "@/components/header"
-import Footer from "@/components/footer"
-import ScrollToTop from "@/components/scroll-to-top"
+import ReservationPanel from '@/components/common/forms/ReservationPanel';
+import MainCarousel from '@/components/common/home/MainCarousel';
+import ScrollToTop from '@/components/common/home/ScrollToTop';
+import Footer from '@/components/common/layout/Footer';
+import Header from '@/components/common/layout/Header';
+import DiningSection from '@/components/dining/DiningSection';
+import GiftShopSection from '@/components/gift-shop/GiftShopSection';
+import RoomSection from '@/components/rooms/RoomSection';
 
 export default function Home() {
   return (
@@ -34,6 +34,5 @@ export default function Home() {
       {/* Footer */}
       <Footer />
     </main>
-  )
+  );
 }
-
