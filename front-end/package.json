@@ -45,6 +45,7 @@
     "@radix-ui/react-tooltip": "^1.0.7",
     "@types/lodash": "^4.17.16",
     "autoprefixer": "^10.4.17",
+    "axios": "^1.8.4",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
     "cmdk": "^0.2.0",

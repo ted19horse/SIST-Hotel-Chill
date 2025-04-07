@@ -1,27 +1,15 @@
 'use client';
 
-import {
-  Accordion,
-  AccordionContent,
-  AccordionItem,
-  AccordionTrigger,
-} from '@/components/common/ui/Accordion';
-import { Badge } from '@/components/common/ui/Badge';
 import { Button } from '@/components/common/ui/Button';
-import { Dialog, DialogContent, DialogTrigger } from '@/components/common/ui/Dialog';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/common/ui/Tabs';
-import {
-  Calendar,
-  ChevronRight,
-  Clock,
-  Info,
-  MapPin,
-  Maximize2,
-  Users,
-  Utensils,
-} from 'lucide-react';
-import Image from 'next/image';
-import { useState } from 'react';
+import { DiningEvent } from '@/data/dining/types/event';
+import { Restaurant } from '@/data/dining/types/restaurant';
+import { useDiningStore } from '@/lib/stores/diningStore';
+import { motion } from 'framer-motion';
+import { Search } from 'lucide-react';
+import Link from 'next/link';
+import { useEffect, useState } from 'react';
+import EventCard from './EventCard';
+import RestaurantCard from './RestaurantCard';
 
 // Restaurant data types
 interface MenuItem {
@@ -43,25 +31,6 @@ interface BeveragePairing {
   name: string;
   description: string;
   price: number;
-}
-
-interface Restaurant {
-  id: number;
-  name: string;
-  concept: string;
-  location: string;
-  hours: string;
-  capacity: {
-    total: number;
-    details: string;
-  };
-  menuCategories: MenuCategory[];
-  beveragePairings?: BeveragePairing[];
-  featuredDishes: string[];
-  policy: string[];
-  restrictions?: string;
-  images: string[];
-  tags: string[];
 }
 
 // Restaurant data
@@ -450,279 +419,163 @@ const restaurants: Restaurant[] = [
   },
 ];
 
-export default function RestaurantGrid() {
-  const [selectedRestaurant, setSelectedRestaurant] = useState<number | null>(null);
-  const [activeTab, setActiveTab] = useState<string>('overview');
+// 컴포넌트 인터페이스 정의
+interface RestaurantGridProps {
+  restaurants: Restaurant[];
+  events: DiningEvent[];
+}
+
+export default function RestaurantGrid({ restaurants, events }: RestaurantGridProps) {
+  const [selectedRestaurant, setSelectedRestaurant] = useState<string | null>(null);
+  const [activeTab, setActiveTab] = useState<'restaurants' | 'events'>('restaurants');
+
+  // Zustand 스토어 사용
+  const { filters, filteredRestaurants, filteredEvents, applyFilters } = useDiningStore();
+
+  // 필터 변경 시 필터링 적용
+  useEffect(() => {
+    applyFilters(restaurants, events);
+  }, [
+    filters.mealTime,
+    filters.diningStyle,
+    filters.searchQuery,
+    restaurants,
+    events,
+    applyFilters,
+  ]);
+
+  // 표시할 레스토랑과 이벤트 목록
+  const displayRestaurants = filters.isFiltering ? filteredRestaurants : restaurants;
+  const displayEvents = filters.isFiltering ? filteredEvents : events.filter((e) => e.isActive);
+
+  // 선택된 레스토랑 정보 찾기
+  const selectedRestaurantData = selectedRestaurant
+    ? displayRestaurants.find((r) => r.id === selectedRestaurant)
+    : null;
+
+  // 선택된 레스토랑의 이벤트 찾기
+  const restaurantEvents = selectedRestaurant
+    ? displayEvents.filter((event) => event.restaurantId === selectedRestaurant)
+    : [];
+
+  // 검색 결과가 없는 경우 메시지 표시
+  if (filters.isFiltering && displayRestaurants.length === 0) {
+    return (
+      <div className="mt-12 text-center py-16 bg-neutral-50 rounded-xl">
+        <Search className="h-12 w-12 mx-auto text-neutral-300 mb-4" />
+        <h3 className="text-xl font-bold mb-2">검색 결과가 없습니다</h3>
+        <p className="text-neutral-600 mb-6">다른 검색어나 필터를 사용해 보세요.</p>
+        <Button onClick={() => useDiningStore.getState().resetFilters()}>필터 초기화</Button>
+      </div>
+    );
+  }
+
+  const hasSearchQuery = filters.searchQuery.trim().length > 0;
+  const hasNoResults =
+    (activeTab === 'restaurants' && filteredRestaurants.length === 0) ||
+    (activeTab === 'events' && filteredEvents.length === 0);
+
+  const containerVariants = {
+    hidden: { opacity: 0 },
+    visible: {
+      opacity: 1,
+      transition: {
+        staggerChildren: 0.05,
+      },
+    },
+  };
 
   return (
-    <div className="space-y-12">
-      {restaurants.map((restaurant) => (
-        <div
-          key={restaurant.id}
-          id={`restaurant-${restaurant.id}`}
-          className="bg-white rounded-lg overflow-hidden shadow-md hover:shadow-lg transition-shadow"
+    <div className="mt-12">
+      {/* 탭 버튼 */}
+      <div className="flex border-b border-neutral-200 mb-8 pb-1">
+        <button
+          className={`px-4 py-2 font-medium text-lg transition-colors relative ${
+            activeTab === 'restaurants' ? 'text-primary' : 'text-neutral-500 hover:text-neutral-800'
+          }`}
+          onClick={() => setActiveTab('restaurants')}
         >
-          <div className="flex flex-col lg:flex-row">
-            <div className="relative w-full lg:w-1/3 h-64 lg:h-auto">
-              <Image
-                src={restaurant.images[0] || '/placeholder.svg'}
-                alt={restaurant.name}
-                fill
-                className="object-cover"
-              />
-              {restaurant.restrictions && (
-                <div className="absolute top-4 left-4">
-                  <Badge className="bg-primary text-white">
-                    <Info className="h-3 w-3 mr-1" />
-                    Suite Guests Only
-                  </Badge>
-                </div>
-              )}
-              <div className="absolute top-4 right-4">
-                <Dialog>
-                  <DialogTrigger asChild>
-                    <Button
-                      variant="outline"
-                      size="icon"
-                      className="rounded-full bg-white/80 hover:bg-white"
-                    >
-                      <Maximize2 className="h-4 w-4" />
-                    </Button>
-                  </DialogTrigger>
-                  <DialogContent className="max-w-4xl">
-                    <Tabs defaultValue="image-0">
-                      <div className="relative h-[50vh] mb-4">
-                        {restaurant.images.map((image, index) => (
-                          <TabsContent key={index} value={`image-${index}`} className="p-0 m-0">
-                            <div className="relative h-[50vh]">
-                              <Image
-                                src={image || '/placeholder.svg'}
-                                alt={`${restaurant.name} - Image ${index + 1}`}
-                                fill
-                                className="object-cover rounded-md"
-                              />
-                            </div>
-                          </TabsContent>
-                        ))}
-                      </div>
-                      <TabsList className="grid grid-cols-3 gap-2">
-                        {restaurant.images.map((image, index) => (
-                          <TabsTrigger
-                            key={index}
-                            value={`image-${index}`}
-                            className="p-0 overflow-hidden h-20"
-                          >
-                            <div className="relative w-full h-full">
-                              <Image
-                                src={image || '/placeholder.svg'}
-                                alt={`Thumbnail ${index + 1}`}
-                                fill
-                                className="object-cover"
-                              />
-                            </div>
-                          </TabsTrigger>
-                        ))}
-                      </TabsList>
-                    </Tabs>
-                  </DialogContent>
-                </Dialog>
-              </div>
-            </div>
-            <div className="p-6 lg:p-8 w-full lg:w-2/3">
-              <div className="flex flex-col md:flex-row md:justify-between md:items-start">
-                <div>
-                  <h3 className="text-2xl font-bold mb-2">{restaurant.name}</h3>
-                  <p className="text-neutral-600 mb-4">{restaurant.concept}</p>
-                </div>
-                <div className="mt-4 md:mt-0 md:ml-4 flex flex-col items-start md:items-end">
-                  <Badge variant="outline" className="mb-2 flex items-center">
-                    <Clock className="h-3 w-3 mr-1" />
-                    {restaurant.hours}
-                  </Badge>
-                  <div className="flex items-center text-sm text-neutral-500">
-                    <Users className="h-4 w-4 mr-1" />
-                    <span>최대 {restaurant.capacity.total}명</span>
-                  </div>
-                </div>
-              </div>
+          레스토랑
+          {activeTab === 'restaurants' && (
+            <motion.div
+              className="absolute bottom-0 left-0 h-0.5 bg-primary w-full"
+              layoutId="tabIndicator"
+            />
+          )}
+        </button>
+        <button
+          className={`px-4 py-2 font-medium text-lg transition-colors relative ${
+            activeTab === 'events' ? 'text-primary' : 'text-neutral-500 hover:text-neutral-800'
+          }`}
+          onClick={() => setActiveTab('events')}
+        >
+          이벤트 & 프로모션
+          {activeTab === 'events' && (
+            <motion.div
+              className="absolute bottom-0 left-0 h-0.5 bg-primary w-full"
+              layoutId="tabIndicator"
+            />
+          )}
+        </button>
+      </div>
 
-              <div className="mt-6 grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">
-                <div className="flex items-start">
-                  <MapPin className="h-5 w-5 text-primary mr-2 mt-0.5" />
-                  <div>
-                    <p className="font-medium">위치</p>
-                    <p className="text-neutral-600">{restaurant.location}</p>
-                  </div>
-                </div>
-                <div className="flex items-start">
-                  <Utensils className="h-5 w-5 text-primary mr-2 mt-0.5" />
-                  <div>
-                    <p className="font-medium">대표 메뉴</p>
-                    <p className="text-neutral-600">{restaurant.featuredDishes.join(', ')}</p>
-                  </div>
-                </div>
-              </div>
-
-              <div className="mt-6">
-                <Tabs defaultValue="overview" onValueChange={setActiveTab} className="w-full">
-                  <TabsList className="grid grid-cols-3 mb-4">
-                    <TabsTrigger value="overview">개요</TabsTrigger>
-                    <TabsTrigger value="menu">메뉴</TabsTrigger>
-                    <TabsTrigger value="policy">이용 안내</TabsTrigger>
-                  </TabsList>
-
-                  <TabsContent value="overview" className="pt-2">
-                    <p className="text-neutral-600 mb-4">
-                      {restaurant.concept} {restaurant.location}에 위치한 {restaurant.name}은(는)
-                      {restaurant.capacity.details}의 좌석을 갖추고 있으며, {restaurant.hours} 동안
-                      운영됩니다.
-                    </p>
-                    <div className="flex flex-wrap gap-2 mt-4">
-                      {restaurant.tags.map((tag, index) => (
-                        <Badge key={index} variant="secondary" className="bg-neutral-100">
-                          {tag === 'breakfast' && '아침'}
-                          {tag === 'lunch' && '점심'}
-                          {tag === 'dinner' && '저녁'}
-                          {tag === 'casual' && '캐주얼'}
-                          {tag === 'specialty' && '스페셜티'}
-                          {tag === 'premium' && '프리미엄'}
-                        </Badge>
-                      ))}
-                    </div>
-                  </TabsContent>
-
-                  <TabsContent value="menu" className="pt-2">
-                    <Accordion type="single" collapsible className="w-full">
-                      {restaurant.menuCategories.map((category, index) => (
-                        <AccordionItem key={index} value={`category-${index}`}>
-                          <AccordionTrigger className="text-left">
-                            <div>
-                              {category.name}
-                              {category.hours && (
-                                <span className="ml-2 text-sm font-normal text-neutral-500">
-                                  {category.hours}
-                                </span>
-                              )}
-                              {(category.price !== undefined || category.description) && (
-                                <span className="ml-2 text-sm font-normal text-neutral-500">
-                                  {category.price !== undefined && `$${category.price}`}
-                                  {category.description && ` - ${category.description}`}
-                                </span>
-                              )}
-                            </div>
-                          </AccordionTrigger>
-                          <AccordionContent>
-                            <div className="space-y-4">
-                              {category.items.map((item, itemIndex) => (
-                                <div
-                                  key={itemIndex}
-                                  className="border-b border-neutral-100 pb-4 last:border-0 last:pb-0"
-                                >
-                                  <div className="flex justify-between">
-                                    <h4 className="font-medium">{item.name}</h4>
-                                    {item.price !== undefined && (
-                                      <span className="font-medium">
-                                        $
-                                        {typeof item.price === 'string'
-                                          ? item.price
-                                          : item.price.toFixed(0)}
-                                        {item.perPerson && ' per person'}
-                                      </span>
-                                    )}
-                                  </div>
-                                  {item.description && (
-                                    <p className="text-sm text-neutral-600 mt-1">
-                                      {item.description}
-                                    </p>
-                                  )}
-                                </div>
-                              ))}
-                            </div>
-                          </AccordionContent>
-                        </AccordionItem>
-                      ))}
-
-                      {restaurant.beveragePairings && (
-                        <AccordionItem value="beverage-pairings">
-                          <AccordionTrigger>음료 페어링</AccordionTrigger>
-                          <AccordionContent>
-                            <div className="space-y-4">
-                              {restaurant.beveragePairings.map((pairing, index) => (
-                                <div
-                                  key={index}
-                                  className="border-b border-neutral-100 pb-4 last:border-0 last:pb-0"
-                                >
-                                  <div className="flex justify-between">
-                                    <h4 className="font-medium">{pairing.name}</h4>
-                                    <span className="font-medium">${pairing.price}</span>
-                                  </div>
-                                  <p className="text-sm text-neutral-600 mt-1">
-                                    {pairing.description}
-                                  </p>
-                                </div>
-                              ))}
-                            </div>
-                          </AccordionContent>
-                        </AccordionItem>
-                      )}
-                    </Accordion>
-                  </TabsContent>
-
-                  <TabsContent value="policy" className="pt-2">
-                    <ul className="space-y-2">
-                      {restaurant.policy.map((item, index) => (
-                        <li key={index} className="flex items-start">
-                          <div className="h-5 w-5 text-primary mr-2">
-                            <svg
-                              xmlns="http://www.w3.org/2000/svg"
-                              width="20"
-                              height="20"
-                              viewBox="0 0 24 24"
-                              fill="none"
-                              stroke="currentColor"
-                              strokeWidth="2"
-                              strokeLinecap="round"
-                              strokeLinejoin="round"
-                            >
-                              <polyline points="20 6 9 17 4 12"></polyline>
-                            </svg>
-                          </div>
-                          {item}
-                        </li>
-                      ))}
-                    </ul>
-
-                    {restaurant.restrictions && (
-                      <div className="mt-4 p-4 bg-neutral-50 rounded-md">
-                        <p className="text-sm font-medium flex items-center text-neutral-700">
-                          <Info className="h-4 w-4 mr-2 text-primary" />
-                          이용 제한 안내
-                        </p>
-                        <p className="text-sm text-neutral-600 mt-1">{restaurant.restrictions}</p>
-                      </div>
-                    )}
-                  </TabsContent>
-                </Tabs>
-              </div>
-
-              <div className="mt-6 flex flex-col sm:flex-row justify-between items-center pt-4 border-t border-neutral-200">
-                <div className="mb-4 sm:mb-0">
-                  {activeTab === 'menu' && (
-                    <Button variant="outline" size="sm" className="text-primary border-primary">
-                      <Calendar className="h-4 w-4 mr-2" />
-                      전체 메뉴 보기
-                    </Button>
-                  )}
-                </div>
-                <Button className="w-full sm:w-auto bg-primary hover:bg-primary/90">
-                  테이블 예약
-                  <ChevronRight className="h-4 w-4 ml-1" />
-                </Button>
-              </div>
-            </div>
-          </div>
+      {/* 결과 요약 */}
+      {hasSearchQuery && (
+        <div className="mb-6">
+          <p className="text-neutral-600">
+            <span className="font-medium text-primary">&quot;{filters.searchQuery}&quot;</span>에
+            대한
+            {activeTab === 'restaurants'
+              ? ` 레스토랑 ${filteredRestaurants.length}개`
+              : ` 이벤트 ${filteredEvents.length}개`}
+            를 찾았습니다.
+          </p>
         </div>
-      ))}
+      )}
+
+      {/* 결과 없음 */}
+      {hasNoResults && (
+        <div className="py-16 text-center">
+          <h3 className="text-xl font-medium mb-2">검색 결과가 없습니다</h3>
+          <p className="text-neutral-500 mb-6">다른 키워드로 검색하거나 필터를 재설정해 보세요.</p>
+          <button
+            onClick={() => useDiningStore.getState().resetFilters()}
+            className="px-4 py-2 bg-primary text-white rounded-md hover:bg-primary/90 transition-colors"
+          >
+            필터 초기화
+          </button>
+        </div>
+      )}
+
+      {/* 레스토랑 그리드 */}
+      {activeTab === 'restaurants' && filteredRestaurants.length > 0 && (
+        <motion.div
+          className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"
+          variants={containerVariants}
+          initial="hidden"
+          animate="visible"
+        >
+          {filteredRestaurants.map((restaurant) => (
+            <Link href={`/dining/${restaurant.id}`} key={restaurant.id} className="block">
+              <RestaurantCard restaurant={restaurant} searchTerm={filters.searchQuery} />
+            </Link>
+          ))}
+        </motion.div>
+      )}
+
+      {/* 이벤트 그리드 */}
+      {activeTab === 'events' && filteredEvents.length > 0 && (
+        <motion.div
+          className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"
+          variants={containerVariants}
+          initial="hidden"
+          animate="visible"
+        >
+          {filteredEvents.map((event) => (
+            <EventCard key={event.id} event={event} searchTerm={filters.searchQuery} />
+          ))}
+        </motion.div>
+      )}
     </div>
   );
 }
