@@ -8,17 +8,10 @@ import {
 } from '@/components/common/ui/Accordion';
 import { Button } from '@/components/common/ui/Button';
 import { Checkbox } from '@/components/common/ui/Checkbox';
+import { getCategories } from '@/lib/api/gift-shop';
+import { ProductCategory } from '@/types/gift-shop';
 import { useRouter, useSearchParams } from 'next/navigation';
-import { useState } from 'react';
-
-const categories = [
-  { id: 1, name: 'Chill Haven 시그니처 컬렉션' },
-  { id: 2, name: '힐링 & 웰니스 컬렉션' },
-  { id: 3, name: '에코 & 지속가능한 라이프스타일 제품' },
-  { id: 4, name: '휴식을 위한 식음료 제품' },
-  { id: 5, name: '객실 등급별 맞춤 컬렉션' },
-  { id: 6, name: '메모리 & 컬렉터블 아이템' },
-];
+import { useEffect, useState } from 'react';
 
 const priceRanges = [
   { id: 'under50k', name: '50,000원 미만', min: 0, max: 50000 },
@@ -30,6 +23,8 @@ const priceRanges = [
 export default function ProductFiltersContent() {
   const router = useRouter();
   const searchParams = useSearchParams();
+  const [categories, setCategories] = useState<ProductCategory[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
   const [selectedCategories, setSelectedCategories] = useState<number[]>(
     searchParams
       .get('categories')
@@ -40,21 +35,55 @@ export default function ProductFiltersContent() {
   const [selectedPriceRanges, setSelectedPriceRanges] = useState<string[]>(
     searchParams.get('priceRanges')?.split(',') || []
   );
+  const [selectedFeatures, setSelectedFeatures] = useState({
+    featured: searchParams.get('featured') === 'true',
+    newArrival: searchParams.get('newArrival') === 'true',
+    limited: searchParams.get('limited') === 'true',
+    discounted: searchParams.get('discounted') === 'true',
+  });
+
+  // 카테고리 정보 로드
+  useEffect(() => {
+    const fetchCategories = async () => {
+      try {
+        setIsLoading(true);
+        const data = await getCategories();
+        setCategories(data);
+      } catch (error) {
+        console.error('카테고리 로딩 오류:', error);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    fetchCategories();
+  }, []);
 
   const applyFilters = () => {
     const params = new URLSearchParams(searchParams.toString());
 
+    // 카테고리 필터
     if (selectedCategories.length > 0) {
       params.set('categories', selectedCategories.join(','));
     } else {
       params.delete('categories');
     }
 
+    // 가격대 필터
     if (selectedPriceRanges.length > 0) {
       params.set('priceRanges', selectedPriceRanges.join(','));
     } else {
       params.delete('priceRanges');
     }
+
+    // 특징 필터
+    Object.entries(selectedFeatures).forEach(([key, value]) => {
+      if (value) {
+        params.set(key, 'true');
+      } else {
+        params.delete(key);
+      }
+    });
 
     router.push(`/gift-shop/products?${params.toString()}`);
   };
@@ -62,6 +91,12 @@ export default function ProductFiltersContent() {
   const resetFilters = () => {
     setSelectedCategories([]);
     setSelectedPriceRanges([]);
+    setSelectedFeatures({
+      featured: false,
+      newArrival: false,
+      limited: false,
+      discounted: false,
+    });
     router.push('/gift-shop/products');
   };
 
@@ -73,31 +108,35 @@ export default function ProductFiltersContent() {
         <AccordionItem value="categories">
           <AccordionTrigger>카테고리</AccordionTrigger>
           <AccordionContent>
-            <div className="space-y-2">
-              {categories.map((category) => (
-                <div key={category.id} className="flex items-center space-x-2">
-                  <Checkbox
-                    id={`category-${category.id}`}
-                    checked={selectedCategories.includes(category.id)}
-                    onCheckedChange={(checked) => {
-                      if (checked) {
-                        setSelectedCategories([...selectedCategories, category.id]);
-                      } else {
-                        setSelectedCategories(
-                          selectedCategories.filter((id) => id !== category.id)
-                        );
-                      }
-                    }}
-                  />
-                  <label
-                    htmlFor={`category-${category.id}`}
-                    className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
-                  >
-                    {category.name}
-                  </label>
-                </div>
-              ))}
-            </div>
+            {isLoading ? (
+              <div className="p-2 text-sm text-gray-500">카테고리 불러오는 중...</div>
+            ) : (
+              <div className="space-y-2">
+                {categories.map((category) => (
+                  <div key={category.id} className="flex items-center space-x-2">
+                    <Checkbox
+                      id={`category-${category.id}`}
+                      checked={selectedCategories.includes(category.id)}
+                      onCheckedChange={(checked) => {
+                        if (checked) {
+                          setSelectedCategories([...selectedCategories, category.id]);
+                        } else {
+                          setSelectedCategories(
+                            selectedCategories.filter((id) => id !== category.id)
+                          );
+                        }
+                      }}
+                    />
+                    <label
+                      htmlFor={`category-${category.id}`}
+                      className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+                    >
+                      {category.name}
+                    </label>
+                  </div>
+                ))}
+              </div>
+            )}
           </AccordionContent>
         </AccordionItem>
 
@@ -126,6 +165,86 @@ export default function ProductFiltersContent() {
                   </label>
                 </div>
               ))}
+            </div>
+          </AccordionContent>
+        </AccordionItem>
+
+        <AccordionItem value="features">
+          <AccordionTrigger>특징</AccordionTrigger>
+          <AccordionContent>
+            <div className="space-y-2">
+              <div className="flex items-center space-x-2">
+                <Checkbox
+                  id="feature-featured"
+                  checked={selectedFeatures.featured}
+                  onCheckedChange={(checked) => {
+                    setSelectedFeatures({
+                      ...selectedFeatures,
+                      featured: !!checked,
+                    });
+                  }}
+                />
+                <label
+                  htmlFor="feature-featured"
+                  className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+                >
+                  추천 상품
+                </label>
+              </div>
+              <div className="flex items-center space-x-2">
+                <Checkbox
+                  id="feature-new"
+                  checked={selectedFeatures.newArrival}
+                  onCheckedChange={(checked) => {
+                    setSelectedFeatures({
+                      ...selectedFeatures,
+                      newArrival: !!checked,
+                    });
+                  }}
+                />
+                <label
+                  htmlFor="feature-new"
+                  className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+                >
+                  신상품
+                </label>
+              </div>
+              <div className="flex items-center space-x-2">
+                <Checkbox
+                  id="feature-limited"
+                  checked={selectedFeatures.limited}
+                  onCheckedChange={(checked) => {
+                    setSelectedFeatures({
+                      ...selectedFeatures,
+                      limited: !!checked,
+                    });
+                  }}
+                />
+                <label
+                  htmlFor="feature-limited"
+                  className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+                >
+                  한정판
+                </label>
+              </div>
+              <div className="flex items-center space-x-2">
+                <Checkbox
+                  id="feature-discounted"
+                  checked={selectedFeatures.discounted}
+                  onCheckedChange={(checked) => {
+                    setSelectedFeatures({
+                      ...selectedFeatures,
+                      discounted: !!checked,
+                    });
+                  }}
+                />
+                <label
+                  htmlFor="feature-discounted"
+                  className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+                >
+                  할인상품
+                </label>
+              </div>
             </div>
           </AccordionContent>
         </AccordionItem>

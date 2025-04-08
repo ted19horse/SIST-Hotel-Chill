@@ -1,12 +1,16 @@
 'use client';
 
+import ScrollToTop from '@/components/common/home/ScrollToTop';
+import Footer from '@/components/common/layout/Footer';
+import Header from '@/components/common/layout/Header';
 import { Button } from '@/components/common/ui/Button';
 import { Input } from '@/components/common/ui/Input';
 import RestaurantCard from '@/components/dining/RestaurantCard';
 import RestaurantFilter from '@/components/dining/RestaurantFilter';
 import { restaurants } from '@/lib/data/dining/restaurants';
 import { Restaurant, RestaurantFilterOptions } from '@/lib/types/restaurant';
-import { Search } from 'lucide-react';
+import { ChevronRight, Search } from 'lucide-react';
+import Link from 'next/link';
 import { useSearchParams } from 'next/navigation';
 import { useEffect, useState } from 'react';
 
@@ -119,67 +123,100 @@ export default function DiningPage() {
   };
 
   return (
-    <div className="container py-8">
-      <div className="mb-8">
-        <h1 className="text-3xl font-bold mb-2">다이닝</h1>
-        <p className="text-gray-600">
-          Chill Haven Resort & Spa의 다양한 레스토랑에서 특별한 다이닝 경험을 즐겨보세요.
-        </p>
-      </div>
+    <main className="min-h-screen">
+      <ScrollToTop />
+      {/* Header is imported as a component */}
+      <Header />
 
-      <div className="relative mb-6">
-        <Input
-          placeholder="레스토랑 이름, 요리 종류, 또는 키워드로 검색..."
-          value={searchTerm}
-          onChange={handleSearchChange}
-          className="pr-10"
+      {/* Page Banner */}
+      <div className="relative h-[40vh] bg-neutral-900">
+        <div
+          className="absolute inset-0 bg-cover bg-center"
+          style={{
+            backgroundImage: "url('/placeholder.svg?height=800&width=1920')",
+            opacity: 0.6,
+          }}
         />
-        <Search
-          className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400"
-          size={18}
-        />
-      </div>
-
-      <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
-        <div className="lg:col-span-1">
-          <RestaurantFilter onChange={handleFilterChange} initialFilters={activeFilters} />
-        </div>
-
-        <div className="lg:col-span-3">
-          {filteredRestaurants.length > 0 ? (
-            <div>
-              <div className="mb-4 flex justify-between items-center">
-                <p className="text-sm text-gray-600">
-                  {filteredRestaurants.length}개 레스토랑 중에서{' '}
-                  {Object.values(activeFilters).flat().length > 0
-                    ? '필터링된 결과'
-                    : '전체 레스토랑'}
-                  {searchTerm && ` "${searchTerm}" 검색 결과`}
-                </p>
-              </div>
-
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                {filteredRestaurants.map((restaurant) => (
-                  <RestaurantCard key={restaurant.id} restaurant={restaurant} />
-                ))}
-              </div>
+        <div className="absolute inset-0 flex items-center justify-center">
+          <div className="text-center text-white">
+            <h1 className="text-4xl md:text-5xl font-bold mb-4">다이닝</h1>
+            <div className="flex items-center justify-center text-sm">
+              <Link href="/" className="hover:underline">
+                홈
+              </Link>
+              <ChevronRight className="h-4 w-4 mx-2" />
+              <span>다이닝</span>
             </div>
-          ) : (
-            <div className="text-center py-12">
-              <h3 className="text-lg font-semibold mb-2">검색 결과가 없습니다</h3>
-              <p className="text-gray-600 mb-4">다른 검색어나 필터를 사용해 보세요.</p>
-              <Button
-                onClick={() => {
-                  setSearchTerm('');
-                  setActiveFilters({});
-                }}
-              >
-                모든 필터 초기화
-              </Button>
-            </div>
-          )}
+          </div>
         </div>
       </div>
-    </div>
+
+      {/* Dining Content */}
+      <div className="container mx-auto px-4 py-12">
+        <div className="mb-8">
+          <h1 className="text-3xl font-bold mb-2">다이닝</h1>
+          <p className="text-gray-600">
+            Chill Haven Resort & Spa의 다양한 레스토랑에서 특별한 다이닝 경험을 즐겨보세요.
+          </p>
+        </div>
+
+        <div className="relative mb-6">
+          <Input
+            placeholder="레스토랑 이름, 요리 종류, 또는 키워드로 검색..."
+            value={searchTerm}
+            onChange={handleSearchChange}
+            className="pr-10"
+          />
+          <Search
+            className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400"
+            size={18}
+          />
+        </div>
+
+        <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
+          <div className="lg:col-span-1">
+            <RestaurantFilter onChange={handleFilterChange} initialFilters={activeFilters} />
+          </div>
+
+          <div className="lg:col-span-3">
+            {filteredRestaurants.length > 0 ? (
+              <div>
+                <div className="mb-4 flex justify-between items-center">
+                  <p className="text-sm text-gray-600">
+                    {filteredRestaurants.length}개 레스토랑 중에서{' '}
+                    {Object.values(activeFilters).flat().length > 0
+                      ? '필터링된 결과'
+                      : '전체 레스토랑'}
+                    {searchTerm && ` "${searchTerm}" 검색 결과`}
+                  </p>
+                </div>
+
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                  {filteredRestaurants.map((restaurant) => (
+                    <RestaurantCard key={restaurant.id} restaurant={restaurant} />
+                  ))}
+                </div>
+              </div>
+            ) : (
+              <div className="text-center py-12">
+                <h3 className="text-lg font-semibold mb-2">검색 결과가 없습니다</h3>
+                <p className="text-gray-600 mb-4">다른 검색어나 필터를 사용해 보세요.</p>
+                <Button
+                  onClick={() => {
+                    setSearchTerm('');
+                    setActiveFilters({});
+                  }}
+                >
+                  모든 필터 초기화
+                </Button>
+              </div>
+            )}
+          </div>
+        </div>
+      </div>
+
+      {/* Footer */}
+      <Footer />
+    </main>
   );
 }

@@ -108,3 +108,5 @@ class ApiClient {
 // API 클라이언트 인스턴스 내보내기
 const apiClient = ApiClient.getInstance();
 export default apiClient;
+// 원래 코드와의 호환성을 위한 export
+export { apiClient as client };

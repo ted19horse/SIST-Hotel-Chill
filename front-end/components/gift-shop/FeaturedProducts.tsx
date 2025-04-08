@@ -2,89 +2,54 @@
 
 import { Badge } from '@/components/common/ui/Badge';
 import { Button } from '@/components/common/ui/Button';
+import { getFeaturedProducts } from '@/lib/api/gift-shop';
+import { useCart } from '@/lib/hooks/useCart';
 import { cn } from '@/lib/utils';
+import { Product } from '@/types/gift-shop';
 import { ChevronLeft, ChevronRight, Eye, Heart, ShoppingCart } from 'lucide-react';
 import Image from 'next/image';
-import { useRef, useState } from 'react';
-
-const featuredProducts = [
-  {
-    id: 1,
-    name: 'Peaceful Moment Aroma Diffuser Set',
-    description:
-      'Our signature diffuser with 3 essential oil blends to create a peaceful atmosphere at home',
-    price: 85,
-    images: ['/placeholder.svg?height=600&width=600'],
-    isNew: true,
-    category: 'signature-collection',
-  },
-  {
-    id: 2,
-    name: 'Chill Comfort Premium Bathrobe',
-    description:
-      'The same luxurious bathrobe you enjoyed during your stay, made from 100% organic cotton',
-    price: 95,
-    images: ['/placeholder.svg?height=600&width=600'],
-    category: 'signature-collection',
-  },
-  {
-    id: 3,
-    name: 'Deep Rest Sleep Kit',
-    description:
-      "Everything you need for a restful night's sleep: eye mask, pillow mist, and relaxation guide",
-    price: 65,
-    images: ['/placeholder.svg?height=600&width=600'],
-    category: 'healing-wellness',
-  },
-  {
-    id: 4,
-    name: 'Chill Tea Signature Tea Collection',
-    description: 'A set of our five most popular tea blends served in our restaurants and lounges',
-    price: 45,
-    images: ['/placeholder.svg?height=600&width=600'],
-    category: 'food-beverage',
-  },
-  {
-    id: 5,
-    name: 'Forest Gift Aromatherapy Oil Set',
-    description: 'Premium essential oils inspired by the forest surrounding Chill Haven',
-    price: 70,
-    images: ['/placeholder.svg?height=600&width=600'],
-    isNew: true,
-    category: 'healing-wellness',
-  },
-  {
-    id: 6,
-    name: 'Chill Night Bedding Collection - Queen',
-    description:
-      'Experience our luxurious bedding at home with this complete set for queen-sized beds',
-    price: 220,
-    images: ['/placeholder.svg?height=600&width=600'],
-    category: 'signature-collection',
-  },
-  {
-    id: 7,
-    name: 'Seasonal Peace Limited Edition Collection',
-    description:
-      'Special seasonal items that capture the essence of the current season at Chill Haven',
-    price: 85,
-    images: ['/placeholder.svg?height=600&width=600'],
-    isLimitedEdition: true,
-    category: 'memories-collectibles',
-  },
-  {
-    id: 8,
-    name: 'Earth Rest Eco-friendly Tumbler',
-    description: 'Keep your beverages at the perfect temperature while reducing single-use plastic',
-    price: 35,
-    images: ['/placeholder.svg?height=600&width=600'],
-    category: 'eco-sustainable',
-  },
-];
+import Link from 'next/link';
+import { useEffect, useRef, useState } from 'react';
 
 export default function FeaturedProducts() {
+  const [featuredProducts, setFeaturedProducts] = useState<Product[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+  const [wishlist, setWishlist] = useState<number[]>([]);
   const [currentIndex, setCurrentIndex] = useState(0);
   const carouselRef = useRef<HTMLDivElement>(null);
+  const { addItem } = useCart();
+
+  // 추천 상품 불러오기
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        setIsLoading(true);
+        const products = await getFeaturedProducts();
+        setFeaturedProducts(products);
+      } catch (err) {
+        console.error('추천 상품 로딩 오류:', err);
+        setError('추천 상품을 불러오는 데 실패했습니다.');
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    fetchData();
+  }, []);
+
+  // 위시리스트 관리
+  const toggleWishlist = (productId: number) => {
+    setWishlist((prev) =>
+      prev.includes(productId) ? prev.filter((id) => id !== productId) : [...prev, productId]
+    );
+  };
+
+  // 장바구니에 추가
+  const handleAddToCart = (product: Product) => {
+    addItem(product, 1);
+    alert('상품이 장바구니에 추가되었습니다.');
+  };
 
   const visibleProducts = 4;
   const maxIndex = Math.max(0, featuredProducts.length - visibleProducts);
@@ -97,13 +62,49 @@ export default function FeaturedProducts() {
     setCurrentIndex((prev) => Math.max(prev - 1, 0));
   };
 
+  if (isLoading) {
+    return (
+      <section className="py-16 bg-neutral-50">
+        <div className="container mx-auto px-4">
+          <div className="text-center">
+            <p>추천 상품을 불러오는 중...</p>
+          </div>
+        </div>
+      </section>
+    );
+  }
+
+  if (error) {
+    return (
+      <section className="py-16 bg-neutral-50">
+        <div className="container mx-auto px-4">
+          <div className="text-center text-red-500">
+            <p>{error}</p>
+          </div>
+        </div>
+      </section>
+    );
+  }
+
+  if (featuredProducts.length === 0) {
+    return (
+      <section className="py-16 bg-neutral-50">
+        <div className="container mx-auto px-4">
+          <div className="text-center">
+            <p>추천 상품이 없습니다.</p>
+          </div>
+        </div>
+      </section>
+    );
+  }
+
   return (
     <section className="py-16 bg-neutral-50">
       <div className="container mx-auto px-4">
         <div className="flex justify-between items-center mb-8">
           <div>
-            <h2 className="text-3xl font-bold">Featured Products</h2>
-            <p className="text-neutral-600">Our most popular items and new arrivals</p>
+            <h2 className="text-3xl font-bold">추천 상품</h2>
+            <p className="text-neutral-600">가장 인기 있는 상품들과 신상품</p>
           </div>
           <div className="flex space-x-2">
             <Button
@@ -150,11 +151,11 @@ export default function FeaturedProducts() {
                       className="object-cover"
                     />
                     <div className="absolute top-4 left-4 flex flex-col gap-2">
-                      {product.isNew && (
-                        <Badge className="bg-green-500 text-white">New Arrival</Badge>
+                      {product.isNewArrival && (
+                        <Badge className="bg-green-500 text-white">신상품</Badge>
                       )}
                       {product.isLimitedEdition && (
-                        <Badge className="bg-amber-500 text-white">Limited Edition</Badge>
+                        <Badge className="bg-amber-500 text-white">한정판</Badge>
                       )}
                     </div>
                     <div className="absolute top-4 right-4 flex flex-col gap-2">
@@ -162,16 +163,24 @@ export default function FeaturedProducts() {
                         variant="outline"
                         size="icon"
                         className="rounded-full bg-white/80 hover:bg-white"
+                        onClick={() => toggleWishlist(product.id)}
                       >
-                        <Heart className="h-4 w-4" />
+                        <Heart
+                          className={cn(
+                            'h-4 w-4',
+                            wishlist.includes(product.id) ? 'fill-red-500 text-red-500' : ''
+                          )}
+                        />
                       </Button>
-                      <Button
-                        variant="outline"
-                        size="icon"
-                        className="rounded-full bg-white/80 hover:bg-white"
-                      >
-                        <Eye className="h-4 w-4" />
-                      </Button>
+                      <Link href={`/gift-shop/products/${product.id}`}>
+                        <Button
+                          variant="outline"
+                          size="icon"
+                          className="rounded-full bg-white/80 hover:bg-white"
+                        >
+                          <Eye className="h-4 w-4" />
+                        </Button>
+                      </Link>
                     </div>
                   </div>
                   <div className="p-6">
@@ -180,11 +189,27 @@ export default function FeaturedProducts() {
                       <p className="text-neutral-600 text-sm mb-4 line-clamp-2">
                         {product.description}
                       </p>
-                      <p className="text-xl font-bold text-primary">${product.price}</p>
+                      {product.isDiscounted && product.discountPrice ? (
+                        <div className="flex items-center gap-2">
+                          <p className="text-xl font-bold text-primary">
+                            ₩{product.discountPrice.toLocaleString()}
+                          </p>
+                          <p className="text-sm text-neutral-500 line-through">
+                            ₩{product.price.toLocaleString()}
+                          </p>
+                        </div>
+                      ) : (
+                        <p className="text-xl font-bold text-primary">
+                          ₩{product.price.toLocaleString()}
+                        </p>
+                      )}
                     </div>
-                    <Button className="w-full bg-primary hover:bg-primary/90">
+                    <Button
+                      className="w-full bg-primary hover:bg-primary/90"
+                      onClick={() => handleAddToCart(product)}
+                    >
                       <ShoppingCart className="h-4 w-4 mr-2" />
-                      Add to Cart
+                      장바구니 담기
                     </Button>
                   </div>
                 </div>
@@ -194,9 +219,11 @@ export default function FeaturedProducts() {
         </div>
 
         <div className="mt-8 text-center">
-          <Button variant="outline" className="border-primary text-primary hover:bg-primary/10">
-            View All Products
-          </Button>
+          <Link href="/gift-shop/products">
+            <Button variant="outline" className="border-primary text-primary hover:bg-primary/10">
+              모든 상품 보기
+            </Button>
+          </Link>
         </div>
       </div>
     </section>

@@ -9,51 +9,28 @@ import {
   SheetTitle,
   SheetTrigger,
 } from '@/components/common/ui/Sheet';
+import { useCart } from '@/lib/hooks/useCart';
 import { Minus, Plus, ShoppingCart, Trash2 } from 'lucide-react';
 import { useState } from 'react';
 
-// Simplified cart item type
-type CartItem = {
-  id: number;
-  name: string;
-  price: number;
-  quantity: number;
-};
-
-// Mock cart data with minimal items
-const initialCartItems: CartItem[] = [
-  {
-    id: 101,
-    name: 'Chill Haven 시그니처 디퓨저',
-    price: 85000,
-    quantity: 1,
-  },
-];
-
 export default function ShoppingCartComponent() {
-  const [cartItems, setCartItems] = useState<CartItem[]>(initialCartItems);
+  const { cart, isLoaded, updateQuantity, removeItem } = useCart();
   const [isOpen, setIsOpen] = useState(false);
 
-  const updateQuantity = (id: number, newQuantity: number) => {
-    if (newQuantity < 1) return;
+  // 배송비 계산: 10만원 이상 구매시 무료배송, 그 외 3,000원
+  const shipping = cart.totalAmount >= 100000 ? 0 : 3000;
 
-    setCartItems((prev) =>
-      prev.map((item) => (item.id === id ? { ...item, quantity: newQuantity } : item))
+  // 총 금액
+  const total = cart.totalAmount + shipping;
+
+  if (!isLoaded) {
+    return (
+      <div className="bg-white rounded-lg shadow p-6 mb-6">
+        <h3 className="font-bold text-lg mb-4">장바구니</h3>
+        <p className="text-sm text-gray-500">로딩 중...</p>
+      </div>
     );
-  };
-
-  const removeItem = (id: number) => {
-    setCartItems((prev) => prev.filter((item) => item.id !== id));
-  };
-
-  const totalItems = cartItems.reduce((sum, item) => sum + item.quantity, 0);
-  const subtotal = cartItems.reduce((sum, item) => sum + item.price * item.quantity, 0);
-
-  // Fixed shipping cost
-  const shipping = 3000;
-
-  // Calculate total
-  const total = subtotal + shipping;
+  }
 
   return (
     <div className="bg-white rounded-lg shadow p-6 mb-6">
@@ -63,9 +40,9 @@ export default function ShoppingCartComponent() {
           <SheetTrigger asChild>
             <Button variant="outline" className="relative">
               <ShoppingCart className="h-5 w-5" />
-              {totalItems > 0 && (
+              {cart.totalQuantity > 0 && (
                 <span className="absolute -top-2 -right-2 bg-primary text-white text-xs rounded-full h-5 w-5 flex items-center justify-center">
-                  {totalItems}
+                  {cart.totalQuantity}
                 </span>
               )}
             </Button>
@@ -75,7 +52,7 @@ export default function ShoppingCartComponent() {
               <SheetTitle>장바구니</SheetTitle>
             </SheetHeader>
 
-            {cartItems.length === 0 ? (
+            {cart.items.length === 0 ? (
               <div className="flex flex-col items-center justify-center h-[50vh]">
                 <ShoppingCart className="h-16 w-16 text-neutral-300 mb-4" />
                 <p className="text-neutral-500">장바구니가 비어있습니다</p>
@@ -83,19 +60,33 @@ export default function ShoppingCartComponent() {
             ) : (
               <div className="flex flex-col h-full">
                 <div className="flex-1 overflow-auto py-4">
-                  {cartItems.map((item) => (
-                    <div key={item.id} className="flex py-4">
+                  {cart.items.map((item) => (
+                    <div key={item.productId} className="flex py-4">
+                      <div className="w-16 h-16 rounded-md overflow-hidden bg-gray-100 mr-4 flex-shrink-0">
+                        <img
+                          src={item.image}
+                          alt={item.name}
+                          className="w-full h-full object-cover"
+                        />
+                      </div>
                       <div className="flex-1">
                         <h4 className="font-medium">{item.name}</h4>
                         <p className="text-primary font-semibold mt-1">
-                          {item.price.toLocaleString()}원
+                          {item.discountPrice
+                            ? `₩${item.discountPrice.toLocaleString()} `
+                            : `₩${item.price.toLocaleString()}`}
+                          {item.discountPrice && (
+                            <span className="line-through text-gray-500 text-sm ml-1">
+                              ₩{item.price.toLocaleString()}
+                            </span>
+                          )}
                         </p>
                         <div className="flex items-center mt-2">
                           <Button
                             variant="outline"
                             size="icon"
                             className="h-8 w-8 rounded-full"
-                            onClick={() => updateQuantity(item.id, item.quantity - 1)}
+                            onClick={() => updateQuantity(item.productId, item.quantity - 1)}
                           >
                             <Minus className="h-3 w-3" />
                           </Button>
@@ -104,13 +95,17 @@ export default function ShoppingCartComponent() {
                             variant="outline"
                             size="icon"
                             className="h-8 w-8 rounded-full"
-                            onClick={() => updateQuantity(item.id, item.quantity + 1)}
+                            onClick={() => updateQuantity(item.productId, item.quantity + 1)}
                           >
                             <Plus className="h-3 w-3" />
                           </Button>
                         </div>
                       </div>
-                      <Button variant="ghost" size="icon" onClick={() => removeItem(item.id)}>
+                      <Button
+                        variant="ghost"
+                        size="icon"
+                        onClick={() => removeItem(item.productId)}
+                      >
                         <Trash2 className="h-5 w-5 text-neutral-400" />
                       </Button>
                     </div>
@@ -120,16 +115,26 @@ export default function ShoppingCartComponent() {
                 <div className="border-t pt-4">
                   <div className="flex justify-between py-2">
                     <span className="text-neutral-600">소계</span>
-                    <span>{subtotal.toLocaleString()}원</span>
+                    <span>₩{cart.totalAmount.toLocaleString()}</span>
                   </div>
                   <div className="flex justify-between py-2">
                     <span className="text-neutral-600">배송비</span>
-                    <span>{shipping.toLocaleString()}원</span>
+                    <span>{shipping === 0 ? '무료' : `₩${shipping.toLocaleString()}`}</span>
                   </div>
+                  {shipping === 0 && (
+                    <div className="bg-green-50 text-green-700 text-sm p-2 rounded my-2">
+                      10만원 이상 구매로 무료배송 혜택이 적용되었습니다.
+                    </div>
+                  )}
+                  {shipping > 0 && cart.totalAmount > 0 && (
+                    <div className="text-sm text-gray-600 my-2">
+                      ₩{(100000 - cart.totalAmount).toLocaleString()}원 더 구매 시 무료배송
+                    </div>
+                  )}
                   <Separator className="my-2" />
                   <div className="flex justify-between py-2 font-bold">
                     <span>합계</span>
-                    <span>{total.toLocaleString()}원</span>
+                    <span>₩{total.toLocaleString()}</span>
                   </div>
 
                   <Button className="w-full mt-4 bg-primary hover:bg-primary/90">결제하기</Button>
@@ -141,8 +146,13 @@ export default function ShoppingCartComponent() {
       </div>
 
       <div className="text-sm text-neutral-600">
-        <p>장바구니에 {totalItems}개의 상품이 있습니다.</p>
-        <p className="font-medium mt-2">합계: {total.toLocaleString()}원</p>
+        <p>장바구니에 {cart.totalQuantity}개의 상품이 있습니다.</p>
+        <p className="font-medium mt-2">합계: ₩{total.toLocaleString()}</p>
+        {shipping > 0 && cart.totalAmount > 0 && (
+          <p className="text-xs text-gray-500 mt-1">
+            ₩{(100000 - cart.totalAmount).toLocaleString()}원 더 구매 시 무료배송
+          </p>
+        )}
       </div>
 
       <Button

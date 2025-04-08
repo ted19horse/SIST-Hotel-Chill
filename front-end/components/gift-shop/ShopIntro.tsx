@@ -1,6 +1,7 @@
 import { Button } from '@/components/common/ui/Button';
 import { ShoppingBag } from 'lucide-react';
 import Image from 'next/image';
+import Link from 'next/link';
 
 export default function ShopIntro() {
   return (
@@ -17,10 +18,12 @@ export default function ShopIntro() {
               home.
             </p>
             <div className="flex flex-wrap gap-4">
-              <Button className="bg-primary hover:bg-primary/90">
-                <ShoppingBag className="h-4 w-4 mr-2" />
-                Shop Now
-              </Button>
+              <Link href="/gift-shop/products">
+                <Button className="bg-primary hover:bg-primary/90">
+                  <ShoppingBag className="h-4 w-4 mr-2" />
+                  Shop Now
+                </Button>
+              </Link>
               <Button variant="outline" className="border-primary text-primary hover:bg-primary/10">
                 View Membership Benefits
               </Button>

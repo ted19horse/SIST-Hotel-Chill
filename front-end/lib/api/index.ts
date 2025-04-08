@@ -3,6 +3,7 @@
  */
 import apiClient from './client';
 import { diningApi } from './dining';
+import * as giftShopApi from './gift-shop';
 import mockAdapter from './mock-adapter';
 
 // 개발 환경에서 목업 어댑터 설정
@@ -13,6 +14,7 @@ if (process.env.NODE_ENV === 'development' && process.env.NEXT_PUBLIC_USE_MOCK =
 // API 모듈 내보내기
 const api = {
   dining: diningApi,
+  giftShop: giftShopApi,
 };
 
 export default api;
