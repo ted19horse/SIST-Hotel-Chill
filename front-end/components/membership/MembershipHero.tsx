@@ -7,7 +7,7 @@ export default function MembershipHero() {
       <div className="absolute inset-0 z-0">
         <Image
           src="/placeholder.svg?height=1080&width=1920"
-          alt="Guests enjoying premium amenities"
+          alt="프리미엄 서비스를 즐기는 투숙객"
           fill
           className="object-cover"
           priority
@@ -17,16 +17,15 @@ export default function MembershipHero() {
 
       <div className="container mx-auto px-4 relative z-10">
         <div className="max-w-2xl text-white">
-          <h1 className="text-4xl md:text-5xl font-bold mb-4">Chill Rewards Membership</h1>
-          <p className="text-xl text-white/90 mb-6">Deepen your relaxation with every stay</p>
+          <h1 className="text-4xl md:text-5xl font-bold mb-4">Chill Rewards 멤버십</h1>
+          <p className="text-xl text-white/90 mb-6">매 투숙마다 깊어지는 휴식을 경험하세요</p>
           <p className="text-lg mb-8 leading-relaxed">
-            Join our exclusive membership program designed to enhance your healing journey at Chill
-            Haven Resort & Spa. As a Chill Rewards member, you'll enjoy special privileges,
-            personalized services, and valuable benefits that make each stay more rewarding than the
-            last.
+            Chill Haven Resort & Spa에서의 힐링 여정을 더욱 풍요롭게 할 특별한 멤버십 프로그램에
+            가입하세요. Chill Rewards 회원으로서 특별한 특권, 맞춤형 서비스, 그리고 매 투숙을 더욱
+            가치있게 만드는 다양한 혜택을 누릴 수 있습니다.
           </p>
           <Button className="bg-primary hover:bg-primary/90 text-white px-8 py-6 text-lg">
-            Join Now
+            지금 가입하기
           </Button>
         </div>
       </div>

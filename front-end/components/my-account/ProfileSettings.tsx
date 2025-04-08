@@ -1,19 +1,12 @@
 'use client';
 
 import { Button } from '@/components/common/ui/Button';
+import { Checkbox } from '@/components/common/ui/Checkbox';
 import { Input } from '@/components/common/ui/Input';
 import { Label } from '@/components/common/ui/Label';
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from '@/components/common/ui/Select';
-import { Separator } from '@/components/common/ui/Separator';
+import { Select } from '@/components/common/ui/Select';
 import { Switch } from '@/components/common/ui/Switch';
-import { AlertTriangle, Camera, Save } from 'lucide-react';
-import Image from 'next/image';
+import { Smartphone, Tablet, X } from 'lucide-react';
 import { useState } from 'react';
 
 export default function ProfileSettings() {
@@ -55,332 +48,176 @@ export default function ProfileSettings() {
 
   return (
     <div className="p-6">
-      <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center mb-6">
-        <h1 className="text-2xl font-bold mb-2 sm:mb-0">Profile & Settings</h1>
-        {isEditing ? (
-          <div className="flex space-x-3">
-            <Button variant="outline" onClick={() => setIsEditing(false)}>
-              Cancel
-            </Button>
-            <Button
-              className="bg-primary hover:bg-primary/90 text-white flex items-center"
-              onClick={handleSave}
-              disabled={isSaving}
-            >
-              {isSaving ? (
-                <>
-                  <svg
-                    className="animate-spin -ml-1 mr-2 h-4 w-4 text-white"
-                    xmlns="http://www.w3.org/2000/svg"
-                    fill="none"
-                    viewBox="0 0 24 24"
-                  >
-                    <circle
-                      className="opacity-25"
-                      cx="12"
-                      cy="12"
-                      r="10"
-                      stroke="currentColor"
-                      strokeWidth="4"
-                    ></circle>
-                    <path
-                      className="opacity-75"
-                      fill="currentColor"
-                      d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
-                    ></path>
-                  </svg>
-                  Saving Changes
-                </>
-              ) : (
-                <>
-                  <Save className="h-4 w-4 mr-2" />
-                  Save Changes
-                </>
-              )}
-            </Button>
-          </div>
-        ) : (
-          <Button
-            className="bg-primary hover:bg-primary/90 text-white"
-            onClick={() => setIsEditing(true)}
-          >
-            Edit Profile
-          </Button>
-        )}
-      </div>
+      <h1 className="text-2xl font-bold mb-6">프로필 및 설정</h1>
 
-      {/* Profile Information */}
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 mb-8">
-        {/* Left Column - Profile Image */}
-        <div className="lg:col-span-1">
-          <div className="bg-neutral-50 rounded-lg p-6">
-            <div className="flex flex-col items-center">
-              <div className="relative mb-4">
-                <div className="w-32 h-32 rounded-full overflow-hidden">
-                  <Image
-                    src={user.profileImage || '/placeholder.svg'}
-                    alt={`${user.firstName} ${user.lastName}`}
-                    width={128}
-                    height={128}
-                    className="object-cover"
-                  />
-                </div>
-                {isEditing && (
-                  <button className="absolute bottom-0 right-0 p-2 bg-primary text-white rounded-full">
-                    <Camera className="h-4 w-4" />
-                  </button>
-                )}
-              </div>
-
-              <h2 className="text-xl font-bold mb-1">
-                {user.firstName} {user.lastName}
-              </h2>
-              <p className="text-neutral-600 text-sm">{user.email}</p>
-
-              {isEditing && (
-                <div className="mt-4 w-full">
-                  <Button variant="outline" className="w-full">
-                    Change Profile Picture
-                  </Button>
-                </div>
-              )}
-            </div>
-          </div>
-        </div>
-
-        {/* Right Column - Personal Information */}
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+        {/* 개인 정보 */}
         <div className="lg:col-span-2">
           <div className="bg-neutral-50 rounded-lg p-6">
-            <h3 className="text-lg font-bold mb-4">Personal Information</h3>
+            <h2 className="text-lg font-bold mb-4">개인 정보</h2>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               <div>
-                <Label htmlFor="firstName">First Name</Label>
-                <Input
-                  id="firstName"
-                  value={user.firstName}
-                  onChange={(e) => setUser({ ...user, firstName: e.target.value })}
-                  disabled={!isEditing}
-                />
+                <Label htmlFor="firstName">이름</Label>
+                <Input id="firstName" defaultValue="박" />
               </div>
+
               <div>
-                <Label htmlFor="lastName">Last Name</Label>
-                <Input
-                  id="lastName"
-                  value={user.lastName}
-                  onChange={(e) => setUser({ ...user, lastName: e.target.value })}
-                  disabled={!isEditing}
-                />
+                <Label htmlFor="lastName">성</Label>
+                <Input id="lastName" defaultValue="민지" />
               </div>
+
               <div>
-                <Label htmlFor="email">Email Address</Label>
-                <Input
-                  id="email"
-                  type="email"
-                  value={user.email}
-                  onChange={(e) => setUser({ ...user, email: e.target.value })}
-                  disabled={!isEditing}
-                />
+                <Label htmlFor="email">이메일</Label>
+                <Input id="email" type="email" defaultValue="minji.park@example.com" />
               </div>
+
               <div>
-                <Label htmlFor="phone">Phone Number</Label>
-                <Input
-                  id="phone"
-                  value={user.phone}
-                  onChange={(e) => setUser({ ...user, phone: e.target.value })}
-                  disabled={!isEditing}
-                />
+                <Label htmlFor="phone">전화번호</Label>
+                <Input id="phone" type="tel" defaultValue="010-1234-5678" />
               </div>
+
               <div>
-                <Label htmlFor="address">Address</Label>
-                <Input
-                  id="address"
-                  value={user.address}
-                  onChange={(e) => setUser({ ...user, address: e.target.value })}
-                  disabled={!isEditing}
-                />
+                <Label htmlFor="birthdate">생년월일</Label>
+                <Input id="birthdate" type="date" defaultValue="1990-03-15" />
               </div>
+
               <div>
-                <Label htmlFor="city">City</Label>
-                <Input
-                  id="city"
-                  value={user.city}
-                  onChange={(e) => setUser({ ...user, city: e.target.value })}
-                  disabled={!isEditing}
-                />
-              </div>
-              <div>
-                <Label htmlFor="postalCode">Postal Code</Label>
-                <Input
-                  id="postalCode"
-                  value={user.postalCode}
-                  onChange={(e) => setUser({ ...user, postalCode: e.target.value })}
-                  disabled={!isEditing}
-                />
-              </div>
-              <div>
-                <Label htmlFor="country">Country</Label>
-                <Input
-                  id="country"
-                  value={user.country}
-                  onChange={(e) => setUser({ ...user, country: e.target.value })}
-                  disabled={!isEditing}
-                />
+                <Label htmlFor="language">선호 언어</Label>
+                <Select id="language" defaultValue="ko">
+                  <option value="ko">한국어</option>
+                  <option value="en">영어</option>
+                  <option value="ja">일본어</option>
+                  <option value="zh">중국어</option>
+                </Select>
               </div>
             </div>
 
-            <div>
-              <Label htmlFor="language">Preferred Language</Label>
-              <Select
-                disabled={!isEditing}
-                value={user.language}
-                onValueChange={(value) => setUser({ ...user, language: value })}
-              >
-                <SelectTrigger id="language">
-                  <SelectValue placeholder="Select language" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="korean">한국어</SelectItem>
-                  <SelectItem value="english">English</SelectItem>
-                  <SelectItem value="japanese">日本語</SelectItem>
-                  <SelectItem value="chinese">中文</SelectItem>
-                </SelectContent>
-              </Select>
+            <div className="mt-6">
+              <Label htmlFor="address">주소</Label>
+              <Input id="address" defaultValue="서울특별시 강남구 테헤란로 123" className="mb-2" />
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-2">
+                <Input placeholder="상세주소" />
+                <Input placeholder="우편번호" />
+                <Button
+                  variant="outline"
+                  className="border-primary text-primary hover:bg-primary/10"
+                >
+                  주소 찾기
+                </Button>
+              </div>
+            </div>
+
+            <div className="mt-6">
+              <Label>마케팅 수신 동의</Label>
+              <div className="space-y-2">
+                <div className="flex items-center">
+                  <Checkbox id="emailMarketing" />
+                  <label htmlFor="emailMarketing" className="ml-2 text-sm">
+                    이메일 수신 동의
+                  </label>
+                </div>
+                <div className="flex items-center">
+                  <Checkbox id="smsMarketing" />
+                  <label htmlFor="smsMarketing" className="ml-2 text-sm">
+                    SMS 수신 동의
+                  </label>
+                </div>
+              </div>
+            </div>
+
+            <div className="mt-6 flex justify-end">
+              <Button className="bg-primary hover:bg-primary/90 text-white">변경사항 저장</Button>
             </div>
           </div>
         </div>
-      </div>
 
-      {/* Password Section */}
-      <div className="bg-neutral-50 rounded-lg p-6 mb-8">
-        <h3 className="text-lg font-bold mb-4">Password</h3>
-        {isEditing ? (
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <div>
-              <Label htmlFor="currentPassword">Current Password</Label>
-              <Input id="currentPassword" type="password" />
+        {/* 보안 설정 */}
+        <div className="lg:col-span-1">
+          <div className="bg-neutral-50 rounded-lg p-6">
+            <h2 className="text-lg font-bold mb-4">보안 설정</h2>
+
+            <div className="space-y-6">
+              <div>
+                <h3 className="text-sm font-medium mb-2">비밀번호 변경</h3>
+                <div className="space-y-2">
+                  <Input type="password" placeholder="현재 비밀번호" />
+                  <Input type="password" placeholder="새 비밀번호" />
+                  <Input type="password" placeholder="새 비밀번호 확인" />
+                  <Button className="w-full bg-primary hover:bg-primary/90 text-white">
+                    비밀번호 변경
+                  </Button>
+                </div>
+              </div>
+
+              <div>
+                <h3 className="text-sm font-medium mb-2">2단계 인증</h3>
+                <div className="flex items-center justify-between">
+                  <div>
+                    <p className="text-sm text-neutral-600">
+                      계정 보안을 강화하기 위해 2단계 인증을 설정하세요.
+                    </p>
+                  </div>
+                  <Switch />
+                </div>
+              </div>
+
+              <div>
+                <h3 className="text-sm font-medium mb-2">로그인 기록</h3>
+                <div className="space-y-2">
+                  <div className="flex items-center justify-between text-sm">
+                    <div>
+                      <p className="font-medium">서울, 대한민국</p>
+                      <p className="text-neutral-500">Chrome - Windows</p>
+                    </div>
+                    <p className="text-neutral-500">방금 전</p>
+                  </div>
+                  <div className="flex items-center justify-between text-sm">
+                    <div>
+                      <p className="font-medium">부산, 대한민국</p>
+                      <p className="text-neutral-500">Safari - iOS</p>
+                    </div>
+                    <p className="text-neutral-500">2일 전</p>
+                  </div>
+                </div>
+                <Button
+                  variant="link"
+                  className="text-primary hover:text-primary/90 mt-2 h-auto p-0"
+                >
+                  전체 기록 보기
+                </Button>
+              </div>
+
+              <div>
+                <h3 className="text-sm font-medium mb-2">연결된 기기</h3>
+                <div className="space-y-2">
+                  <div className="flex items-center justify-between text-sm">
+                    <div className="flex items-center">
+                      <Smartphone className="h-4 w-4 text-neutral-500 mr-2" />
+                      <div>
+                        <p className="font-medium">iPhone 13 Pro</p>
+                        <p className="text-neutral-500">앱 버전 2.1.0</p>
+                      </div>
+                    </div>
+                    <Button variant="ghost" className="h-auto p-1">
+                      <X className="h-4 w-4" />
+                    </Button>
+                  </div>
+                  <div className="flex items-center justify-between text-sm">
+                    <div className="flex items-center">
+                      <Tablet className="h-4 w-4 text-neutral-500 mr-2" />
+                      <div>
+                        <p className="font-medium">iPad Air</p>
+                        <p className="text-neutral-500">앱 버전 2.1.0</p>
+                      </div>
+                    </div>
+                    <Button variant="ghost" className="h-auto p-1">
+                      <X className="h-4 w-4" />
+                    </Button>
+                  </div>
+                </div>
+              </div>
             </div>
-            <div></div>
-            <div>
-              <Label htmlFor="newPassword">New Password</Label>
-              <Input id="newPassword" type="password" />
-            </div>
-            <div>
-              <Label htmlFor="confirmPassword">Confirm New Password</Label>
-              <Input id="confirmPassword" type="password" />
-            </div>
-          </div>
-        ) : (
-          <div className="flex justify-between items-center">
-            <p className="text-neutral-600">••••••••••••</p>
-            <Button
-              variant="outline"
-              className="border-primary text-primary hover:bg-primary/10"
-              onClick={() => setIsEditing(true)}
-            >
-              Change Password
-            </Button>
-          </div>
-        )}
-      </div>
-
-      {/* Communication Preferences */}
-      <div className="bg-neutral-50 rounded-lg p-6 mb-8">
-        <h3 className="text-lg font-bold mb-4">Communication Preferences</h3>
-
-        <div className="space-y-4">
-          <div className="flex justify-between items-center">
-            <div>
-              <p className="font-medium">Email Marketing</p>
-              <p className="text-sm text-neutral-600">Receive special offers and promotions</p>
-            </div>
-            <Switch
-              checked={preferences.emailMarketing}
-              onCheckedChange={(checked) =>
-                setPreferences({ ...preferences, emailMarketing: checked })
-              }
-              disabled={!isEditing}
-            />
-          </div>
-
-          <Separator />
-
-          <div className="flex justify-between items-center">
-            <div>
-              <p className="font-medium">SMS Notifications</p>
-              <p className="text-sm text-neutral-600">
-                Receive text messages for reservation updates
-              </p>
-            </div>
-            <Switch
-              checked={preferences.smsNotifications}
-              onCheckedChange={(checked) =>
-                setPreferences({ ...preferences, smsNotifications: checked })
-              }
-              disabled={!isEditing}
-            />
-          </div>
-
-          <Separator />
-
-          <div className="flex justify-between items-center">
-            <div>
-              <p className="font-medium">App Notifications</p>
-              <p className="text-sm text-neutral-600">Receive mobile app notifications</p>
-            </div>
-            <Switch
-              checked={preferences.appNotifications}
-              onCheckedChange={(checked) =>
-                setPreferences({ ...preferences, appNotifications: checked })
-              }
-              disabled={!isEditing}
-            />
-          </div>
-
-          <Separator />
-
-          <div className="flex justify-between items-center">
-            <div>
-              <p className="font-medium">Reservation Updates</p>
-              <p className="text-sm text-neutral-600">Receive emails about your reservations</p>
-            </div>
-            <Switch
-              checked={preferences.emailReservationUpdates}
-              onCheckedChange={(checked) =>
-                setPreferences({ ...preferences, emailReservationUpdates: checked })
-              }
-              disabled={!isEditing}
-            />
-          </div>
-
-          <Separator />
-
-          <div className="flex justify-between items-center">
-            <div>
-              <p className="font-medium">Account Updates</p>
-              <p className="text-sm text-neutral-600">Receive emails about your account activity</p>
-            </div>
-            <Switch
-              checked={preferences.emailAccountUpdates}
-              onCheckedChange={(checked) =>
-                setPreferences({ ...preferences, emailAccountUpdates: checked })
-              }
-              disabled={!isEditing}
-            />
-          </div>
-        </div>
-      </div>
-
-      {/* Delete Account */}
-      <div className="bg-red-50 rounded-lg p-6 border border-red-200">
-        <div className="flex items-start">
-          <AlertTriangle className="h-5 w-5 text-red-500 mr-3 mt-0.5" />
-          <div>
-            <h3 className="text-lg font-bold text-red-700 mb-2">Delete Account</h3>
-            <p className="text-neutral-700 mb-4">
-              Permanently delete your account and all associated data. This action cannot be undone.
-            </p>
-            <Button variant="destructive">Delete My Account</Button>
           </div>
         </div>
       </div>

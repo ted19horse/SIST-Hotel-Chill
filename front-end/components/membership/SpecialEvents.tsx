@@ -1,240 +1,210 @@
+'use client';
+
 import { Button } from '@/components/common/ui/Button';
-import { Award, Calendar, Gift, Users } from 'lucide-react';
+import { specialEvents } from '@/lib/data/membership/special-events';
+import { SpecialEvent } from '@/lib/types/membership';
+import { getPlaceholderImage } from '@/lib/utils/image-utils';
+import { Award, Calendar, Users } from 'lucide-react';
 import Image from 'next/image';
+import { useEffect, useState } from 'react';
 
 export default function SpecialEvents() {
+  const [events, setEvents] = useState<SpecialEvent[]>([]);
+  const [isLoading, setIsLoading] = useState(false);
+  const [upcomingEvents, setUpcomingEvents] = useState<SpecialEvent[]>([]);
+
+  useEffect(() => {
+    const fetchEvents = async () => {
+      setIsLoading(true);
+      try {
+        // 실제 API 연동 시 아래 주석을 해제
+        // const data = await api.membership.getSpecialEvents('UPCOMING');
+        // setEvents(data);
+
+        // 더미 데이터 사용
+        setEvents(specialEvents);
+
+        // 이벤트 중 UPCOMING 상태인 것만 필터링
+        const upcoming = specialEvents.filter((event) => event.status === 'UPCOMING');
+        setUpcomingEvents(upcoming.slice(0, 4)); // 최대 4개만 표시
+      } catch (error) {
+        console.error('Error fetching special events:', error);
+        // 오류 발생 시 더미 데이터 사용
+        setEvents(specialEvents);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    fetchEvents();
+  }, []);
+
   return (
     <section className="py-20">
       <div className="container mx-auto px-4">
         <div className="text-center mb-12">
-          <h2 className="text-3xl md:text-4xl font-bold mb-4">Membership Special Events</h2>
+          <h2 className="text-3xl md:text-4xl font-bold mb-4">멤버십 특별 이벤트</h2>
           <p className="text-neutral-600 max-w-2xl mx-auto">
-            Enjoy exclusive events and promotions designed specifically for our valued Chill Rewards
-            members.
+            Chill Rewards 회원만을 위한 특별한 이벤트와 프로모션을 즐겨보세요.
           </p>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-12">
-          <div className="bg-white rounded-lg shadow-md overflow-hidden">
-            <div className="relative h-64">
-              <Image
-                src="/placeholder.svg?height=600&width=800"
-                alt="Seasonal Member Events"
-                fill
-                className="object-cover"
-              />
-            </div>
-            <div className="p-6">
-              <div className="flex items-center mb-4">
-                <Calendar className="h-5 w-5 text-primary mr-2" />
-                <h3 className="text-xl font-bold">Seasonal Member-Exclusive Events</h3>
-              </div>
-              <p className="text-neutral-600 mb-4">
-                Throughout the year, we host special events exclusively for our members, designed to
-                enhance your wellness journey and create memorable experiences.
-              </p>
-              <div className="space-y-3 mb-6">
-                <div className="bg-neutral-50 p-3 rounded-md">
-                  <p className="font-medium">Spring Renewal Retreat</p>
-                  <p className="text-sm text-neutral-600">
-                    Yoga and meditation workshops focused on renewal and growth
-                  </p>
-                </div>
-                <div className="bg-neutral-50 p-3 rounded-md">
-                  <p className="font-medium">Summer Wellness Weekend</p>
-                  <p className="text-sm text-neutral-600">
-                    Outdoor activities, nutrition classes, and lake experiences
-                  </p>
-                </div>
-                <div className="bg-neutral-50 p-3 rounded-md">
-                  <p className="font-medium">Autumn Mindfulness Gathering</p>
-                  <p className="text-sm text-neutral-600">
-                    Forest walks, tea ceremonies, and stress-reduction workshops
-                  </p>
-                </div>
-                <div className="bg-neutral-50 p-3 rounded-md">
-                  <p className="font-medium">Winter Restoration Series</p>
-                  <p className="text-sm text-neutral-600">
-                    Healing spa treatments, cooking classes, and relaxation techniques
-                  </p>
-                </div>
-              </div>
-              <Button className="w-full bg-primary hover:bg-primary/90">
-                View Upcoming Events
-              </Button>
-            </div>
+        {isLoading ? (
+          <div className="text-center py-12">
+            <p>이벤트 정보를 불러오는 중...</p>
           </div>
+        ) : (
+          <>
+            {/* 주요 이벤트 그리드 */}
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-12">
+              {upcomingEvents.length > 0 ? (
+                upcomingEvents.slice(0, 2).map((event) => (
+                  <div key={event.id} className="bg-white rounded-lg shadow-md overflow-hidden">
+                    <div className="relative h-64">
+                      <Image src={event.imageUrl} alt={event.title} fill className="object-cover" />
+                    </div>
+                    <div className="p-6">
+                      <div className="flex items-center mb-4">
+                        <Calendar className="h-5 w-5 text-primary mr-2" />
+                        <h3 className="text-xl font-bold">{event.title}</h3>
+                      </div>
+                      <p className="text-neutral-600 mb-4">{event.description}</p>
+                      <div className="bg-neutral-50 p-3 rounded-md mb-6">
+                        <div className="flex justify-between items-center">
+                          <div>
+                            <p className="font-medium">일시</p>
+                            <p className="text-sm text-neutral-600">
+                              {new Date(event.startDate).toLocaleDateString('ko-KR')}
+                              {event.startDate !== event.endDate &&
+                                ` ~ ${new Date(event.endDate).toLocaleDateString('ko-KR')}`}
+                            </p>
+                          </div>
+                          <div>
+                            <p className="font-medium">장소</p>
+                            <p className="text-sm text-neutral-600">{event.location}</p>
+                          </div>
+                        </div>
+                      </div>
+                      <Button className="w-full bg-primary hover:bg-primary/90">
+                        이벤트 상세 보기
+                      </Button>
+                    </div>
+                  </div>
+                ))
+              ) : (
+                <div className="col-span-2 text-center py-12">
+                  <p>현재 예정된 이벤트가 없습니다.</p>
+                </div>
+              )}
+            </div>
 
-          <div className="bg-white rounded-lg shadow-md overflow-hidden">
-            <div className="relative h-64">
-              <Image
-                src="/placeholder.svg?height=600&width=800"
-                alt="Member Appreciation"
-                fill
-                className="object-cover"
-              />
-            </div>
-            <div className="p-6">
-              <div className="flex items-center mb-4">
-                <Gift className="h-5 w-5 text-primary mr-2" />
-                <h3 className="text-xl font-bold">Quarterly Member Appreciation</h3>
+            {/* 추가 정보 섹션 */}
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+              <div className="bg-white p-6 rounded-lg shadow-md">
+                <div className="flex items-center mb-4">
+                  <Award className="h-5 w-5 text-primary mr-2" />
+                  <h3 className="text-xl font-bold">제휴 브랜드 혜택</h3>
+                </div>
+                <p className="text-neutral-600 mb-4">
+                  힐링과 높은 품질에 대한 우리의 약속을 공유하는 신중하게 선택된 파트너 브랜드와
+                  함께 특별한 혜택을 누려보세요.
+                </p>
+                <div className="space-y-3">
+                  <div className="flex items-start">
+                    <div className="w-12 h-12 bg-neutral-100 rounded-md flex items-center justify-center mr-3 flex-shrink-0">
+                      <Image
+                        src={getPlaceholderImage(48, 48, 'f5f5f5', '333333', 'S')}
+                        alt="파트너 로고"
+                        width={24}
+                        height={24}
+                      />
+                    </div>
+                    <div>
+                      <p className="font-medium">세렌 스파 제품</p>
+                      <p className="text-sm text-neutral-600">
+                        모든 제품 15% 할인, 회원 전용 선물 세트
+                      </p>
+                    </div>
+                  </div>
+                  <div className="flex items-start">
+                    <div className="w-12 h-12 bg-neutral-100 rounded-md flex items-center justify-center mr-3 flex-shrink-0">
+                      <Image
+                        src={getPlaceholderImage(48, 48, 'f5f5f5', '333333', 'M')}
+                        alt="파트너 로고"
+                        width={24}
+                        height={24}
+                      />
+                    </div>
+                    <div>
+                      <p className="font-medium">마인드풀 어패럴</p>
+                      <p className="text-sm text-neutral-600">
+                        지속 가능한 의류 10% 할인, 회원 전용 컬렉션
+                      </p>
+                    </div>
+                  </div>
+                  <div className="flex items-start">
+                    <div className="w-12 h-12 bg-neutral-100 rounded-md flex items-center justify-center mr-3 flex-shrink-0">
+                      <Image
+                        src={getPlaceholderImage(48, 48, 'f5f5f5', '333333', 'W')}
+                        alt="파트너 로고"
+                        width={24}
+                        height={24}
+                      />
+                    </div>
+                    <div>
+                      <p className="font-medium">웰니스 리트릿 인터내셔널</p>
+                      <p className="text-sm text-neutral-600">국제 웰니스 리트릿 특별 요금</p>
+                    </div>
+                  </div>
+                  <div className="flex items-start">
+                    <div className="w-12 h-12 bg-neutral-100 rounded-md flex items-center justify-center mr-3 flex-shrink-0">
+                      <Image
+                        src={getPlaceholderImage(48, 48, 'f5f5f5', '333333', 'O')}
+                        alt="파트너 로고"
+                        width={24}
+                        height={24}
+                      />
+                    </div>
+                    <div>
+                      <p className="font-medium">오가닉 다이닝</p>
+                      <p className="text-sm text-neutral-600">
+                        우선 예약, 셰프 특선 요리 무료 제공
+                      </p>
+                    </div>
+                  </div>
+                </div>
               </div>
-              <p className="text-neutral-600 mb-4">
-                Every quarter, we celebrate our members with special promotions, bonus points, and
-                exclusive offers to show our appreciation for your loyalty.
-              </p>
-              <div className="space-y-3 mb-6">
-                <div className="bg-neutral-50 p-3 rounded-md">
-                  <p className="font-medium">Q1: New Year Renewal</p>
-                  <p className="text-sm text-neutral-600">
-                    Double points on January stays, wellness package discounts
-                  </p>
-                </div>
-                <div className="bg-neutral-50 p-3 rounded-md">
-                  <p className="font-medium">Q2: Spring Awakening</p>
-                  <p className="text-sm text-neutral-600">
-                    Complimentary room upgrades, spa treatment bonuses
-                  </p>
-                </div>
-                <div className="bg-neutral-50 p-3 rounded-md">
-                  <p className="font-medium">Q3: Summer Celebration</p>
-                  <p className="text-sm text-neutral-600">
-                    Family package deals, kids stay free promotions
-                  </p>
-                </div>
-                <div className="bg-neutral-50 p-3 rounded-md">
-                  <p className="font-medium">Q4: Holiday Gratitude</p>
-                  <p className="text-sm text-neutral-600">
-                    Gift shop vouchers, festive dining experiences
-                  </p>
-                </div>
-              </div>
-              <Button className="w-full bg-primary hover:bg-primary/90">Current Promotions</Button>
-            </div>
-          </div>
-        </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-          <div className="bg-white p-6 rounded-lg shadow-md">
-            <div className="flex items-center mb-4">
-              <Award className="h-5 w-5 text-primary mr-2" />
-              <h3 className="text-xl font-bold">Partner Brand Benefits</h3>
-            </div>
-            <p className="text-neutral-600 mb-4">
-              Enjoy special privileges with our carefully selected partner brands that share our
-              commitment to wellness and quality.
-            </p>
-            <div className="space-y-3">
-              <div className="flex items-start">
-                <div className="w-12 h-12 bg-neutral-100 rounded-md flex items-center justify-center mr-3 flex-shrink-0">
-                  <Image
-                    src="/placeholder.svg?height=48&width=48"
-                    alt="Partner Logo"
-                    width={24}
-                    height={24}
-                  />
+              <div className="bg-white p-6 rounded-lg shadow-md">
+                <div className="flex items-center mb-4">
+                  <Users className="h-5 w-5 text-primary mr-2" />
+                  <h3 className="text-xl font-bold">회원 추천 프로그램</h3>
                 </div>
-                <div>
-                  <p className="font-medium">Serene Spa Products</p>
-                  <p className="text-sm text-neutral-600">
-                    15% discount on all products, exclusive member gift sets
-                  </p>
+                <p className="text-neutral-600 mb-4">
+                  친구나 가족에게 Chill Haven을 추천하고 특별한 보상을 받아보세요. 추천을 받은
+                  사람도 가입 특전을 받을 수 있습니다.
+                </p>
+                <div className="bg-primary/5 p-4 rounded-lg border border-primary/20 mb-4">
+                  <h4 className="font-bold mb-2">추천인 혜택</h4>
+                  <ul className="space-y-2 text-neutral-600 text-sm">
+                    <li>• 추천이 멤버십에 가입할 때마다 1,000 Chill 포인트 적립</li>
+                    <li>• 연간 5명 이상 추천 시 추가 5,000 Chill 포인트 보너스</li>
+                    <li>• 추천으로 Deep Chill 회원이 가입하면 Chill Flow로 자동 업그레이드</li>
+                  </ul>
                 </div>
-              </div>
-              <div className="flex items-start">
-                <div className="w-12 h-12 bg-neutral-100 rounded-md flex items-center justify-center mr-3 flex-shrink-0">
-                  <Image
-                    src="/placeholder.svg?height=48&width=48"
-                    alt="Partner Logo"
-                    width={24}
-                    height={24}
-                  />
+                <div className="bg-neutral-50 p-4 rounded-lg mb-4">
+                  <h4 className="font-bold mb-2">신규 회원 혜택</h4>
+                  <ul className="space-y-2 text-neutral-600 text-sm">
+                    <li>• 가입 시 500 Chill 포인트 즉시 적립</li>
+                    <li>• 첫 투숙 시 무료 방 업그레이드 (이용 가능 시)</li>
+                    <li>• 웰컴 기프트 패키지</li>
+                  </ul>
                 </div>
-                <div>
-                  <p className="font-medium">Mindful Apparel</p>
-                  <p className="text-sm text-neutral-600">
-                    10% discount on sustainable clothing, member-only collections
-                  </p>
-                </div>
-              </div>
-              <div className="flex items-start">
-                <div className="w-12 h-12 bg-neutral-100 rounded-md flex items-center justify-center mr-3 flex-shrink-0">
-                  <Image
-                    src="/placeholder.svg?height=48&width=48"
-                    alt="Partner Logo"
-                    width={24}
-                    height={24}
-                  />
-                </div>
-                <div>
-                  <p className="font-medium">Wellness Retreats International</p>
-                  <p className="text-sm text-neutral-600">
-                    Special rates on international wellness retreats
-                  </p>
-                </div>
-              </div>
-              <div className="flex items-start">
-                <div className="w-12 h-12 bg-neutral-100 rounded-md flex items-center justify-center mr-3 flex-shrink-0">
-                  <Image
-                    src="/placeholder.svg?height=48&width=48"
-                    alt="Partner Logo"
-                    width={24}
-                    height={24}
-                  />
-                </div>
-                <div>
-                  <p className="font-medium">Organic Dining Co.</p>
-                  <p className="text-sm text-neutral-600">
-                    Priority reservations, complimentary chef's special
-                  </p>
-                </div>
+                <Button className="w-full bg-primary hover:bg-primary/90">친구 추천하기</Button>
               </div>
             </div>
-          </div>
-
-          <div className="bg-white p-6 rounded-lg shadow-md">
-            <div className="flex items-center mb-4">
-              <Users className="h-5 w-5 text-primary mr-2" />
-              <h3 className="text-xl font-bold">Member Referral Program</h3>
-            </div>
-            <p className="text-neutral-600 mb-4">
-              Share the Chill Haven experience with friends and family and be rewarded for your
-              referrals.
-            </p>
-            <div className="bg-neutral-50 p-4 rounded-lg mb-6">
-              <h4 className="font-bold mb-2">How It Works</h4>
-              <ol className="space-y-2 text-sm text-neutral-600 list-decimal pl-4">
-                <li>Share your unique referral code with friends and family</li>
-                <li>They receive 1,000 bonus points when joining Chill Rewards</li>
-                <li>After their first stay, you receive 2,000 bonus points</li>
-                <li>Refer 5 friends who complete stays to earn a complimentary night</li>
-              </ol>
-            </div>
-            <div className="bg-primary/5 p-4 rounded-lg border border-primary/20">
-              <div className="flex justify-between items-center">
-                <div>
-                  <p className="font-bold text-primary">Referral Bonus Tiers</p>
-                  <p className="text-sm text-neutral-600">The more you refer, the more you earn</p>
-                </div>
-                <Button className="bg-primary hover:bg-primary/90">Start Referring</Button>
-              </div>
-              <div className="mt-4 grid grid-cols-3 gap-2 text-center text-sm">
-                <div className="bg-white p-2 rounded">
-                  <p className="font-bold">5 Referrals</p>
-                  <p className="text-neutral-600">Free Night</p>
-                </div>
-                <div className="bg-white p-2 rounded">
-                  <p className="font-bold">10 Referrals</p>
-                  <p className="text-neutral-600">Tier Upgrade</p>
-                </div>
-                <div className="bg-white p-2 rounded">
-                  <p className="font-bold">20 Referrals</p>
-                  <p className="text-neutral-600">Spa Package</p>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
+          </>
+        )}
       </div>
     </section>
   );

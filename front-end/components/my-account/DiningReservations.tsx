@@ -135,10 +135,10 @@ export default function DiningReservations() {
   return (
     <div className="p-6">
       <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center mb-6">
-        <h1 className="text-2xl font-bold mb-2 sm:mb-0">Dining Reservations</h1>
+        <h1 className="text-2xl font-bold mb-2 sm:mb-0">다이닝 예약</h1>
         <Button className="bg-primary hover:bg-primary/90 text-white">
           <Utensils className="h-4 w-4 mr-2" />
-          Make Dining Reservation
+          다이닝 예약하기
         </Button>
       </div>
 
@@ -149,9 +149,9 @@ export default function DiningReservations() {
         className="w-full"
       >
         <TabsList className="grid w-full grid-cols-3 mb-6">
-          <TabsTrigger value="upcoming">Upcoming</TabsTrigger>
-          <TabsTrigger value="past">Past</TabsTrigger>
-          <TabsTrigger value="cancelled">Cancelled</TabsTrigger>
+          <TabsTrigger value="upcoming">예정된 예약</TabsTrigger>
+          <TabsTrigger value="past">이용 완료</TabsTrigger>
+          <TabsTrigger value="cancelled">취소된 예약</TabsTrigger>
         </TabsList>
 
         <TabsContent value="upcoming">
@@ -159,14 +159,10 @@ export default function DiningReservations() {
             <div className="text-center py-12 bg-neutral-50 rounded-lg">
               <CalendarCheck className="h-12 w-12 mx-auto text-neutral-400 mb-4" />
               <h3 className="text-lg font-medium text-neutral-600 mb-2">
-                No Upcoming Dining Reservations
+                예정된 다이닝 예약이 없습니다
               </h3>
-              <p className="text-neutral-500 mb-6">
-                You don't have any upcoming dining reservations at Chill Haven.
-              </p>
-              <Button className="bg-primary hover:bg-primary/90 text-white">
-                Make a Reservation
-              </Button>
+              <p className="text-neutral-500 mb-6">Chill Haven에 예정된 다이닝 예약이 없습니다.</p>
+              <Button className="bg-primary hover:bg-primary/90 text-white">예약하기</Button>
             </div>
           ) : (
             <div className="space-y-6">{/* Upcoming reservations would be mapped here */}</div>
@@ -178,10 +174,10 @@ export default function DiningReservations() {
             <div className="text-center py-12 bg-neutral-50 rounded-lg">
               <CalendarCheck className="h-12 w-12 mx-auto text-neutral-400 mb-4" />
               <h3 className="text-lg font-medium text-neutral-600 mb-2">
-                No Past Dining Reservations
+                이용 완료된 예약이 없습니다
               </h3>
               <p className="text-neutral-500">
-                You don't have any past dining reservations at Chill Haven.
+                Chill Haven에서 이용 완료된 다이닝 예약이 없습니다.
               </p>
             </div>
           ) : (
@@ -206,29 +202,27 @@ export default function DiningReservations() {
                       <div className="flex flex-col md:flex-row md:justify-between md:items-start mb-4">
                         <div>
                           <h3 className="text-lg font-bold">{reservation.restaurant}</h3>
-                          <p className="text-neutral-600">Reservation #{reservation.id}</p>
+                          <p className="text-neutral-600">예약 번호: {reservation.id}</p>
                         </div>
                         <div className="mt-2 md:mt-0">{getStatusBadge(reservation.status)}</div>
                       </div>
 
                       <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
                         <div>
-                          <p className="text-sm text-neutral-500">Date & Time</p>
+                          <p className="text-sm text-neutral-500">날짜 및 시간</p>
                           <p className="font-medium">{formatDate(reservation.date)}</p>
                           <p className="text-sm">{formatTime(reservation.date)}</p>
                         </div>
                         <div>
-                          <p className="text-sm text-neutral-500">Party Size</p>
-                          <p className="font-medium">
-                            {reservation.guests} {reservation.guests === 1 ? 'Guest' : 'Guests'}
-                          </p>
-                          <p className="text-sm">Table #{reservation.tableNumber}</p>
+                          <p className="text-sm text-neutral-500">인원</p>
+                          <p className="font-medium">{reservation.guests}명</p>
+                          <p className="text-sm">테이블 #{reservation.tableNumber}</p>
                         </div>
                         <div>
-                          <p className="text-sm text-neutral-500">Total Amount</p>
+                          <p className="text-sm text-neutral-500">결제 금액</p>
                           <p className="font-medium">₩{reservation.totalAmount.toLocaleString()}</p>
                           <p className="text-sm text-green-600">
-                            Earned {Math.floor(reservation.totalAmount / 10000)} points
+                            {Math.floor(reservation.totalAmount / 10000)}포인트 적립
                           </p>
                         </div>
                       </div>
@@ -238,19 +232,19 @@ export default function DiningReservations() {
                           variant="outline"
                           className="border-primary text-primary hover:bg-primary/10"
                         >
-                          Download Receipt
+                          영수증 다운로드
                         </Button>
                         <Button
                           variant="outline"
                           className="border-primary text-primary hover:bg-primary/10"
                         >
-                          Write Review
+                          리뷰 작성
                         </Button>
                         <Button
                           variant="outline"
                           className="border-primary text-primary hover:bg-primary/10"
                         >
-                          Book Again
+                          다시 예약하기
                         </Button>
                         <Button
                           variant="ghost"
@@ -260,12 +254,12 @@ export default function DiningReservations() {
                           {reservation.isExpanded ? (
                             <>
                               <ChevronUp className="h-4 w-4 mr-2" />
-                              Less Details
+                              접기
                             </>
                           ) : (
                             <>
                               <ChevronDown className="h-4 w-4 mr-2" />
-                              More Details
+                              더보기
                             </>
                           )}
                         </Button>
@@ -278,31 +272,31 @@ export default function DiningReservations() {
                     <div className="px-6 pb-6 pt-0 border-t border-neutral-200 mt-6">
                       <div className="grid grid-cols-1 md:grid-cols-2 gap-6 pt-6">
                         <div>
-                          <h4 className="font-medium mb-2">Special Requests</h4>
+                          <h4 className="font-medium mb-2">특별 요청사항</h4>
                           <div className="bg-white rounded-md p-4 min-h-[100px]">
                             {reservation.specialRequests ? (
                               <p className="text-neutral-600">{reservation.specialRequests}</p>
                             ) : (
-                              <p className="text-neutral-400 italic">No special requests</p>
+                              <p className="text-neutral-400 italic">특별 요청사항이 없습니다</p>
                             )}
                           </div>
                         </div>
                         <div>
-                          <h4 className="font-medium mb-2">Restaurant Details</h4>
+                          <h4 className="font-medium mb-2">레스토랑 정보</h4>
                           <div className="bg-white rounded-md p-4">
                             <div className="flex items-start space-x-4">
                               <Utensils className="h-5 w-5 text-primary mt-0.5" />
                               <div>
                                 <p className="font-medium">{reservation.restaurant}</p>
                                 <p className="text-sm text-neutral-600">
-                                  Table #{reservation.tableNumber}
+                                  테이블 #{reservation.tableNumber}
                                 </p>
                               </div>
                             </div>
                             <div className="flex items-start space-x-4 mt-4">
                               <Clock className="h-5 w-5 text-primary mt-0.5" />
                               <div>
-                                <p className="font-medium">Dining Time</p>
+                                <p className="font-medium">식사 시간</p>
                                 <p className="text-sm text-neutral-600">
                                   {formatTime(reservation.date)}
                                 </p>
@@ -324,9 +318,9 @@ export default function DiningReservations() {
             <div className="text-center py-12 bg-neutral-50 rounded-lg">
               <CalendarCheck className="h-12 w-12 mx-auto text-neutral-400 mb-4" />
               <h3 className="text-lg font-medium text-neutral-600 mb-2">
-                No Cancelled Dining Reservations
+                취소된 다이닝 예약이 없습니다
               </h3>
-              <p className="text-neutral-500">You don't have any cancelled dining reservations.</p>
+              <p className="text-neutral-500">취소된 다이닝 예약이 없습니다.</p>
             </div>
           ) : (
             <div className="space-y-6">
@@ -350,29 +344,27 @@ export default function DiningReservations() {
                       <div className="flex flex-col md:flex-row md:justify-between md:items-start mb-4">
                         <div>
                           <h3 className="text-lg font-bold">{reservation.restaurant}</h3>
-                          <p className="text-neutral-600">Reservation #{reservation.id}</p>
+                          <p className="text-neutral-600">예약 번호: {reservation.id}</p>
                         </div>
                         <div className="mt-2 md:mt-0">{getStatusBadge(reservation.status)}</div>
                       </div>
 
                       <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
                         <div>
-                          <p className="text-sm text-neutral-500">Cancelled Date</p>
+                          <p className="text-sm text-neutral-500">취소일</p>
                           <p className="font-medium">
                             {formatDate(reservation.cancellationDate || '')}
                           </p>
-                          <p className="text-sm">Original date: {formatDate(reservation.date)}</p>
+                          <p className="text-sm">원래 예약일: {formatDate(reservation.date)}</p>
                         </div>
                         <div>
-                          <p className="text-sm text-neutral-500">Party Size</p>
-                          <p className="font-medium">
-                            {reservation.guests} {reservation.guests === 1 ? 'Guest' : 'Guests'}
-                          </p>
+                          <p className="text-sm text-neutral-500">인원</p>
+                          <p className="font-medium">{reservation.guests}명</p>
                         </div>
                         <div>
-                          <p className="text-sm text-neutral-500">Cancellation Reason</p>
+                          <p className="text-sm text-neutral-500">취소 사유</p>
                           <p className="font-medium">
-                            {reservation.cancellationReason || 'Not specified'}
+                            {reservation.cancellationReason || '미지정'}
                           </p>
                         </div>
                       </div>
@@ -382,7 +374,7 @@ export default function DiningReservations() {
                           variant="outline"
                           className="border-primary text-primary hover:bg-primary/10"
                         >
-                          Book Again
+                          다시 예약하기
                         </Button>
                         <Button
                           variant="ghost"
@@ -392,12 +384,12 @@ export default function DiningReservations() {
                           {reservation.isExpanded ? (
                             <>
                               <ChevronUp className="h-4 w-4 mr-2" />
-                              Less Details
+                              접기
                             </>
                           ) : (
                             <>
                               <ChevronDown className="h-4 w-4 mr-2" />
-                              More Details
+                              더보기
                             </>
                           )}
                         </Button>
@@ -410,33 +402,31 @@ export default function DiningReservations() {
                     <div className="px-6 pb-6 pt-0 border-t border-neutral-200 mt-6">
                       <div className="grid grid-cols-1 md:grid-cols-2 gap-6 pt-6">
                         <div>
-                          <h4 className="font-medium mb-2">Special Requests</h4>
+                          <h4 className="font-medium mb-2">특별 요청사항</h4>
                           <div className="bg-white rounded-md p-4 min-h-[100px]">
                             {reservation.specialRequests ? (
                               <p className="text-neutral-600">{reservation.specialRequests}</p>
                             ) : (
-                              <p className="text-neutral-400 italic">No special requests</p>
+                              <p className="text-neutral-400 italic">특별 요청사항이 없습니다</p>
                             )}
                           </div>
                         </div>
                         <div>
-                          <h4 className="font-medium mb-2">Restaurant Details</h4>
+                          <h4 className="font-medium mb-2">레스토랑 정보</h4>
                           <div className="bg-white rounded-md p-4">
                             <div className="flex items-start space-x-4">
                               <Utensils className="h-5 w-5 text-primary mt-0.5" />
                               <div>
                                 <p className="font-medium">{reservation.restaurant}</p>
-                                <p className="text-sm text-neutral-600">
-                                  Located in the main building
-                                </p>
+                                <p className="text-sm text-neutral-600">메인 건물 내 위치</p>
                               </div>
                             </div>
                             <div className="flex items-start space-x-4 mt-4">
                               <CalendarIcon className="h-5 w-5 text-primary mt-0.5" />
                               <div>
-                                <p className="font-medium">Original Reservation</p>
+                                <p className="font-medium">원래 예약</p>
                                 <p className="text-sm text-neutral-600">
-                                  {formatDate(reservation.date)} at {formatTime(reservation.date)}
+                                  {formatDate(reservation.date)} {formatTime(reservation.date)}
                                 </p>
                               </div>
                             </div>

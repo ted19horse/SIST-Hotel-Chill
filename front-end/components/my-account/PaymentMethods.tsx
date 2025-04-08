@@ -1,35 +1,8 @@
 'use client';
 
-import { Badge } from '@/components/common/ui/Badge';
-
 import { Button } from '@/components/common/ui/Button';
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardFooter,
-  CardHeader,
-  CardTitle,
-} from '@/components/common/ui/Card';
-import { Input } from '@/components/common/ui/Input';
-import { Label } from '@/components/common/ui/Label';
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from '@/components/common/ui/Select';
 import { Switch } from '@/components/common/ui/Switch';
-import {
-  AlertCircle,
-  Check,
-  CreditCard,
-  CreditCardIcon,
-  Edit,
-  PlusCircle,
-  Trash2,
-} from 'lucide-react';
+import { CreditCardIcon } from 'lucide-react';
 import { useState } from 'react';
 
 export default function PaymentMethods() {
@@ -96,167 +69,104 @@ export default function PaymentMethods() {
 
   return (
     <div className="p-6">
-      <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center mb-6">
-        <h1 className="text-2xl font-bold mb-2 sm:mb-0">Payment Methods</h1>
-        <Button
-          className="bg-primary hover:bg-primary/90 text-white"
-          onClick={() => setShowAddCard(!showAddCard)}
-        >
-          <PlusCircle className="h-4 w-4 mr-2" />
-          Add Payment Method
-        </Button>
-      </div>
+      <h1 className="text-2xl font-bold mb-6">결제 수단</h1>
 
-      {/* Add New Card Form */}
-      {showAddCard && (
-        <Card className="mb-8">
-          <CardHeader>
-            <CardTitle>Add New Payment Method</CardTitle>
-            <CardDescription>Enter your card details to save for future bookings</CardDescription>
-          </CardHeader>
-          <CardContent>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
-              <div className="md:col-span-2">
-                <Label htmlFor="cardName">Name on Card</Label>
-                <Input id="cardName" placeholder="Enter name as it appears on card" />
+      <div className="space-y-6">
+        <div className="bg-neutral-50 rounded-lg p-6">
+          <h2 className="text-lg font-bold mb-4">등록된 카드</h2>
+
+          <div className="space-y-4">
+            <div className="flex items-center justify-between p-4 border rounded-lg">
+              <div className="flex items-center gap-4">
+                <div className="w-12 h-8 bg-neutral-200 rounded"></div>
+                <div>
+                  <p className="font-medium">신한카드 •••• 1234</p>
+                  <p className="text-sm text-neutral-500">만료일: 12/25</p>
+                </div>
               </div>
-              <div className="md:col-span-2">
-                <Label htmlFor="cardNumber">Card Number</Label>
-                <Input id="cardNumber" placeholder="0000 0000 0000 0000" />
-              </div>
-              <div>
-                <Label htmlFor="expiryDate">Expiry Date</Label>
-                <Input id="expiryDate" placeholder="MM/YY" />
-              </div>
-              <div>
-                <Label htmlFor="cvv">Security Code (CVV)</Label>
-                <Input id="cvv" placeholder="123" />
-              </div>
-              <div className="md:col-span-2">
-                <Label htmlFor="billingAddress">Billing Address</Label>
-                <Input id="billingAddress" placeholder="Enter your billing address" />
-              </div>
-              <div>
-                <Label htmlFor="city">City</Label>
-                <Input id="city" placeholder="City" />
-              </div>
-              <div>
-                <Label htmlFor="postalCode">Postal Code</Label>
-                <Input id="postalCode" placeholder="Postal Code" />
-              </div>
-              <div className="md:col-span-2">
-                <Label htmlFor="country">Country</Label>
-                <Select>
-                  <SelectTrigger id="country">
-                    <SelectValue placeholder="Select country" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="kr">South Korea</SelectItem>
-                    <SelectItem value="us">United States</SelectItem>
-                    <SelectItem value="jp">Japan</SelectItem>
-                    <SelectItem value="cn">China</SelectItem>
-                    <SelectItem value="sg">Singapore</SelectItem>
-                  </SelectContent>
-                </Select>
-              </div>
-              <div className="md:col-span-2 flex items-center space-x-2 pt-2">
-                <Switch id="setDefault" />
-                <Label htmlFor="setDefault">Set as default payment method</Label>
+              <div className="flex items-center gap-2">
+                <Button variant="outline" size="sm">
+                  수정
+                </Button>
+                <Button variant="outline" size="sm" className="text-red-500 hover:text-red-600">
+                  삭제
+                </Button>
               </div>
             </div>
-          </CardContent>
-          <CardFooter className="flex justify-between">
-            <Button variant="outline" onClick={() => setShowAddCard(false)}>
-              Cancel
-            </Button>
-            <Button className="bg-primary hover:bg-primary/90 text-white">
-              <Check className="h-4 w-4 mr-2" />
-              Save Card
-            </Button>
-          </CardFooter>
-        </Card>
-      )}
 
-      {/* Saved Payment Methods */}
-      <div className="space-y-4">
-        <h2 className="text-lg font-medium">Saved Payment Methods</h2>
-
-        {paymentMethods.length === 0 ? (
-          <div className="bg-neutral-50 rounded-lg p-8 text-center">
-            <CreditCard className="h-12 w-12 mx-auto text-neutral-400 mb-4" />
-            <h3 className="text-lg font-medium text-neutral-600 mb-2">No Payment Methods</h3>
-            <p className="text-neutral-500 mb-6">You haven't added any payment methods yet.</p>
-            <Button
-              className="bg-primary hover:bg-primary/90 text-white"
-              onClick={() => setShowAddCard(true)}
-            >
-              Add Payment Method
-            </Button>
+            <div className="flex items-center justify-between p-4 border rounded-lg">
+              <div className="flex items-center gap-4">
+                <div className="w-12 h-8 bg-neutral-200 rounded"></div>
+                <div>
+                  <p className="font-medium">삼성카드 •••• 5678</p>
+                  <p className="text-sm text-neutral-500">만료일: 09/26</p>
+                </div>
+              </div>
+              <div className="flex items-center gap-2">
+                <Button variant="outline" size="sm">
+                  수정
+                </Button>
+                <Button variant="outline" size="sm" className="text-red-500 hover:text-red-600">
+                  삭제
+                </Button>
+              </div>
+            </div>
           </div>
-        ) : (
-          paymentMethods.map((card) => (
-            <div
-              key={card.id}
-              className={`bg-white rounded-lg border ${
-                card.isDefault ? 'border-primary' : 'border-neutral-200'
-              } p-4`}
-            >
-              <div className="flex flex-col md:flex-row md:items-center md:justify-between">
-                <div className="flex items-center mb-4 md:mb-0">
-                  <div className="mr-4">{getCardIcon(card.type)}</div>
-                  <div>
-                    <p className="font-medium">{card.number}</p>
-                    <p className="text-sm text-neutral-500">
-                      {card.name} • Expires {card.expiry}
-                    </p>
-                  </div>
-                  {card.isDefault && (
-                    <Badge className="ml-4 bg-primary/10 text-primary hover:bg-primary/20">
-                      Default
-                    </Badge>
-                  )}
-                </div>
 
-                <div className="flex space-x-2">
-                  {!card.isDefault && (
-                    <Button
-                      variant="outline"
-                      size="sm"
-                      className="text-primary border-primary hover:bg-primary/10"
-                      onClick={() => handleSetDefault(card.id)}
-                    >
-                      Set as Default
-                    </Button>
-                  )}
-                  <Button variant="outline" size="sm">
-                    <Edit className="h-4 w-4" />
-                  </Button>
-                  <Button
-                    variant="outline"
-                    size="sm"
-                    className="text-red-500 border-red-200 hover:bg-red-50"
-                    onClick={() => handleDeleteCard(card.id)}
-                  >
-                    <Trash2 className="h-4 w-4" />
-                  </Button>
-                </div>
+          <Button className="w-full mt-4">새 카드 추가</Button>
+        </div>
+
+        <div className="bg-neutral-50 rounded-lg p-6">
+          <h2 className="text-lg font-bold mb-4">결제 내역</h2>
+
+          <div className="space-y-4">
+            <div className="p-4 border rounded-lg">
+              <div className="flex justify-between mb-2">
+                <p className="font-medium">Chill Serenity Room</p>
+                <p className="font-medium">₩550,000</p>
+              </div>
+              <div className="flex justify-between text-sm text-neutral-500">
+                <p>2025년 3월 25일</p>
+                <p>신한카드 •••• 1234</p>
               </div>
             </div>
-          ))
-        )}
-      </div>
 
-      {/* Payment Security Notice */}
-      <div className="mt-8 bg-blue-50 rounded-lg p-4 border border-blue-200">
-        <div className="flex">
-          <AlertCircle className="h-5 w-5 text-blue-500 mr-3 mt-0.5 flex-shrink-0" />
-          <div>
-            <h3 className="font-medium text-blue-800 mb-1">Secure Payments</h3>
-            <p className="text-sm text-blue-700">
-              Your payment information is encrypted and securely stored. We never store your full
-              card details on our servers. All transactions are processed through our secure payment
-              gateway.
-            </p>
+            <div className="p-4 border rounded-lg">
+              <div className="flex justify-between mb-2">
+                <p className="font-medium">La Mer Restaurant</p>
+                <p className="font-medium">₩180,000</p>
+              </div>
+              <div className="flex justify-between text-sm text-neutral-500">
+                <p>2025년 2월 14일</p>
+                <p>삼성카드 •••• 5678</p>
+              </div>
+            </div>
+          </div>
+
+          <Button variant="outline" className="w-full mt-4">
+            전체 내역 보기
+          </Button>
+        </div>
+
+        <div className="bg-neutral-50 rounded-lg p-6">
+          <h2 className="text-lg font-bold mb-4">청구서 설정</h2>
+
+          <div className="space-y-4">
+            <div className="flex items-center justify-between">
+              <div>
+                <p className="font-medium">전자 영수증</p>
+                <p className="text-sm text-neutral-500">이메일로 영수증 받기</p>
+              </div>
+              <Switch />
+            </div>
+
+            <div className="flex items-center justify-between">
+              <div>
+                <p className="font-medium">자동 결제</p>
+                <p className="text-sm text-neutral-500">예약 시 기본 카드로 자동 결제</p>
+              </div>
+              <Switch />
+            </div>
           </div>
         </div>
       </div>

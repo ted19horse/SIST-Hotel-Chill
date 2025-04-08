@@ -18,14 +18,14 @@ import { useState } from 'react';
 
 // Navigation sections
 const sections = {
-  overview: 'overview',
-  profile: 'profile',
-  roomReservations: 'room-reservations',
-  diningReservations: 'dining-reservations',
-  rewards: 'rewards',
-  payments: 'payments',
-  preferences: 'preferences',
-  support: 'support',
+  overview: '개요',
+  profile: '프로필',
+  roomReservations: '객실-예약',
+  diningReservations: '다이닝-예약',
+  rewards: '리워드',
+  payments: '결제수단',
+  preferences: '환경설정',
+  support: '고객지원',
 };
 
 export default function MyAccountPage() {
@@ -57,10 +57,10 @@ export default function MyAccountPage() {
   return (
     <main className="min-h-screen">
       <ScrollToTop />
-      {/* Header */}
+      {/* 헤더 */}
       <Header />
 
-      {/* Page Banner */}
+      {/* 페이지 배너 */}
       <div className="relative h-[30vh] bg-neutral-900">
         <div
           className="absolute inset-0 bg-cover bg-center"
@@ -91,7 +91,7 @@ export default function MyAccountPage() {
         {renderSection()}
       </AccountLayout>
 
-      {/* Footer */}
+      {/* 푸터 */}
       <Footer />
     </main>
   );

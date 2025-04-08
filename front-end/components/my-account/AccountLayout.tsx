@@ -25,7 +25,7 @@ export default function AccountLayout({
   const [mobileOpen, setMobileOpen] = useState(false);
   const isDesktop = useMediaQuery('(min-width: 1024px)');
 
-  // Close mobile sidebar when switching to desktop
+  // 데스크톱으로 전환 시 모바일 사이드바 닫기
   useEffect(() => {
     if (isDesktop) setMobileOpen(false);
   }, [isDesktop]);
@@ -39,7 +39,7 @@ export default function AccountLayout({
     <div className="bg-neutral-50 py-12">
       <div className="container mx-auto px-4">
         <div className="flex flex-col lg:flex-row gap-8">
-          {/* Sidebar Navigation - Desktop */}
+          {/* 사이드바 네비게이션 - 데스크톱 */}
           <div className="hidden lg:block w-72 flex-shrink-0">
             <SidebarNavigation
               activeSection={activeSection}
@@ -48,20 +48,20 @@ export default function AccountLayout({
             />
           </div>
 
-          {/* Sidebar Navigation - Mobile */}
+          {/* 사이드바 네비게이션 - 모바일 */}
           <div className="lg:hidden mb-4">
             <Sheet open={mobileOpen} onOpenChange={setMobileOpen}>
               <SheetTrigger asChild>
                 <Button variant="outline" className="w-full flex justify-between items-center">
                   <span>
-                    {activeSection === sections.overview && 'Account Overview'}
-                    {activeSection === sections.profile && 'Profile & Settings'}
-                    {activeSection === sections.roomReservations && 'My Reservations'}
-                    {activeSection === sections.diningReservations && 'Dining Reservations'}
-                    {activeSection === sections.rewards && 'Chill Rewards'}
-                    {activeSection === sections.payments && 'Payment Methods'}
-                    {activeSection === sections.preferences && 'Preferences'}
-                    {activeSection === sections.support && 'Support'}
+                    {activeSection === sections.overview && '계정 개요'}
+                    {activeSection === sections.profile && '프로필 및 설정'}
+                    {activeSection === sections.roomReservations && '객실 예약'}
+                    {activeSection === sections.diningReservations && '다이닝 예약'}
+                    {activeSection === sections.rewards && '칠 리워드'}
+                    {activeSection === sections.payments && '결제 수단'}
+                    {activeSection === sections.preferences && '환경설정'}
+                    {activeSection === sections.support && '고객지원'}
                   </span>
                   <Menu className="h-5 w-5" />
                 </Button>
@@ -78,7 +78,7 @@ export default function AccountLayout({
             </Sheet>
           </div>
 
-          {/* Main Content */}
+          {/* 메인 콘텐츠 */}
           <div className="flex-1">
             <div className="bg-white rounded-lg shadow-md">{children}</div>
           </div>

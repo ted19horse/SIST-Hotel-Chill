@@ -10,26 +10,7 @@ import {
 } from '@/components/common/ui/Accordion';
 import { Badge } from '@/components/common/ui/Badge';
 import { Button } from '@/components/common/ui/Button';
-import { Input } from '@/components/common/ui/Input';
-import { Label } from '@/components/common/ui/Label';
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from '@/components/common/ui/Select';
-import { Textarea } from '@/components/common/ui/Textarea';
-import {
-  CheckCircle2,
-  Clock,
-  HelpCircle,
-  LifeBuoy,
-  Mail,
-  MessageSquare,
-  Phone,
-  Send,
-} from 'lucide-react';
+import { Mail, MapPin, MessageCircle, Phone } from 'lucide-react';
 import { useState } from 'react';
 
 export default function Support() {
@@ -141,299 +122,120 @@ export default function Support() {
 
   return (
     <div className="p-6">
-      <h1 className="text-2xl font-bold mb-6">Support</h1>
+      <h1 className="text-2xl font-bold mb-6">고객 지원</h1>
 
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-        {/* Left Column - Contact Info & FAQ */}
-        <div className="lg:col-span-1 space-y-6">
-          {/* Contact Information */}
-          <div className="bg-white rounded-lg shadow-sm p-6">
-            <h2 className="text-lg font-bold mb-4">Contact Us</h2>
+      <div className="space-y-6">
+        <div className="bg-neutral-50 rounded-lg p-6">
+          <h2 className="text-lg font-bold mb-4">문의하기</h2>
 
-            <div className="space-y-4">
-              <div className="flex items-start">
-                <Phone className="h-5 w-5 text-primary mr-3 mt-0.5" />
-                <div>
-                  <p className="font-medium">Phone Support</p>
-                  <p className="text-neutral-600">+82 2-123-4567</p>
-                  <p className="text-sm text-neutral-500">Available 24/7</p>
-                </div>
-              </div>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <Button className="bg-primary hover:bg-primary/90 text-white h-auto py-6 flex flex-col items-center">
+              <Phone className="h-6 w-6 mb-2" />
+              <span className="font-medium">전화 상담</span>
+              <span className="text-sm opacity-80">1588-1234</span>
+            </Button>
 
-              <div className="flex items-start">
-                <Mail className="h-5 w-5 text-primary mr-3 mt-0.5" />
-                <div>
-                  <p className="font-medium">Email Support</p>
-                  <p className="text-neutral-600">support@chillhaven.com</p>
-                  <p className="text-sm text-neutral-500">Response within 24 hours</p>
-                </div>
-              </div>
-
-              <div className="flex items-start">
-                <MessageSquare className="h-5 w-5 text-primary mr-3 mt-0.5" />
-                <div>
-                  <p className="font-medium">Live Chat</p>
-                  <p className="text-neutral-600">Available in our mobile app</p>
-                  <p className="text-sm text-neutral-500">9:00 AM - 10:00 PM KST</p>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          {/* FAQ */}
-          <div className="bg-white rounded-lg shadow-sm p-6">
-            <h2 className="text-lg font-bold mb-4">Frequently Asked Questions</h2>
-
-            <Accordion type="single" collapsible className="w-full">
-              <AccordionItem value="item-1">
-                <AccordionTrigger>How do I modify my reservation?</AccordionTrigger>
-                <AccordionContent>
-                  <p className="text-neutral-600">
-                    You can modify your reservation through your account dashboard under "My
-                    Reservations." Select the reservation you wish to change and click the "Modify"
-                    button. Alternatively, you can contact our reservations team at +82 2-123-4567.
-                  </p>
-                </AccordionContent>
-              </AccordionItem>
-
-              <AccordionItem value="item-2">
-                <AccordionTrigger>What is the check-in/check-out time?</AccordionTrigger>
-                <AccordionContent>
-                  <p className="text-neutral-600">
-                    Standard check-in time is 3:00 PM and check-out time is 11:00 AM. Early check-in
-                    and late check-out may be available based on room availability and may incur
-                    additional charges. Chill Rewards members at higher tiers receive complimentary
-                    early check-in and late check-out privileges.
-                  </p>
-                </AccordionContent>
-              </AccordionItem>
-
-              <AccordionItem value="item-3">
-                <AccordionTrigger>How do I earn and redeem Chill Points?</AccordionTrigger>
-                <AccordionContent>
-                  <p className="text-neutral-600">
-                    You earn Chill Points with every stay based on your membership tier: Chill
-                    Breeze (100 points/night), Chill Flow (200 points/night), and Deep Chill (300
-                    points/night). Points can be redeemed for room charges, dining, spa treatments,
-                    and gift shop purchases at a rate of 1,000 points = ₩10,000.
-                  </p>
-                </AccordionContent>
-              </AccordionItem>
-
-              <AccordionItem value="item-4">
-                <AccordionTrigger>Is there a cancellation fee?</AccordionTrigger>
-                <AccordionContent>
-                  <p className="text-neutral-600">
-                    Cancellation policies vary by rate type and season. Generally, cancellations
-                    made 48 hours or more before check-in are fully refundable. Cancellations made
-                    within 48 hours of check-in may be subject to a one-night charge. Please refer
-                    to your specific booking terms for details.
-                  </p>
-                </AccordionContent>
-              </AccordionItem>
-
-              <AccordionItem value="item-5">
-                <AccordionTrigger>How can I request special amenities?</AccordionTrigger>
-                <AccordionContent>
-                  <p className="text-neutral-600">
-                    You can request special amenities by updating your preferences in your account
-                    settings or by adding special requests when making a reservation. For specific
-                    one-time requests, please contact our concierge team at concierge@chillhaven.com
-                    at least 24 hours before your arrival.
-                  </p>
-                </AccordionContent>
-              </AccordionItem>
-            </Accordion>
-
-            <div className="mt-4 text-center">
-              <Button variant="outline" className="text-primary border-primary hover:bg-primary/10">
-                <HelpCircle className="h-4 w-4 mr-2" />
-                View All FAQs
-              </Button>
-            </div>
+            <Button className="bg-primary hover:bg-primary/90 text-white h-auto py-6 flex flex-col items-center">
+              <MessageCircle className="h-6 w-6 mb-2" />
+              <span className="font-medium">실시간 채팅</span>
+              <span className="text-sm opacity-80">평균 응답 시간 5분</span>
+            </Button>
           </div>
         </div>
 
-        {/* Right Column - Support Tickets */}
-        <div className="lg:col-span-2">
-          {/* New Support Ticket */}
-          <div className="bg-white rounded-lg shadow-sm p-6 mb-6">
-            <h2 className="text-lg font-bold mb-4">Submit a Support Request</h2>
+        <div className="bg-neutral-50 rounded-lg p-6">
+          <h2 className="text-lg font-bold mb-4">자주 묻는 질문</h2>
 
-            <form onSubmit={handleSubmitTicket}>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
-                <div className="md:col-span-2">
-                  <Label htmlFor="subject">Subject</Label>
-                  <Input
-                    id="subject"
-                    placeholder="Brief description of your issue"
-                    value={newTicket.subject}
-                    onChange={(e) => setNewTicket({ ...newTicket, subject: e.target.value })}
-                    required
-                  />
-                </div>
+          <div className="space-y-4">
+            <div className="border rounded-lg">
+              <Accordion type="single" collapsible>
+                <AccordionItem value="1">
+                  <AccordionTrigger className="px-4">
+                    체크인/체크아웃 시간은 어떻게 되나요?
+                  </AccordionTrigger>
+                  <AccordionContent className="px-4 pb-4">
+                    체크인은 오후 3시부터, 체크아웃은 오전 11시까지입니다. 얼리 체크인이나 레이트
+                    체크아웃이 필요하신 경우 프론트 데스크로 문의해 주세요.
+                  </AccordionContent>
+                </AccordionItem>
 
-                <div className="md:col-span-2">
-                  <Label htmlFor="category">Category</Label>
-                  <Select
-                    value={newTicket.category}
-                    onValueChange={(value) => setNewTicket({ ...newTicket, category: value })}
-                    required
-                  >
-                    <SelectTrigger id="category">
-                      <SelectValue placeholder="Select a category" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="reservation">Reservation Inquiry</SelectItem>
-                      <SelectItem value="billing">Billing Issue</SelectItem>
-                      <SelectItem value="facilities">Facilities Question</SelectItem>
-                      <SelectItem value="membership">Membership & Rewards</SelectItem>
-                      <SelectItem value="feedback">Feedback & Suggestions</SelectItem>
-                      <SelectItem value="other">Other</SelectItem>
-                    </SelectContent>
-                  </Select>
-                </div>
+                <AccordionItem value="2">
+                  <AccordionTrigger className="px-4">
+                    예약을 변경하거나 취소하고 싶어요.
+                  </AccordionTrigger>
+                  <AccordionContent className="px-4 pb-4">
+                    체크인 24시간 전까지는 무료로 예약 변경 및 취소가 가능합니다. 마이페이지에서
+                    직접 변경하시거나 고객센터로 연락해 주세요.
+                  </AccordionContent>
+                </AccordionItem>
 
-                <div className="md:col-span-2">
-                  <Label htmlFor="message">Message</Label>
-                  <Textarea
-                    id="message"
-                    placeholder="Please provide details about your inquiry or issue"
-                    value={newTicket.message}
-                    onChange={(e) => setNewTicket({ ...newTicket, message: e.target.value })}
-                    className="min-h-[150px]"
-                    required
-                  />
-                </div>
-              </div>
-
-              <Button
-                type="submit"
-                className="bg-primary hover:bg-primary/90 text-white"
-                disabled={isSubmitting}
-              >
-                {isSubmitting ? (
-                  <>
-                    <svg
-                      className="animate-spin -ml-1 mr-2 h-4 w-4 text-white"
-                      xmlns="http://www.w3.org/2000/svg"
-                      fill="none"
-                      viewBox="0 0 24 24"
-                    >
-                      <circle
-                        className="opacity-25"
-                        cx="12"
-                        cy="12"
-                        r="10"
-                        stroke="currentColor"
-                        strokeWidth="4"
-                      ></circle>
-                      <path
-                        className="opacity-75"
-                        fill="currentColor"
-                        d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
-                      ></path>
-                    </svg>
-                    Submitting...
-                  </>
-                ) : (
-                  <>
-                    <Send className="h-4 w-4 mr-2" />
-                    Submit Request
-                  </>
-                )}
-              </Button>
-            </form>
+                <AccordionItem value="3">
+                  <AccordionTrigger className="px-4">포인트는 어떻게 사용하나요?</AccordionTrigger>
+                  <AccordionContent className="px-4 pb-4">
+                    객실 예약, 레스토랑, 스파 등 호텔 내 모든 시설에서 포인트를 사용하실 수
+                    있습니다. 1,000포인트는 10,000원의 가치를 가집니다.
+                  </AccordionContent>
+                </AccordionItem>
+              </Accordion>
+            </div>
           </div>
 
-          {/* Support Ticket History */}
-          <div className="bg-white rounded-lg shadow-sm p-6">
-            <h2 className="text-lg font-bold mb-4">Support Ticket History</h2>
+          <Button variant="link" className="mt-4 h-auto p-0">
+            전체 FAQ 보기
+          </Button>
+        </div>
 
-            {supportTickets.length === 0 ? (
-              <div className="text-center py-8">
-                <LifeBuoy className="h-12 w-12 mx-auto text-neutral-400 mb-4" />
-                <h3 className="text-lg font-medium text-neutral-600 mb-2">No Support Tickets</h3>
-                <p className="text-neutral-500">You haven't submitted any support tickets yet.</p>
+        <div className="bg-neutral-50 rounded-lg p-6">
+          <h2 className="text-lg font-bold mb-4">문의 내역</h2>
+
+          <div className="space-y-4">
+            <div className="border rounded-lg p-4">
+              <div className="flex items-start justify-between gap-4">
+                <div>
+                  <p className="font-medium">객실 업그레이드 문의</p>
+                  <p className="text-sm text-neutral-500">2025년 3월 20일</p>
+                  <p className="text-sm mt-2">
+                    예약하신 객실의 업그레이드 가능 여부를 확인 중입니다. 빠른 시일 내에 답변
+                    드리겠습니다.
+                  </p>
+                </div>
+                <Badge>처리중</Badge>
               </div>
-            ) : (
-              <div className="space-y-4">
-                {supportTickets.map((ticket) => (
-                  <div
-                    key={ticket.id}
-                    className="border border-neutral-200 rounded-lg overflow-hidden"
-                  >
-                    <div className="bg-neutral-50 p-4 flex flex-col md:flex-row md:justify-between md:items-center">
-                      <div>
-                        <div className="flex items-center">
-                          <h3 className="font-bold">{ticket.subject}</h3>
-                          <div className="ml-3">{getStatusBadge(ticket.status)}</div>
-                        </div>
-                        <p className="text-sm text-neutral-500">
-                          Ticket #{ticket.id} • Created {formatDate(ticket.createdAt)}
-                        </p>
-                      </div>
-                      <div className="mt-2 md:mt-0">
-                        {ticket.status === 'closed' ? (
-                          <Badge className="bg-neutral-100 text-neutral-800 flex items-center">
-                            <CheckCircle2 className="h-3 w-3 mr-1" />
-                            Resolved
-                          </Badge>
-                        ) : (
-                          <Badge className="bg-blue-100 text-blue-800 flex items-center">
-                            <Clock className="h-3 w-3 mr-1" />
-                            In Progress
-                          </Badge>
-                        )}
-                      </div>
-                    </div>
+            </div>
+          </div>
 
-                    <div className="p-4">
-                      <div className="mb-4">
-                        <p className="text-neutral-600">{ticket.message}</p>
-                      </div>
+          <Button variant="outline" className="w-full mt-4">
+            새 문의하기
+          </Button>
+        </div>
 
-                      {ticket.responses.length > 0 && (
-                        <div className="border-t border-neutral-200 pt-4 mt-4">
-                          <h4 className="font-medium mb-3">Responses</h4>
-                          <div className="space-y-4">
-                            {ticket.responses.map((response) => (
-                              <div
-                                key={response.id}
-                                className={`p-3 rounded-lg ${
-                                  response.from === 'support'
-                                    ? 'bg-neutral-100 ml-0 md:ml-4'
-                                    : 'bg-primary/10 mr-0 md:mr-4'
-                                }`}
-                              >
-                                <div className="flex justify-between items-center mb-1">
-                                  <p className="font-medium">
-                                    {response.from === 'support' ? 'Chill Haven Support' : 'You'}
-                                  </p>
-                                  <p className="text-xs text-neutral-500">
-                                    {formatDate(response.timestamp)}
-                                  </p>
-                                </div>
-                                <p className="text-neutral-600">{response.message}</p>
-                              </div>
-                            ))}
-                          </div>
-                        </div>
-                      )}
+        <div className="bg-neutral-50 rounded-lg p-6">
+          <h2 className="text-lg font-bold mb-4">연락처 정보</h2>
 
-                      {ticket.status !== 'closed' && (
-                        <div className="mt-4 flex">
-                          <Input placeholder="Type your reply here..." className="mr-2" />
-                          <Button className="bg-primary hover:bg-primary/90 text-white">
-                            <Send className="h-4 w-4" />
-                          </Button>
-                        </div>
-                      )}
-                    </div>
-                  </div>
-                ))}
+          <div className="space-y-4">
+            <div className="flex items-center gap-3">
+              <MapPin className="h-5 w-5 text-primary" />
+              <div>
+                <p className="font-medium">주소</p>
+                <p className="text-sm text-neutral-500">서울특별시 강남구 테헤란로 123</p>
               </div>
-            )}
+            </div>
+
+            <div className="flex items-center gap-3">
+              <Phone className="h-5 w-5 text-primary" />
+              <div>
+                <p className="font-medium">전화</p>
+                <p className="text-sm text-neutral-500">1588-1234</p>
+              </div>
+            </div>
+
+            <div className="flex items-center gap-3">
+              <Mail className="h-5 w-5 text-primary" />
+              <div>
+                <p className="font-medium">이메일</p>
+                <p className="text-sm text-neutral-500">support@chillhaven.com</p>
+              </div>
+            </div>
           </div>
         </div>
       </div>
