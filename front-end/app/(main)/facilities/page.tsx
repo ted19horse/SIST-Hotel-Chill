@@ -7,6 +7,7 @@ import FacilityTabs from '@/components/facilities/FacilityTabs';
 import InfoRequestForm from '@/components/facilities/InfoRequestForm';
 import ReservationInfo from '@/components/facilities/ReservationInfo';
 import RoomBenefits from '@/components/facilities/RoomBenefits';
+import { PLACEHOLDER_IMAGES } from '@/data/static/constants';
 import { ChevronRight } from 'lucide-react';
 import Link from 'next/link';
 
@@ -14,15 +15,15 @@ export default function FacilitiesPage() {
   return (
     <main className="min-h-screen">
       <ScrollToTop />
-      {/* Header is imported as a component */}
+      {/* 헤더 컴포넌트 */}
       <Header />
 
-      {/* Page Banner */}
+      {/* 페이지 배너 */}
       <div className="relative h-[40vh] bg-neutral-900">
         <div
           className="absolute inset-0 bg-cover bg-center"
           style={{
-            backgroundImage: "url('/placeholder.svg?height=800&width=1920')",
+            backgroundImage: `url('${PLACEHOLDER_IMAGES.MAIN_BANNER}')`,
             opacity: 0.6,
           }}
         />
@@ -40,25 +41,25 @@ export default function FacilitiesPage() {
         </div>
       </div>
 
-      {/* Facilities Introduction */}
+      {/* 시설 소개 */}
       <FacilitiesIntro />
 
-      {/* Facility Tabs */}
+      {/* 시설 탭 */}
       <FacilityTabs />
 
-      {/* Facilities Map */}
+      {/* 시설 지도 */}
       <FacilitiesMap />
 
-      {/* Reservation Information */}
+      {/* 예약 정보 */}
       <ReservationInfo />
 
-      {/* Room Grade Benefits */}
+      {/* 객실 등급별 혜택 */}
       <RoomBenefits />
 
-      {/* Request Information Form */}
+      {/* 정보 요청 양식 */}
       <InfoRequestForm />
 
-      {/* Footer */}
+      {/* 푸터 */}
       <Footer />
     </main>
   );

@@ -16,8 +16,10 @@ import {
   SelectValue,
 } from '@/components/common/ui/Select';
 import { Textarea } from '@/components/common/ui/Textarea';
+import { facilities } from '@/data/static/facilities/facilities-data';
 import { cn } from '@/lib/utils';
 import { format } from 'date-fns';
+import { ko } from 'date-fns/locale';
 import { CalendarIcon, Send } from 'lucide-react';
 import { useState } from 'react';
 
@@ -35,12 +37,12 @@ export default function InfoRequestForm() {
     e.preventDefault();
     setIsSubmitting(true);
 
-    // Simulate form submission
+    // 폼 제출 시뮬레이션
     setTimeout(() => {
       setIsSubmitting(false);
       setIsSubmitted(true);
 
-      // Reset form
+      // 폼 초기화
       setName('');
       setEmail('');
       setPhone('');
@@ -48,7 +50,7 @@ export default function InfoRequestForm() {
       setFacility('');
       setMessage('');
 
-      // Reset submission status after 5 seconds
+      // 5초 후 제출 상태 리셋
       setTimeout(() => {
         setIsSubmitted(false);
       }, 5000);
@@ -60,10 +62,10 @@ export default function InfoRequestForm() {
       <div className="container mx-auto px-4">
         <div className="max-w-3xl mx-auto">
           <div className="text-center mb-12">
-            <h2 className="text-3xl md:text-4xl font-bold mb-4">Request More Information</h2>
+            <h2 className="text-3xl md:text-4xl font-bold mb-4">추가 정보 요청</h2>
             <p className="text-neutral-600">
-              Have questions about our facilities? Fill out the form below and our team will get
-              back to you shortly.
+              시설에 대해 궁금한 점이 있으신가요? 아래 양식을 작성해 주시면 빠른 시일 내에 답변
+              드리겠습니다.
             </p>
           </div>
 
@@ -87,10 +89,9 @@ export default function InfoRequestForm() {
                     <polyline points="22 4 12 14.01 9 11.01"></polyline>
                   </svg>
                 </div>
-                <h3 className="text-xl font-bold mb-2">Thank You!</h3>
+                <h3 className="text-xl font-bold mb-2">감사합니다!</h3>
                 <p className="text-neutral-600">
-                  Your request has been submitted successfully. Our team will contact you within 24
-                  hours.
+                  요청이 성공적으로 접수되었습니다. 24시간 이내에 담당 팀에서 연락드릴 예정입니다.
                 </p>
               </div>
             ) : (
@@ -98,43 +99,43 @@ export default function InfoRequestForm() {
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
                   <div>
                     <Label htmlFor="name" className="mb-2 block">
-                      Full Name *
+                      이름 *
                     </Label>
                     <Input
                       id="name"
                       value={name}
                       onChange={(e) => setName(e.target.value)}
-                      placeholder="Enter your full name"
+                      placeholder="이름을 입력하세요"
                       required
                     />
                   </div>
                   <div>
                     <Label htmlFor="email" className="mb-2 block">
-                      Email Address *
+                      이메일 주소 *
                     </Label>
                     <Input
                       id="email"
                       type="email"
                       value={email}
                       onChange={(e) => setEmail(e.target.value)}
-                      placeholder="Enter your email address"
+                      placeholder="이메일 주소를 입력하세요"
                       required
                     />
                   </div>
                   <div>
                     <Label htmlFor="phone" className="mb-2 block">
-                      Phone Number
+                      연락처
                     </Label>
                     <Input
                       id="phone"
                       value={phone}
                       onChange={(e) => setPhone(e.target.value)}
-                      placeholder="Enter your phone number"
+                      placeholder="연락 가능한 전화번호를 입력하세요"
                     />
                   </div>
                   <div>
                     <Label htmlFor="date" className="mb-2 block">
-                      Planned Visit Date
+                      예정 방문일
                     </Label>
                     <Popover>
                       <PopoverTrigger asChild>
@@ -147,11 +148,17 @@ export default function InfoRequestForm() {
                           )}
                         >
                           <CalendarIcon className="mr-2 h-4 w-4" />
-                          {date ? format(date, 'PPP') : <span>Select a date</span>}
+                          {date ? format(date, 'PPP', { locale: ko }) : <span>날짜 선택</span>}
                         </Button>
                       </PopoverTrigger>
                       <PopoverContent className="w-auto p-0">
-                        <Calendar mode="single" selected={date} onSelect={setDate} initialFocus />
+                        <Calendar
+                          mode="single"
+                          selected={date}
+                          onSelect={setDate}
+                          initialFocus
+                          locale={ko}
+                        />
                       </PopoverContent>
                     </Popover>
                   </div>
@@ -159,35 +166,32 @@ export default function InfoRequestForm() {
 
                 <div className="mb-6">
                   <Label htmlFor="facility" className="mb-2 block">
-                    Facility of Interest *
+                    관심 시설 *
                   </Label>
                   <Select value={facility} onValueChange={setFacility} required>
                     <SelectTrigger id="facility">
-                      <SelectValue placeholder="Select a facility" />
+                      <SelectValue placeholder="시설을 선택하세요" />
                     </SelectTrigger>
                     <SelectContent>
-                      <SelectItem value="wellness-center">Chill Wellness Center</SelectItem>
-                      <SelectItem value="serenity-spa">Chill Serenity Spa</SelectItem>
-                      <SelectItem value="nature-zone">Nature Chill Zone</SelectItem>
-                      <SelectItem value="lounge-entertainment">
-                        Chill Lounge & Entertainment
-                      </SelectItem>
-                      <SelectItem value="business-chill">Business Chill</SelectItem>
-                      <SelectItem value="kids-family">Chill Kids & Family</SelectItem>
-                      <SelectItem value="all">All Facilities</SelectItem>
+                      {facilities.map((item) => (
+                        <SelectItem key={item.id} value={item.id}>
+                          {item.displayName}
+                        </SelectItem>
+                      ))}
+                      <SelectItem value="all">모든 시설</SelectItem>
                     </SelectContent>
                   </Select>
                 </div>
 
                 <div className="mb-6">
                   <Label htmlFor="message" className="mb-2 block">
-                    Your Message *
+                    문의 내용 *
                   </Label>
                   <Textarea
                     id="message"
                     value={message}
                     onChange={(e) => setMessage(e.target.value)}
-                    placeholder="Please let us know what specific information you're looking for"
+                    placeholder="어떤 정보가 필요하신지 구체적으로 알려주세요"
                     className="min-h-[120px]"
                     required
                   />
@@ -200,11 +204,10 @@ export default function InfoRequestForm() {
                       htmlFor="terms"
                       className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
                     >
-                      I agree to the privacy policy *
+                      개인정보 수집 및 이용에 동의합니다 *
                     </label>
                     <p className="text-sm text-neutral-500">
-                      Your information will only be used to respond to your inquiry and will not be
-                      shared with third parties.
+                      입력하신 정보는 문의 응대 목적으로만 사용되며 제3자에게 제공되지 않습니다.
                     </p>
                   </div>
                 </div>
@@ -236,12 +239,12 @@ export default function InfoRequestForm() {
                           d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
                         ></path>
                       </svg>
-                      Submitting...
+                      제출 중...
                     </>
                   ) : (
                     <>
                       <Send className="h-4 w-4 mr-2" />
-                      Submit Request
+                      문의 제출하기
                     </>
                   )}
                 </Button>
