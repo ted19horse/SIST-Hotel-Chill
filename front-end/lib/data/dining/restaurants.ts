@@ -1,381 +1,201 @@
-import { Restaurant } from '@/lib/types/restaurant';
-import { chillBitesMenus, chillEleganceMenus, chillGardenMenus, chillMomentsMenus } from './menus';
+import { Restaurant } from '@/lib/stores/reservationStore';
 
 /**
  * 다이닝 레스토랑 목업 데이터
  * (Dining.md 문서 기준으로 업데이트)
  */
-export const restaurants: Restaurant[] = [
+export const restaurants: (Restaurant & {
+  slug: string;
+  images?: string[];
+  description?: string;
+  cuisine?: string;
+  features?: string[];
+  priceRange?: string;
+  rating?: number;
+  reviewCount?: number;
+  isNew?: boolean;
+  isOpen?: boolean;
+  floor?: string;
+  phone?: string;
+  email?: string;
+  dresscode?: string;
+  capacity?: {
+    total: number;
+    indoor?: number;
+    outdoor?: number;
+    bar?: number;
+    lounge?: number;
+  };
+  specialEvents?: Array<{
+    name: string;
+    description: string;
+    startDate?: string;
+    endDate?: string;
+    time?: string;
+    days?: string[];
+  }>;
+  exclusiveFor?: string[];
+})[] = [
   {
     id: 'chill-bites',
-    name: 'Chill Bites',
     slug: 'chill-bites',
-    concept: '건강한 로컬 식재료 중심의 올데이 다이닝',
-    shortDescription: '하루 종일 건강한 식사를 즐길 수 있는 올데이 다이닝',
-    description:
-      'Chill Bites는 하루 종일 건강한 식사를 즐길 수 있는 올데이 다이닝 레스토랑입니다. 유기농 로컬 식재료를 중심으로 건강하고 영양 가득한 요리를 제공합니다. 아침부터 저녁까지 몸과 마음에 휴식을 주는 음식을 즐길 수 있습니다.',
-    location: '1층 중앙, 가든 뷰',
+    name: 'Chill Bites',
+    location: '1층 중앙',
     floor: '1층',
-    cuisine: '인터내셔널, 로컬 푸드',
+    concept: '건강한 로컬 식재료 중심의 올데이 다이닝',
+    description:
+      '하루 종일 건강한 식사를 즐길 수 있는 올데이 다이닝 레스토랑입니다. 유기농 로컬 식재료를 중심으로 건강하고 영양 가득한 요리를 제공합니다.',
+    cuisine: '올데이 다이닝',
+    features: ['건강식', '로컬 식재료', '가든 뷰'],
     priceRange: '₩₩',
     rating: 4.5,
-    reviewCount: 152,
-    thumbnail: 'https://placehold.co/600x400/F1F5F9/667080?text=Chill+Bites',
-    images: [
-      'https://placehold.co/800x500/F1F5F9/667080?text=Chill+Bites+1',
-      'https://placehold.co/800x500/F1F5F9/667080?text=Chill+Bites+2',
-      'https://placehold.co/800x500/F1F5F9/667080?text=Chill+Bites+3',
-      'https://placehold.co/800x500/F1F5F9/667080?text=Chill+Bites+4',
-    ],
-    openingHours: [
-      {
-        dayOfWeek: '월요일',
-        open: '06:30',
-        close: '22:30',
-        isClosed: false,
-      },
-      {
-        dayOfWeek: '화요일',
-        open: '06:30',
-        close: '22:30',
-        isClosed: false,
-      },
-      {
-        dayOfWeek: '수요일',
-        open: '06:30',
-        close: '22:30',
-        isClosed: false,
-      },
-      {
-        dayOfWeek: '목요일',
-        open: '06:30',
-        close: '22:30',
-        isClosed: false,
-      },
-      {
-        dayOfWeek: '금요일',
-        open: '06:30',
-        close: '22:30',
-        isClosed: false,
-      },
-      {
-        dayOfWeek: '토요일',
-        open: '06:30',
-        close: '22:30',
-        isClosed: false,
-      },
-      {
-        dayOfWeek: '일요일',
-        open: '06:30',
-        close: '22:30',
-        isClosed: false,
-      },
-    ],
+    reviewCount: 120,
+    isOpen: true,
+    phone: '02-1234-5678',
+    email: 'chillbites@chillhaven.com',
+    dresscode: '캐주얼',
     capacity: {
       total: 120,
       indoor: 120,
-      outdoor: 0,
     },
-    features: ['올데이 다이닝', '건강식', '로컬 식재료', '가든 뷰'],
-    amenities: ['키즈 메뉴', '무료 와이파이'],
-    isOpen: true,
-    isNew: false,
-    isPromoted: true,
-    reservationUrl: '/dining/reserve?restaurant=chill-bites',
-    dresscode: '캐주얼',
-    phone: '02-1234-5678',
-    email: 'chillbites@chillhaven.com',
+    openingHours: [
+      { dayOfWeek: '월요일', open: '06:30', close: '22:30' },
+      { dayOfWeek: '화요일', open: '06:30', close: '22:30' },
+      { dayOfWeek: '수요일', open: '06:30', close: '22:30' },
+      { dayOfWeek: '목요일', open: '06:30', close: '22:30' },
+      { dayOfWeek: '금요일', open: '06:30', close: '22:30' },
+      { dayOfWeek: '토요일', open: '06:30', close: '22:30' },
+      { dayOfWeek: '일요일', open: '06:30', close: '22:30' },
+    ],
     reservationPolicy: {
       minPartySize: 1,
-      maxPartySize: 12,
+      maxPartySize: 8,
       reservationRequired: false,
-      cancellationPolicy: '예약 시간 2시간 전까지 취소 가능',
-      cancellationDeadlineHours: 2,
-      specialRequests: true,
+      cancellationPolicy: '6인 이상 단체는 예약 권장',
     },
-    menuCategories: chillBitesMenus,
   },
   {
     id: 'chill-garden',
-    name: 'Chill Garden',
     slug: 'chill-garden',
-    concept: '가든 뷰가 있는 야외 테라스를 갖춘 캐주얼 다이닝',
-    shortDescription: '정원 전망의 테라스와 신선한 제철 요리',
-    description:
-      'Chill Garden은 호텔의 아름다운 정원이 보이는 테라스에서 캐주얼한 분위기에서 식사를 즐길 수 있는 레스토랑입니다. 신선한 가든 허브와 계절 식재료를 활용한 다양한 요리와 함께 여유로운 시간을 보내세요.',
-    location: '가든 레벨, 실내 및 야외 테라스',
+    name: 'Chill Garden',
+    location: '가든 레벨',
     floor: '가든 레벨',
-    cuisine: '캐주얼, 지중해, 그릴',
+    concept: '가든 뷰가 있는 야외 테라스를 갖춘 캐주얼 다이닝',
+    description: '가든 뷰가 있는 야외 테라스에서 캐주얼한 다이닝을 즐길 수 있는 공간입니다.',
+    cuisine: '캐주얼 다이닝',
+    features: ['야외 테라스', '가든 뷰'],
     priceRange: '₩₩',
-    rating: 4.7,
-    reviewCount: 96,
-    thumbnail: 'https://placehold.co/600x400/F1F5F9/667080?text=Chill+Garden',
-    images: [
-      'https://placehold.co/800x500/E6F4EA/2E7D32?text=Chill+Garden+1',
-      'https://placehold.co/800x500/E6F4EA/2E7D32?text=Chill+Garden+2',
-      'https://placehold.co/800x500/E6F4EA/2E7D32?text=Chill+Garden+3',
-      'https://placehold.co/800x500/E6F4EA/2E7D32?text=Chill+Garden+4',
-    ],
-    openingHours: [
-      {
-        dayOfWeek: '월요일',
-        open: '11:30',
-        close: '22:00',
-        isClosed: false,
-      },
-      {
-        dayOfWeek: '화요일',
-        open: '11:30',
-        close: '22:00',
-        isClosed: false,
-      },
-      {
-        dayOfWeek: '수요일',
-        open: '11:30',
-        close: '22:00',
-        isClosed: false,
-      },
-      {
-        dayOfWeek: '목요일',
-        open: '11:30',
-        close: '22:00',
-        isClosed: false,
-      },
-      {
-        dayOfWeek: '금요일',
-        open: '11:30',
-        close: '22:00',
-        isClosed: false,
-      },
-      {
-        dayOfWeek: '토요일',
-        open: '11:30',
-        close: '22:00',
-        isClosed: false,
-      },
-      {
-        dayOfWeek: '일요일',
-        open: '11:30',
-        close: '22:00',
-        isClosed: false,
-      },
-    ],
+    rating: 4.6,
+    reviewCount: 80,
+    isOpen: true,
+    phone: '02-1234-5679',
+    email: 'chillgarden@chillhaven.com',
+    dresscode: '캐주얼',
     capacity: {
       total: 80,
       indoor: 50,
       outdoor: 30,
-      terrace: 30,
     },
-    features: ['캐주얼 다이닝', '야외 테라스', '가든 뷰', '제철 요리'],
-    amenities: ['테라스 좌석', '무료 와이파이'],
-    isOpen: true,
-    isNew: false,
-    isPromoted: false,
-    reservationUrl: '/dining/reserve?restaurant=chill-garden',
-    dresscode: '캐주얼',
-    phone: '02-1234-5679',
-    email: 'chillgarden@chillhaven.com',
+    openingHours: [
+      { dayOfWeek: '월요일', open: '11:30', close: '22:00' },
+      { dayOfWeek: '화요일', open: '11:30', close: '22:00' },
+      { dayOfWeek: '수요일', open: '11:30', close: '22:00' },
+      { dayOfWeek: '목요일', open: '11:30', close: '22:00' },
+      { dayOfWeek: '금요일', open: '11:30', close: '22:00' },
+      { dayOfWeek: '토요일', open: '11:30', close: '22:00' },
+      { dayOfWeek: '일요일', open: '11:30', close: '22:00' },
+    ],
     reservationPolicy: {
       minPartySize: 1,
-      maxPartySize: 10,
+      maxPartySize: 8,
       reservationRequired: false,
-      cancellationPolicy: '예약 시간 2시간 전까지 취소 가능',
-      cancellationDeadlineHours: 2,
-      specialRequests: true,
+      cancellationPolicy: '주말 및 공휴일은 예약 권장',
     },
-    menuCategories: chillGardenMenus,
   },
   {
     id: 'chill-elegance',
-    name: 'Chill Elegance',
     slug: 'chill-elegance',
-    concept: '고급 모던 한식 및 퓨전 요리',
-    shortDescription: '최상층의 파노라마 뷰와 프리미엄 다이닝',
-    description:
-      'Chill Elegance는 최상층에서 파노라마 뷰를 감상하며 고급 한식 및 퓨전 요리를 즐길 수 있는 프리미엄 다이닝 레스토랑입니다. 최고급 식재료와 셰프의 정교한 솜씨로 만들어진 코스 요리를 통해 잊지 못할 미식 경험을 선사합니다.',
-    location: '최상층, 파노라마 뷰',
+    name: 'Chill Elegance',
+    location: '최상층',
     floor: '최상층',
+    concept: '고급 모던 한식 및 퓨전 요리',
+    description:
+      '최상층에서 파노라마 뷰와 함께 고급 모던 한식과 퓨전 요리를 즐길 수 있는 프리미엄 다이닝입니다.',
     cuisine: '모던 한식, 퓨전',
+    features: ['파노라마 뷰', '프리미엄 다이닝'],
     priceRange: '₩₩₩₩',
     rating: 4.9,
-    reviewCount: 64,
-    thumbnail: 'https://placehold.co/600x400/F3E5F5/6A1B9A?text=Chill+Elegance',
-    images: [
-      'https://placehold.co/800x500/F3E5F5/6A1B9A?text=Chill+Elegance+1',
-      'https://placehold.co/800x500/F3E5F5/6A1B9A?text=Chill+Elegance+2',
-      'https://placehold.co/800x500/F3E5F5/6A1B9A?text=Chill+Elegance+3',
-      'https://placehold.co/800x500/F3E5F5/6A1B9A?text=Chill+Elegance+4',
-    ],
-    openingHours: [
-      {
-        dayOfWeek: '월요일',
-        open: '18:00',
-        close: '22:00',
-        isClosed: false,
-      },
-      {
-        dayOfWeek: '화요일',
-        open: '18:00',
-        close: '22:00',
-        isClosed: false,
-      },
-      {
-        dayOfWeek: '수요일',
-        open: '18:00',
-        close: '22:00',
-        isClosed: false,
-      },
-      {
-        dayOfWeek: '목요일',
-        open: '18:00',
-        close: '22:00',
-        isClosed: false,
-      },
-      {
-        dayOfWeek: '금요일',
-        open: '18:00',
-        close: '22:00',
-        isClosed: false,
-      },
-      {
-        dayOfWeek: '토요일',
-        open: '18:00',
-        close: '22:00',
-        isClosed: false,
-      },
-      {
-        dayOfWeek: '일요일',
-        open: '18:00',
-        close: '22:00',
-        isClosed: false,
-      },
-    ],
+    reviewCount: 40,
+    isOpen: true,
+    phone: '02-1234-5680',
+    email: 'chillelegance@chillhaven.com',
+    dresscode: '스마트 캐주얼',
     capacity: {
       total: 40,
       indoor: 40,
-      outdoor: 0,
-      privateRoom: 10,
     },
-    features: ['프리미엄 다이닝', '코스 요리', '파노라마 뷰', '디너 전용'],
-    amenities: ['와인 페어링', '논알콜 페어링', '한국 전통주 페어링'],
-    isOpen: true,
-    isNew: false,
-    isPromoted: true,
-    reservationUrl: '/dining/reserve?restaurant=chill-elegance',
-    dresscode: '스마트 캐주얼',
-    phone: '02-1234-5680',
-    email: 'chillelegance@chillhaven.com',
+    openingHours: [
+      { dayOfWeek: '월요일', open: '18:00', close: '22:00' },
+      { dayOfWeek: '화요일', open: '18:00', close: '22:00' },
+      { dayOfWeek: '수요일', open: '18:00', close: '22:00' },
+      { dayOfWeek: '목요일', open: '18:00', close: '22:00' },
+      { dayOfWeek: '금요일', open: '18:00', close: '22:00' },
+      { dayOfWeek: '토요일', open: '18:00', close: '22:00' },
+      { dayOfWeek: '일요일', open: '18:00', close: '22:00' },
+    ],
     reservationPolicy: {
       minPartySize: 1,
       maxPartySize: 8,
       reservationRequired: true,
-      cancellationPolicy: '예약 시간 24시간 전까지 취소 가능',
-      cancellationDeadlineHours: 24,
-      specialRequests: true,
+      cancellationPolicy: '최소 1일 전 예약 필수',
     },
-    exclusiveFor: ['CHILL_FAMILY_SUITE', 'CHILL_LAKE_SUITE', 'ULTIMATE_CHILL_SUITE'],
-    chefName: '김정현',
-    chefDescription:
-      '10년 이상의 미슐랭 스타 레스토랑 경력을 가진 김정현 셰프는 전통 한식의 맛과 현대적 조리법을 결합한 창의적인 요리로 유명합니다.',
-    menuCategories: chillEleganceMenus,
+    exclusiveFor: ['Chill Family Suite', 'Chill Lake Suite', 'Ultimate Chill Suite'],
   },
   {
     id: 'chill-moments',
-    name: 'Chill Moments',
     slug: 'chill-moments',
-    concept: '티 타임, 가벼운 식사, 칵테일을 즐길 수 있는 공간',
-    shortDescription: '라운지 & 바, 로비 인접, 정원 뷰',
-    description:
-      'Chill Moments는 로비 인접한 곳에 위치한 라운지 & 바로, 언제든지 방문하여 티 타임, 가벼운 식사, 칵테일을 즐길 수 있는 공간입니다. 아름다운 정원 뷰와 함께 휴식을 취하거나 비즈니스 미팅을 할 수 있는 최적의 장소입니다.',
-    location: '로비 인접, 정원 뷰',
+    name: 'Chill Moments',
+    location: '로비 인접',
     floor: '1층',
-    cuisine: '라운지 & 바, 애프터눈 티',
+    concept: '티 타임, 가벼운 식사, 칵테일을 즐길 수 있는 공간',
+    description:
+      '로비 인접한 곳에서 정원 뷰와 함께 티 타임, 가벼운 식사, 칵테일을 즐길 수 있는 라운지 & 바입니다.',
+    cuisine: '라운지 & 바',
+    features: ['정원 뷰', '라이브 뮤직'],
     priceRange: '₩₩',
-    rating: 4.6,
-    reviewCount: 128,
-    thumbnail: 'https://placehold.co/600x400/E3F2FD/1565C0?text=Chill+Moments',
-    images: [
-      'https://placehold.co/800x500/E3F2FD/1565C0?text=Chill+Moments+1',
-      'https://placehold.co/800x500/E3F2FD/1565C0?text=Chill+Moments+2',
-      'https://placehold.co/800x500/E3F2FD/1565C0?text=Chill+Moments+3',
-      'https://placehold.co/800x500/E3F2FD/1565C0?text=Chill+Moments+4',
-    ],
-    openingHours: [
-      {
-        dayOfWeek: '월요일',
-        open: '10:00',
-        close: '24:00',
-        isClosed: false,
-      },
-      {
-        dayOfWeek: '화요일',
-        open: '10:00',
-        close: '24:00',
-        isClosed: false,
-      },
-      {
-        dayOfWeek: '수요일',
-        open: '10:00',
-        close: '24:00',
-        isClosed: false,
-      },
-      {
-        dayOfWeek: '목요일',
-        open: '10:00',
-        close: '24:00',
-        isClosed: false,
-      },
-      {
-        dayOfWeek: '금요일',
-        open: '10:00',
-        close: '24:00',
-        isClosed: false,
-      },
-      {
-        dayOfWeek: '토요일',
-        open: '10:00',
-        close: '24:00',
-        isClosed: false,
-      },
-      {
-        dayOfWeek: '일요일',
-        open: '10:00',
-        close: '24:00',
-        isClosed: false,
-      },
-    ],
+    rating: 4.7,
+    reviewCount: 60,
+    isOpen: true,
+    phone: '02-1234-5681',
+    email: 'chillmoments@chillhaven.com',
+    dresscode: '스마트 캐주얼',
     capacity: {
       total: 60,
       indoor: 60,
-      outdoor: 0,
       bar: 10,
       lounge: 50,
     },
-    features: ['라운지', '바', '정원 뷰', '애프터눈 티', '라이브 음악'],
-    amenities: ['무료 와이파이', '충전 스테이션'],
-    isOpen: true,
-    isNew: false,
-    isPromoted: false,
-    reservationUrl: '/dining/reserve?restaurant=chill-moments',
-    dresscode: '스마트 캐주얼',
-    phone: '02-1234-5681',
-    email: 'chillmoments@chillhaven.com',
+    openingHours: [
+      { dayOfWeek: '월요일', open: '10:00', close: '24:00' },
+      { dayOfWeek: '화요일', open: '10:00', close: '24:00' },
+      { dayOfWeek: '수요일', open: '10:00', close: '24:00' },
+      { dayOfWeek: '목요일', open: '10:00', close: '24:00' },
+      { dayOfWeek: '금요일', open: '10:00', close: '24:00' },
+      { dayOfWeek: '토요일', open: '10:00', close: '24:00' },
+      { dayOfWeek: '일요일', open: '10:00', close: '24:00' },
+    ],
     reservationPolicy: {
       minPartySize: 1,
       maxPartySize: 8,
       reservationRequired: false,
-      cancellationPolicy: '예약 시간 2시간 전까지 취소 가능',
-      cancellationDeadlineHours: 2,
-      specialRequests: true,
+      cancellationPolicy: '애프터눈 티는 예약 권장',
     },
-    menuCategories: chillMomentsMenus,
     specialEvents: [
       {
-        name: '라이브 재즈 공연',
-        description: '매주 금요일과 토요일 저녁 7시부터 10시까지 라이브 재즈와 어쿠스틱 음악 공연',
+        name: '라이브 뮤직',
+        description: '재즈, 어쿠스틱 음악 등 편안한 라이브 공연',
         days: ['금요일', '토요일'],
         time: '19:00 - 22:00',
-        isRegular: true,
       },
     ],
   },

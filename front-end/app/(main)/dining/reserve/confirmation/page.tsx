@@ -65,11 +65,8 @@ export default function ReservationConfirmationPage() {
   const handleConfirm = () => {
     setCurrentStep(ReservationStep.CONFIRMED);
 
-    // 예약 완료 후 메인 페이지로 리다이렉트 (실제로는 예약 완료 페이지를 보여주거나 마이페이지로 이동)
-    // 일정 시간 후 폼 상태 초기화
-    setTimeout(() => {
-      resetForm();
-    }, 3000);
+    // 예약 완료 페이지로 리다이렉트
+    router.push('/dining/reserve/confirmation/complete');
   };
 
   // 날짜 포맷팅

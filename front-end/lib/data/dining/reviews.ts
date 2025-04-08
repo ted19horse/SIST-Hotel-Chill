@@ -1,0 +1,63 @@
+// 레스토랑 리뷰 정보 목업 데이터
+export const reviews = [
+  {
+    id: 'review1',
+    restaurantId: 'restaurant1',
+    userId: 'user1',
+    reservationId: 'reservation1',
+    rating: 5,
+    title: '완벽한 다이닝 경험',
+    content:
+      '음식의 품질, 서비스, 분위기 모두 최상이었습니다. 특히 와인 페어링이 음식과 잘 어울렸어요.',
+    images: ['/images/reviews/review1-1.jpg', '/images/reviews/review1-2.jpg'],
+    tags: ['와인페어링', '서비스', '분위기'],
+    likes: 15,
+    comments: [
+      {
+        id: 'comment1',
+        userId: 'user2',
+        content: '저도 다녀왔는데 정말 좋았어요!',
+        createdAt: '2024-03-16T11:20:00Z',
+      },
+    ],
+    createdAt: '2024-03-15T21:30:00Z',
+    updatedAt: '2024-03-15T21:30:00Z',
+  },
+  {
+    id: 'review2',
+    restaurantId: 'restaurant2',
+    userId: 'user2',
+    reservationId: 'reservation2',
+    rating: 4,
+    title: '고급스러운 스테이크 하우스',
+    content: '스테이크의 품질이 매우 좋았고, 조리도 완벽했습니다. 다만 가격이 조금 부담스러웠네요.',
+    images: ['/images/reviews/review2-1.jpg'],
+    tags: ['스테이크', '분위기'],
+    likes: 8,
+    comments: [],
+    createdAt: '2024-03-16T19:45:00Z',
+    updatedAt: '2024-03-16T19:45:00Z',
+  },
+  {
+    id: 'review3',
+    restaurantId: 'restaurant1',
+    userId: 'user3',
+    reservationId: 'reservation3',
+    rating: 3,
+    title: '기대에 비해 아쉬웠어요',
+    content: '음식은 맛있었지만, 서비스가 다소 느렸습니다. 웨이터의 응대도 개선이 필요해 보입니다.',
+    images: [],
+    tags: ['서비스'],
+    likes: 2,
+    comments: [
+      {
+        id: 'comment2',
+        userId: 'user4',
+        content: '저도 비슷한 경험이 있었어요.',
+        createdAt: '2024-03-17T10:15:00Z',
+      },
+    ],
+    createdAt: '2024-03-17T09:30:00Z',
+    updatedAt: '2024-03-17T09:30:00Z',
+  },
+];

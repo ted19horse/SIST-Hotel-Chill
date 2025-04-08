@@ -3,7 +3,7 @@
 import { Badge } from '@/components/common/ui/Badge';
 import { Button } from '@/components/common/ui/Button';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/common/ui/Tabs';
-import { restaurants } from '@/lib/data/dining/restaurants';
+import useReservationStore from '@/lib/stores/reservationStore';
 import { Calendar, ChevronLeft, Clock, Mail, MapPin, Phone, Star } from 'lucide-react';
 import Image from 'next/image';
 import Link from 'next/link';
@@ -16,8 +16,222 @@ import { useState } from 'react';
 export default function RestaurantDetailPage({ params }: { params: { slug: string } }) {
   const { slug } = params;
 
+  // Zustand 스토어에서 상태 가져오기
+  const { date, guests, setDate, setGuests } = useReservationStore();
+
+  // OpeningHour 타입 정의
+  type OpeningHour = {
+    dayOfWeek: string;
+    open: string;
+    close: string;
+    isClosed?: boolean;
+  };
+
+  // MenuItem 타입 정의
+  type MenuItem = {
+    id: string;
+    name: string;
+    description?: string;
+    price: number;
+    currency?: string;
+    image?: string;
+    isSignature?: boolean;
+    dietaryRestrictions?: string[];
+    allergens?: string[];
+  };
+
+  // MenuCategory 타입 정의
+  type MenuCategory = {
+    id: string;
+    name: string;
+    description?: string;
+    timeAvailable?: {
+      start: string;
+      end: string;
+    };
+    items: MenuItem[];
+  };
+
+  // Restaurant 타입 정의
+  type Restaurant = {
+    slug: string;
+    name: string;
+    concept?: string;
+    location?: string;
+    floor?: string;
+    images?: string[];
+    openingHours?: OpeningHour[];
+    menuCategories?: MenuCategory[];
+    isOpen?: boolean;
+    isNew?: boolean;
+    rating?: number;
+    reviewCount?: number;
+    priceRange?: string;
+    cuisine?: string;
+    features?: string[];
+    specialEvents?: { name: string; description: string }[];
+    description?: string;
+    phone?: string;
+    email?: string;
+    dresscode?: string;
+    reservationPolicy?: {
+      minPartySize: number;
+      maxPartySize: number;
+      reservationRequired: boolean;
+      cancellationPolicy?: string;
+    };
+    exclusiveFor?: string[];
+  };
+
+  // 더미 데이터 예시
+  const dummyRestaurants: Restaurant[] = [
+    {
+      slug: 'chill-bites',
+      name: 'Chill Bites',
+      concept: '올데이 다이닝',
+      location: '1층 중앙, 가든 뷰',
+      floor: '1',
+      images: ['https://placehold.co/800x500?text=Chill+Bites'],
+      openingHours: [
+        { dayOfWeek: '월요일', open: '06:30', close: '22:30' },
+        { dayOfWeek: '화요일', open: '06:30', close: '22:30' },
+        // ... 나머지 요일 ...
+      ],
+      menuCategories: [
+        {
+          id: 'breakfast',
+          name: '조식 메뉴',
+          description: '활기찬 아침을 위한 건강한 조식',
+          timeAvailable: { start: '06:30', end: '10:30' },
+          items: [
+            {
+              id: 'breakfast-item-1',
+              name: '치킬리언 브런치 플레이트',
+              description: '유기농 샐러드, 계란 요리, 홈메이드 소시지, 통곡물 토스트',
+              price: 28000,
+              currency: '원',
+              image: 'https://placehold.co/300x300?text=치킬리언+브런치+플레이트',
+              isSignature: true,
+              dietaryRestrictions: ['계란', '글루텐', '유제품'],
+              allergens: ['계란', '글루텐', '유제품'],
+            },
+            // ... 다른 메뉴 아이템 ...
+          ],
+        },
+        // ... 다른 카테고리 ...
+      ],
+      isOpen: true,
+    },
+    {
+      slug: 'chill-garden',
+      name: 'Chill Garden',
+      concept: '캐주얼 다이닝',
+      location: '가든 레벨, 실내 및 야외 테라스',
+      floor: '가든',
+      images: ['https://placehold.co/800x500?text=Chill+Garden'],
+      openingHours: [
+        { dayOfWeek: '월요일', open: '11:30', close: '22:00' },
+        { dayOfWeek: '화요일', open: '11:30', close: '22:00' },
+        // ... 나머지 요일 ...
+      ],
+      menuCategories: [
+        {
+          id: 'salads',
+          name: '가든 인스피레이션 샐러드',
+          description: '정원에서 영감을 얻은 신선한 샐러드',
+          timeAvailable: { start: '11:30', end: '22:00' },
+          items: [
+            {
+              id: 'salad-item-1',
+              name: '드리프트 어웨이 샐러드',
+              description: '호텔 옥상 정원에서 채취한 허브, 꽃잎, 계절 과일',
+              price: 26000,
+              currency: '원',
+              image: 'https://placehold.co/300x300?text=드리프트+어웨이+샐러드',
+              isSignature: true,
+              dietaryRestrictions: ['견과류'],
+              allergens: ['견과류'],
+            },
+          ],
+        },
+      ],
+      isOpen: true,
+    },
+    {
+      slug: 'chill-elegance',
+      name: 'Chill Elegance',
+      concept: '프리미엄 다이닝',
+      location: '최상층, 파노라마 뷰',
+      floor: '최상층',
+      images: ['https://placehold.co/800x500?text=Chill+Elegance'],
+      openingHours: [
+        { dayOfWeek: '월요일', open: '18:00', close: '22:00' },
+        { dayOfWeek: '화요일', open: '18:00', close: '22:00' },
+        // ... 나머지 요일 ...
+      ],
+      menuCategories: [
+        {
+          id: 'courses',
+          name: '코스 메뉴',
+          description: '5가지 코스로 즐기는 여정',
+          timeAvailable: { start: '18:00', end: '22:00' },
+          items: [
+            {
+              id: 'course-item-1',
+              name: 'Serene Journey 코스 메뉴',
+              description:
+                '시작의 고요, 숲의 속삭임, 바다의 명상, 대지의 평온, 달콤한 휴식 등 5코스',
+              price: 150000,
+              currency: '원',
+              image: 'https://placehold.co/300x300?text=Serene+Journey+코스',
+              isSignature: true,
+              dietaryRestrictions: ['갑각류', '글루텐', '유제품', '견과류', '계란'],
+              allergens: ['갑각류', '글루텐', '유제품', '견과류', '계란'],
+            },
+          ],
+        },
+      ],
+      isOpen: true,
+    },
+    {
+      slug: 'chill-moments',
+      name: 'Chill Moments',
+      concept: '라운지 & 바',
+      location: '로비 인접, 정원 뷰',
+      floor: '로비',
+      images: ['https://placehold.co/800x500?text=Chill+Moments'],
+      openingHours: [
+        { dayOfWeek: '월요일', open: '10:00', close: '24:00' },
+        { dayOfWeek: '화요일', open: '10:00', close: '24:00' },
+        // ... 나머지 요일 ...
+      ],
+      menuCategories: [
+        {
+          id: 'afternoon-tea',
+          name: '애프터눈 티 세트',
+          description: '오후의 여유로운 티타임',
+          timeAvailable: { start: '14:00', end: '17:00' },
+          items: [
+            {
+              id: 'tea-item-1',
+              name: 'Dreamy Afternoon 세트',
+              description: '스콘, 미니 샌드위치, 디저트 6종, 프리미엄 티 선택',
+              price: 65000,
+              currency: '원',
+              image: 'https://placehold.co/300x300?text=Dreamy+Afternoon+세트',
+              isSignature: true,
+              dietaryRestrictions: ['계란', '글루텐', '유제품', '견과류'],
+              allergens: ['계란', '글루텐', '유제품', '견과류'],
+            },
+          ],
+        },
+      ],
+      isOpen: true,
+    },
+  ];
+
   // 슬러그로 레스토랑 찾기
-  const restaurant = restaurants.find((r) => r.slug === slug);
+  const restaurant: Restaurant | undefined = dummyRestaurants.find((r) => r.slug === slug);
 
   // 레스토랑이 없는 경우 404
   if (!restaurant) {
@@ -177,20 +391,10 @@ export default function RestaurantDetailPage({ params }: { params: { slug: strin
                   {restaurant.description}
                 </p>
               </div>
-
-              {restaurant.chefName && (
-                <div>
-                  <h2 className="text-2xl font-bold mb-4">셰프 소개</h2>
-                  <h3 className="text-lg font-medium mb-2">{restaurant.chefName} 셰프</h3>
-                  <p className="text-gray-700 whitespace-pre-line leading-relaxed">
-                    {restaurant.chefDescription}
-                  </p>
-                </div>
-              )}
             </TabsContent>
 
             <TabsContent value="menu" className="space-y-8">
-              {restaurant.menuCategories?.map((category) => (
+              {restaurant.menuCategories?.map((category: MenuCategory) => (
                 <div key={category.id}>
                   <div className="border-b pb-2 mb-4">
                     <h2 className="text-2xl font-bold">{category.name}</h2>
@@ -205,7 +409,7 @@ export default function RestaurantDetailPage({ params }: { params: { slug: strin
                   </div>
 
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    {category.items.map((item) => (
+                    {category.items.map((item: MenuItem) => (
                       <div key={item.id} className="flex gap-4">
                         {(item.image || true) && (
                           <div className="relative w-24 h-24 rounded-md overflow-hidden flex-shrink-0">
@@ -240,7 +444,7 @@ export default function RestaurantDetailPage({ params }: { params: { slug: strin
                           <p className="text-gray-600 text-sm mt-1 mb-2">{item.description}</p>
                           {(item.dietaryRestrictions?.length || item.allergens?.length) && (
                             <div className="flex flex-wrap gap-1 mt-1">
-                              {item.dietaryRestrictions?.map((diet) => (
+                              {item.dietaryRestrictions?.map((diet: string) => (
                                 <Badge
                                   key={diet}
                                   className="text-xs bg-green-50 text-green-800 border-green-200 border"
@@ -248,7 +452,7 @@ export default function RestaurantDetailPage({ params }: { params: { slug: strin
                                   {diet}
                                 </Badge>
                               ))}
-                              {item.allergens?.map((allergen) => (
+                              {item.allergens?.map((allergen: string) => (
                                 <Badge
                                   key={allergen}
                                   className="text-xs bg-amber-50 text-amber-800 border-amber-200 border"
@@ -405,7 +609,7 @@ export default function RestaurantDetailPage({ params }: { params: { slug: strin
           </Tabs>
         </div>
 
-        {/* 예약 및 추가 정보 사이드바 */}
+        {/* 예약하기 버튼 */}
         <div className="md:col-span-1">
           <div className="border rounded-lg p-6 sticky top-24 space-y-6">
             <h2 className="text-xl font-bold mb-4">예약하기</h2>
@@ -414,7 +618,7 @@ export default function RestaurantDetailPage({ params }: { params: { slug: strin
                 {restaurant.name}에서 특별한 식사를 경험해보세요.
               </p>
               <Button className="w-full" asChild>
-                <Link href={restaurant.reservationUrl || '/dining/reserve'}>예약하기</Link>
+                <Link href={`/dining/${restaurant.slug}/reserve`}>예약하기</Link>
               </Button>
               {restaurant.phone && (
                 <Button

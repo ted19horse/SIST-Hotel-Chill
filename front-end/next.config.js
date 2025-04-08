@@ -21,13 +21,17 @@ const nextConfig = {
       },
       {
         protocol: 'https',
-        hostname: 'placehold.co',
+        hostname: 'via.placeholder.com',
+      },
+      {
+        protocol: 'https',
+        hostname: 'picsum.photos',
       },
     ],
     dangerouslyAllowSVG: true,
     contentDispositionType: 'attachment',
     contentSecurityPolicy: "default-src 'self'; script-src 'none'; sandbox;",
-    domains: ['localhost', 'via.placeholder.com', 'picsum.photos', 'placehold.co'],
+    domains: ['localhost', 'via.placeholder.com', 'picsum.photos'],
   },
 };
 

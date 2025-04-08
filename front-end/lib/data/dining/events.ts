@@ -1,0 +1,73 @@
+// 레스토랑 이벤트 목업 데이터
+export const restaurantEvents = [
+  {
+    id: '1',
+    title: '와인 페어링 디너',
+    description: '최고급 와인과 함께하는 특별한 디너 경험',
+    date: '2024-04-15',
+    time: '19:00',
+    location: '더 다이닝 룸',
+    price: 150000,
+    image:
+      'https://images.unsplash.com/photo-1510812431401-41d2bd2722f3?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2070&q=80',
+    capacity: 20,
+    remainingSpots: 15,
+    isFeatured: true,
+  },
+  {
+    id: '2',
+    title: '셰프 테이블',
+    description: '셰프와 함께하는 특별한 요리 클래스',
+    date: '2024-04-20',
+    time: '14:00',
+    location: '서울 가든',
+    price: 100000,
+    image:
+      'https://images.unsplash.com/photo-1556910103-1c02745aae4d?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2070&q=80',
+    capacity: 10,
+    remainingSpots: 8,
+    isFeatured: false,
+  },
+  {
+    id: '3',
+    title: '브런치 파티',
+    description: '주말을 위한 특별한 브런치 파티',
+    date: '2024-04-25',
+    time: '11:00',
+    location: '칠 바이츠',
+    price: 80000,
+    image:
+      'https://images.unsplash.com/photo-1533089860892-a7c6f0a88666?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2070&q=80',
+    capacity: 30,
+    remainingSpots: 25,
+    isFeatured: true,
+  },
+  {
+    id: '4',
+    title: '디저트 마스터클래스',
+    description: '파티시에와 함께하는 디저트 만들기 클래스',
+    date: '2024-05-01',
+    time: '15:00',
+    location: '칠 모먼츠',
+    price: 120000,
+    image:
+      'https://images.unsplash.com/photo-1488477181946-6428a0291777?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2070&q=80',
+    capacity: 15,
+    remainingSpots: 12,
+    isFeatured: false,
+  },
+  {
+    id: '5',
+    title: '로맨틱 디너',
+    description: '특별한 날을 위한 로맨틱 디너',
+    date: '2024-05-05',
+    time: '19:00',
+    location: '칠 엘레강스',
+    price: 200000,
+    image:
+      'https://images.unsplash.com/photo-1414235077428-338989a2e8c0?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2070&q=80',
+    capacity: 12,
+    remainingSpots: 10,
+    isFeatured: true,
+  },
+];
