@@ -1,48 +1,41 @@
+/**
+ * 객실 메인 페이지
+ * 
+ * 사용 가능한 모든 객실 타입을 목록으로 표시하고 필터링할 수 있는 페이지입니다.
+ * 사용자는 여기서 객실을 검색하고 상세 정보를 확인하거나 예약을 진행할 수 있습니다.
+ */
+
+import PageBanner from '@/components/common/layout/PageBanner';
 import ScrollToTop from '@/components/common/home/ScrollToTop';
-import Footer from '@/components/common/layout/Footer';
-import Header from '@/components/common/layout/Header';
 import RoomFilters from '@/components/rooms/RoomFilters';
 import RoomList from '@/components/rooms/RoomList';
-import { rooms as mockRooms } from '@/data/rooms/types/rooms';
-import { ChevronRight } from 'lucide-react';
-import Link from 'next/link';
 import { Suspense } from 'react';
 
+/**
+ * 객실 메인 페이지 컴포넌트
+ * 객실 목록과 필터링 UI를 표시합니다.
+ */
 export default function RoomsPage() {
   return (
     <main className="min-h-screen">
       <ScrollToTop />
-      {/* Header is imported as a component */}
-      <Header />
+      
+      {/* 페이지 배너 - 공통 컴포넌트 사용 */}
+      <PageBanner 
+        title="객실 안내" 
+        breadcrumbs={[
+          { label: '홈', href: '/' }, 
+          { label: '객실' }
+        ]} 
+        backgroundImage="/placeholder.svg?height=800&width=1920" 
+      />
 
-      {/* Page Banner */}
-      <div className="relative h-[40vh] bg-neutral-900">
-        <div
-          className="absolute inset-0 bg-cover bg-center"
-          style={{
-            backgroundImage: "url('/placeholder.svg?height=800&width=1920')",
-            opacity: 0.6,
-          }}
-        />
-        <div className="absolute inset-0 flex items-center justify-center">
-          <div className="text-center text-white">
-            <h1 className="text-4xl md:text-5xl font-bold mb-4">객실 안내</h1>
-            <div className="flex items-center justify-center text-sm">
-              <Link href="/" className="hover:underline">
-                홈
-              </Link>
-              <ChevronRight className="h-4 w-4 mx-2" />
-              <span>객실</span>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      {/* Room Filters and Listings */}
+      {/* 객실 필터 및 목록 */}
       <div className="container mx-auto px-4 py-12">
         <h1 className="text-3xl font-bold text-gray-900 mb-8">객실 예약</h1>
 
         <div className="flex flex-col lg:flex-row gap-8">
+          {/* 사이드바 필터 */}
           <aside className="lg:w-1/4">
             <Suspense
               fallback={<div className="animate-pulse bg-gray-200 rounded-lg h-[600px]"></div>}
@@ -51,6 +44,7 @@ export default function RoomsPage() {
             </Suspense>
           </aside>
 
+          {/* 객실 목록 */}
           <main className="lg:w-3/4">
             <Suspense
               fallback={
@@ -64,14 +58,12 @@ export default function RoomsPage() {
                 </div>
               }
             >
-              <RoomList rooms={mockRooms} />
+              {/* RoomList 컴포넌트는 내부적으로 데이터를 가져옵니다 */}
+              <RoomList />
             </Suspense>
           </main>
         </div>
       </div>
-
-      {/* Footer */}
-      <Footer />
     </main>
   );
 }
