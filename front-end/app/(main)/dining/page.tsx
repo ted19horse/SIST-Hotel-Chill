@@ -8,7 +8,6 @@ import { Input } from '@/components/common/ui/Input';
 import RestaurantCard from '@/components/dining/RestaurantCard';
 import RestaurantFilter from '@/components/dining/RestaurantFilter';
 import { restaurants } from '@/lib/data/dining/restaurants';
-import { Restaurant, RestaurantFilterOptions } from '@/lib/types/restaurant';
 import { ChevronRight, Search } from 'lucide-react';
 import Link from 'next/link';
 import { useSearchParams } from 'next/navigation';
@@ -20,8 +19,8 @@ import { useEffect, useState } from 'react';
 export default function DiningPage() {
   const searchParams = useSearchParams();
   const [searchTerm, setSearchTerm] = useState('');
-  const [activeFilters, setActiveFilters] = useState<RestaurantFilterOptions>({});
-  const [filteredRestaurants, setFilteredRestaurants] = useState<Restaurant[]>(restaurants);
+  const [activeFilters, setActiveFilters] = useState({});
+  const [filteredRestaurants, setFilteredRestaurants] = useState(restaurants);
 
   // URL 쿼리 파라미터에서 검색어 초기화
   useEffect(() => {
@@ -54,7 +53,7 @@ export default function DiningPage() {
       // 요리 종류 필터링
       if (activeFilters.cuisine?.length) {
         results = results.filter((restaurant) =>
-          activeFilters.cuisine!.some((cuisine) =>
+          activeFilters.cuisine.some((cuisine) =>
             restaurant.cuisine.toLowerCase().includes(cuisine.toLowerCase())
           )
         );
@@ -63,21 +62,21 @@ export default function DiningPage() {
       // 가격대 필터링
       if (activeFilters.priceRange?.length) {
         results = results.filter((restaurant) =>
-          activeFilters.priceRange!.includes(restaurant.priceRange)
+          activeFilters.priceRange.includes(restaurant.priceRange)
         );
       }
 
       // 특별 기능 필터링
       if (activeFilters.features?.length) {
         results = results.filter((restaurant) =>
-          activeFilters.features!.some((feature) => restaurant.features?.includes(feature))
+          activeFilters.features.some((feature) => restaurant.features?.includes(feature))
         );
       }
 
       // 식사 시간 필터링 (추후 메뉴 데이터와 연동 필요)
       if (activeFilters.mealTime) {
         // 임시 로직
-        const mealTimeMap: Record<string, string[]> = {
+        const mealTimeMap = {
           breakfast: ['올데이 다이닝'],
           lunch: ['올데이 다이닝', '캐주얼 다이닝'],
           dinner: ['올데이 다이닝', '캐주얼 다이닝', '프리미엄 다이닝'],
@@ -98,8 +97,8 @@ export default function DiningPage() {
         // 식당명에 "Chill Garden"이 있는 경우에는 채식 옵션이 있다고 가정
         results = results.filter((restaurant) => {
           if (
-            activeFilters.dietaryRestrictions!.includes('vegetarian') ||
-            activeFilters.dietaryRestrictions!.includes('vegan')
+            activeFilters.dietaryRestrictions.includes('vegetarian') ||
+            activeFilters.dietaryRestrictions.includes('vegan')
           ) {
             // 모든 레스토랑에 일부 채식 메뉴가 있다고 가정
             return true;
@@ -113,12 +112,12 @@ export default function DiningPage() {
   }, [searchTerm, activeFilters]);
 
   // 검색어 변경 핸들러
-  const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleSearchChange = (e) => {
     setSearchTerm(e.target.value);
   };
 
   // 필터 변경 핸들러
-  const handleFilterChange = (filters: RestaurantFilterOptions) => {
+  const handleFilterChange = (filters) => {
     setActiveFilters(filters);
   };
 
