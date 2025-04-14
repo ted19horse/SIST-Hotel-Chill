@@ -17,26 +17,20 @@ import {
   mealTimeOptions,
   priceRangeOptions,
 } from '@/lib/data/restaurants';
-import { RestaurantFilterOptions } from '@/lib/types/restaurant';
 import { useEffect, useState } from 'react';
-
-interface RestaurantFilterProps {
-  onChange: (filters: RestaurantFilterOptions) => void;
-  initialFilters?: RestaurantFilterOptions;
-}
 
 /**
  * 레스토랑 필터 컴포넌트
  * 다양한 필터 옵션을 제공하여 레스토랑 목록을 필터링합니다.
  */
-const RestaurantFilter = ({ onChange, initialFilters = {} }: RestaurantFilterProps) => {
-  const [filters, setFilters] = useState<RestaurantFilterOptions>(initialFilters);
+const RestaurantFilter = ({ onChange, initialFilters = {} }) => {
+  const [filters, setFilters] = useState(initialFilters);
 
   useEffect(() => {
     onChange(filters);
   }, [filters, onChange]);
 
-  const handleCuisineChange = (value: string, checked: boolean) => {
+  const handleCuisineChange = (value, checked) => {
     setFilters((prev) => {
       const cuisines = prev.cuisine || [];
       if (checked) {
@@ -47,18 +41,18 @@ const RestaurantFilter = ({ onChange, initialFilters = {} }: RestaurantFilterPro
     });
   };
 
-  const handlePriceRangeChange = (value: string, checked: boolean) => {
+  const handlePriceRangeChange = (value, checked) => {
     setFilters((prev) => {
       const priceRanges = prev.priceRange || [];
       if (checked) {
-        return { ...prev, priceRange: [...priceRanges, value as any] };
+        return { ...prev, priceRange: [...priceRanges, value] };
       } else {
         return { ...prev, priceRange: priceRanges.filter((p) => p !== value) };
       }
     });
   };
 
-  const handleFeatureChange = (value: string, checked: boolean) => {
+  const handleFeatureChange = (value, checked) => {
     setFilters((prev) => {
       const features = prev.features || [];
       if (checked) {
@@ -69,7 +63,7 @@ const RestaurantFilter = ({ onChange, initialFilters = {} }: RestaurantFilterPro
     });
   };
 
-  const handleMealTimeChange = (value: string) => {
+  const handleMealTimeChange = (value) => {
     setFilters((prev) => {
       if (prev.mealTime === value) {
         return { ...prev, mealTime: undefined };
@@ -78,11 +72,11 @@ const RestaurantFilter = ({ onChange, initialFilters = {} }: RestaurantFilterPro
     });
   };
 
-  const handleDietaryChange = (value: string, checked: boolean) => {
+  const handleDietaryChange = (value, checked) => {
     setFilters((prev) => {
       const restrictions = prev.dietaryRestrictions || [];
       if (checked) {
-        return { ...prev, dietaryRestrictions: [...restrictions, value as any] };
+        return { ...prev, dietaryRestrictions: [...restrictions, value] };
       } else {
         return { ...prev, dietaryRestrictions: restrictions.filter((r) => r !== value) };
       }
@@ -122,7 +116,7 @@ const RestaurantFilter = ({ onChange, initialFilters = {} }: RestaurantFilterPro
                   <Checkbox
                     id={`cuisine-${cuisine}`}
                     checked={filters.cuisine?.includes(cuisine) || false}
-                    onCheckedChange={(checked) => handleCuisineChange(cuisine, checked as boolean)}
+                    onCheckedChange={(checked) => handleCuisineChange(cuisine, checked)}
                   />
                   <Label
                     htmlFor={`cuisine-${cuisine}`}
@@ -144,9 +138,9 @@ const RestaurantFilter = ({ onChange, initialFilters = {} }: RestaurantFilterPro
                 <div key={option.value} className="flex items-center space-x-2">
                   <Checkbox
                     id={`price-${option.value}`}
-                    checked={filters.priceRange?.includes(option.value as any) || false}
+                    checked={filters.priceRange?.includes(option.value) || false}
                     onCheckedChange={(checked) =>
-                      handlePriceRangeChange(option.value, checked as boolean)
+                      handlePriceRangeChange(option.value, checked)
                     }
                   />
                   <Label
@@ -170,7 +164,7 @@ const RestaurantFilter = ({ onChange, initialFilters = {} }: RestaurantFilterPro
                   <Checkbox
                     id={`feature-${feature}`}
                     checked={filters.features?.includes(feature) || false}
-                    onCheckedChange={(checked) => handleFeatureChange(feature, checked as boolean)}
+                    onCheckedChange={(checked) => handleFeatureChange(feature, checked)}
                   />
                   <Label
                     htmlFor={`feature-${feature}`}
@@ -215,9 +209,9 @@ const RestaurantFilter = ({ onChange, initialFilters = {} }: RestaurantFilterPro
                 <div key={option.value} className="flex items-center space-x-2">
                   <Checkbox
                     id={`diet-${option.value}`}
-                    checked={filters.dietaryRestrictions?.includes(option.value as any) || false}
+                    checked={filters.dietaryRestrictions?.includes(option.value) || false}
                     onCheckedChange={(checked) =>
-                      handleDietaryChange(option.value, checked as boolean)
+                      handleDietaryChange(option.value, checked)
                     }
                   />
                   <Label
