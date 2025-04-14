@@ -3,7 +3,7 @@ import {
   MembershipBenefit,
   MembershipOffer,
   PointTransaction,
-} from '@/types/my-account';
+} from '@/lib/types/my-account';
 
 /**
  * 멤버십 더미데이터

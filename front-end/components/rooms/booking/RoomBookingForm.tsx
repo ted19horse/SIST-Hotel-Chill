@@ -6,7 +6,7 @@
  */
 
 import ClientComponentWrapper from '@/components/common/ClientComponentWrapper';
-import { RoomDisplay } from '@/types/room';
+import { RoomDisplay } from '@/lib/types/room';
 import RoomBookingFormContent from './RoomBookingFormContent';
 
 interface RoomBookingFormProps {

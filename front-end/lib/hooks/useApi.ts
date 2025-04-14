@@ -1,5 +1,5 @@
 import { useApiStore } from '@/lib/stores/apiStore';
-import { ApiStatus } from '@/types/api/common';
+import { ApiStatus } from '@/lib/types/api/common';
 import { useCallback, useEffect, useState } from 'react';
 
 /**

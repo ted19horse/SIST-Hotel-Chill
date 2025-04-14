@@ -5,7 +5,7 @@ import { Badge } from '@/components/common/ui/Badge';
 import { Button } from '@/components/common/ui/Button';
 import AddToCartClient from '@/components/gift-shop/client/AddToCartClient';
 import { getProductById, getProductsByCategory } from '@/lib/api/gift-shop';
-import { Product } from '@/types/gift-shop';
+import { Product } from '@/lib/types/gift-shop';
 import { ChevronRight, Share2 } from 'lucide-react';
 import Image from 'next/image';
 import Link from 'next/link';

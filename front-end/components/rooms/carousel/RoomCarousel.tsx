@@ -1,9 +1,9 @@
 'use client';
 
 import { Badge } from '@/components/common/ui/Badge';
-import { amenityGroups, roomAmenityGroups } from '@/data/rooms/constants/amenities';
+import { amenityGroups, roomAmenityGroups } from '@/lib/data/rooms/constants/amenities';
 import { cn } from '@/lib/utils';
-import { Room, RoomType } from '@/types/room';
+import { Room, RoomType } from '@/lib/types/room';
 import { ChevronLeft, ChevronRight, Maximize2, Mountain, Users } from 'lucide-react';
 import Image from 'next/image';
 import Link from 'next/link';

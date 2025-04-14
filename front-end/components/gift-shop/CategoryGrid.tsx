@@ -2,7 +2,7 @@
 
 import { Button } from '@/components/common/ui/Button';
 import { getCategories, getProductsByCategory } from '@/lib/api/gift-shop';
-import { ProductCategory } from '@/types/gift-shop';
+import { ProductCategory } from '@/lib/types/gift-shop';
 import { ChevronRight } from 'lucide-react';
 import Image from 'next/image';
 import Link from 'next/link';

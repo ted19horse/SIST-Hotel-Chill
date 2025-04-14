@@ -1,7 +1,7 @@
 /**
  * 특별 오퍼 더미 데이터
  */
-import { SpecialOffer } from '@/types/my-account';
+import { SpecialOffer } from '@/lib/types/my-account';
 
 export const mockSpecialOffers: SpecialOffer[] = [
   {

@@ -2,8 +2,8 @@
 
 import { TimeSlot, TimeSlots } from '@/components/common/ui/TimeSlots';
 import api from '@/lib/api';
-import { ApiResponse } from '@/types/api/common';
-import { AvailableTime } from '@/types/api/dining';
+import { ApiResponse } from '@/lib/types/api/common';
+import { AvailableTime } from '@/lib/types/api/dining';
 import { Clock } from 'lucide-react';
 import { useEffect, useState } from 'react';
 

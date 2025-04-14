@@ -7,7 +7,7 @@
 
 'use client';
 
-import { RoomDisplay, ROOM_GRADE_DISPLAY } from '@/types/room';
+import { RoomDisplay, ROOM_GRADE_DISPLAY } from '@/lib/types/room';
 import { useState, useCallback, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import BookingSuccess from './parts/BookingSuccess';

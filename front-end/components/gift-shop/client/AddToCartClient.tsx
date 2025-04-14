@@ -2,7 +2,7 @@
 
 import { Button } from '@/components/common/ui/Button';
 import { useCart } from '@/lib/hooks/useCart';
-import { Product } from '@/types/gift-shop';
+import { Product } from '@/lib/types/gift-shop';
 import { Heart, Minus, Plus, ShoppingCart } from 'lucide-react';
 import { useState } from 'react';
 

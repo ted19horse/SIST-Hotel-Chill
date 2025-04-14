@@ -5,7 +5,7 @@ import { Button } from '@/components/common/ui/Button';
 import { getFeaturedProducts } from '@/lib/api/gift-shop';
 import { useCart } from '@/lib/hooks/useCart';
 import { cn } from '@/lib/utils';
-import { Product } from '@/types/gift-shop';
+import { Product } from '@/lib/types/gift-shop';
 import { ChevronLeft, ChevronRight, Eye, Heart, ShoppingCart } from 'lucide-react';
 import Image from 'next/image';
 import Link from 'next/link';

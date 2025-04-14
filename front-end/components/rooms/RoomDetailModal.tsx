@@ -2,7 +2,7 @@
 
 import { Button } from '@/components/common/ui/Button';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/common/ui/Tabs';
-import { RoomDisplay } from '@/types/room';
+import { RoomDisplay } from '@/lib/types/room';
 import {
   Bath,
   Check,

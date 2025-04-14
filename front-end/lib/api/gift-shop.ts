@@ -6,7 +6,7 @@ import {
   ProductCategory,
   ProductFilterParams,
   ProductSubCategory,
-} from '@/types/gift-shop';
+} from '@/lib/types/gift-shop';
 import axios from 'axios';
 import apiClient from './client';
 

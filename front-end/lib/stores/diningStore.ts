@@ -1,5 +1,5 @@
-import { DiningEvent } from '@/data/dining/types/event';
-import { Restaurant } from '@/data/dining/types/restaurant';
+import { DiningEvent } from '@/lib/data/dining/types/event';
+import { Restaurant } from '@/lib/data/dining/types/restaurant';
 import { create } from 'zustand';
 
 // 필터 타입 정의

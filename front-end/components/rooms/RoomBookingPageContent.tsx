@@ -4,8 +4,8 @@ import BookingForm from '@/components/common/forms/BookingForm';
 import RoomDetailModal from '@/components/rooms/RoomDetailModal';
 import RoomFilters from '@/components/rooms/RoomFilters';
 import RoomList from '@/components/rooms/RoomList';
-import { rooms as mockRooms } from '@/data/rooms/types/rooms';
-import { RoomDisplay } from '@/types/room';
+import { rooms as mockRooms } from '@/lib/data/rooms/types/rooms';
+import { RoomDisplay } from '@/lib/types/room';
 import { useEffect, useState } from 'react';
 
 interface RoomBookingPageContentProps {

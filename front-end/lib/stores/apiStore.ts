@@ -1,4 +1,4 @@
-import { ApiStatus } from '@/types/api/common';
+import { ApiStatus } from '@/lib/types/api/common';
 import { create } from 'zustand';
 
 /**

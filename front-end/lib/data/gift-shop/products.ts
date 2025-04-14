@@ -1,4 +1,4 @@
-import { Product } from '@/types/gift-shop';
+import { Product } from '@/lib/types/gift-shop';
 import { featuredProducts } from './featured-products';
 
 /**

@@ -3,8 +3,8 @@
 import { Badge } from '@/components/common/ui/Badge';
 import { Button } from '@/components/common/ui/Button';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/common/ui/Tabs';
-import { PLACEHOLDER_IMAGES } from '@/data/static/constants';
-import { facilities } from '@/data/static/facilities/facilities-data';
+import { PLACEHOLDER_IMAGES } from '@/lib/data/static/constants';
+import { facilities } from '@/lib/data/static/facilities/facilities-data';
 import { CalendarClock, Clock, Info, MapPin } from 'lucide-react';
 import Image from 'next/image';
 import { useState } from 'react';

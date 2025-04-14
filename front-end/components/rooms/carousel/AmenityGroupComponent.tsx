@@ -4,7 +4,7 @@ import { Badge } from '@/components/common/ui/Badge';
 import { Button } from '@/components/common/ui/Button';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/common/ui/Popover';
 import { cn } from '@/lib/utils';
-import { AmenityItem as AmenityItemType } from '@/types/room';
+import { AmenityItem as AmenityItemType } from '@/lib/types/room';
 import { AlertCircle, Plus } from 'lucide-react';
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 

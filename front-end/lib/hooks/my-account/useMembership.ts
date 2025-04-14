@@ -1,5 +1,5 @@
 import api from '@/lib/api';
-import { Membership, MembershipOffer, PointTransaction } from '@/types/my-account';
+import { Membership, MembershipOffer, PointTransaction } from '@/lib/types/my-account';
 import { useQuery, UseQueryOptions } from '@tanstack/react-query';
 
 /**

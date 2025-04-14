@@ -1,5 +1,5 @@
 import LoadingSpinner from '@/components/common/LoadingSpinner';
-import { RoomDisplay } from '@/types/room';
+import { RoomDisplay } from '@/lib/types/room';
 import { Suspense } from 'react';
 import RoomBookingPageContent from './RoomBookingPageContent';
 

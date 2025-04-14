@@ -7,7 +7,7 @@ import FacilityTabs from '@/components/facilities/FacilityTabs';
 import InfoRequestForm from '@/components/facilities/InfoRequestForm';
 import ReservationInfo from '@/components/facilities/ReservationInfo';
 import RoomBenefits from '@/components/facilities/RoomBenefits';
-import { PLACEHOLDER_IMAGES } from '@/data/static/constants';
+import { PLACEHOLDER_IMAGES } from '@/lib/data/static/constants';
 import { ChevronRight } from 'lucide-react';
 import Link from 'next/link';
 

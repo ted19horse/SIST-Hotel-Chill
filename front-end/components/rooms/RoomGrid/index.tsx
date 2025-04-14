@@ -1,5 +1,5 @@
-import { rooms } from '@/data/rooms/types/rooms';
-import { RoomDisplay } from '@/types/room';
+import { rooms } from '@/lib/data/rooms/types/rooms';
+import { RoomDisplay } from '@/lib/types/room';
 import RoomCard from './RoomCard';
 import RoomCardSkeleton from './RoomCardSkeleton';
 

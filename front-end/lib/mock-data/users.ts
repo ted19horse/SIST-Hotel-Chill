@@ -1,7 +1,7 @@
 /**
  * 사용자 더미 데이터
  */
-import { User, UserStatus } from '@/types/my-account';
+import { User, UserStatus } from '@/lib/types/my-account';
 
 export const mockUsers: User[] = [
   {

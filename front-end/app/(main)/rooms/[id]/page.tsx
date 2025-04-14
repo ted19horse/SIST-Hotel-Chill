@@ -9,7 +9,7 @@ import { notFound } from 'next/navigation';
 import PageBanner from '@/components/common/layout/PageBanner';
 import ScrollToTop from '@/components/common/home/ScrollToTop';
 import RoomDetail from '@/components/rooms/detail/RoomDetail';
-import { getRoomById } from '@/data/rooms';
+import { getRoomById } from '@/lib/data/rooms';
 import { Suspense } from 'react';
 
 interface RoomDetailPageProps {

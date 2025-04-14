@@ -1,5 +1,5 @@
-import styles from '@/styles/components/my-account/membership/MembershipBenefits.module.scss';
-import { MembershipBenefitsProps } from '@/types/membership';
+import styles from './MembershipBenefits.module.scss';
+import { MembershipBenefitsProps } from '@/lib/types/membership';
 import React from 'react';
 
 /**

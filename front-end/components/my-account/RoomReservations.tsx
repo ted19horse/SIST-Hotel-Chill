@@ -3,8 +3,8 @@
 import { Badge } from '@/components/common/ui/Badge';
 import { Button } from '@/components/common/ui/Button';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/common/ui/Tabs';
-import { reservationService } from '@/services/reservationService';
-import { RoomReservation } from '@/types/room';
+import { reservationService } from '@/lib/services/reservationService';
+import { RoomReservation } from '@/lib/types/room';
 import {
   CalendarCheck,
   CalendarIcon,

@@ -2,7 +2,7 @@
 
 import { Button } from '@/components/common/ui/Button';
 import { highlightMatches } from '@/lib/utils/textUtils';
-import { Event } from '@/types/dining/event';
+import { Event } from '@/lib/types/dining/event';
 import { motion } from 'framer-motion';
 import { CalendarDays, ShoppingBag } from 'lucide-react';
 import Image from 'next/image';

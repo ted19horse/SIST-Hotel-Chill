@@ -1,4 +1,4 @@
-import { Product } from '@/types/gift-shop';
+import { Product } from '@/lib/types/gift-shop';
 
 /**
  * 추천 상품 더미 데이터

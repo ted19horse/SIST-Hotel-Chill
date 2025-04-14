@@ -1,7 +1,7 @@
 /**
  * 객실 예약 더미 데이터
  */
-import { ReservationStatus, RoomReservation } from '@/types/my-account';
+import { ReservationStatus, RoomReservation } from '@/lib/types/my-account';
 
 export const mockRoomReservations: RoomReservation[] = [
   // 예정된 예약

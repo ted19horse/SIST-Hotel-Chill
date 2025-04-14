@@ -9,7 +9,7 @@ import { notFound, redirect } from 'next/navigation';
 import PageBanner from '@/components/common/layout/PageBanner';
 import ScrollToTop from '@/components/common/home/ScrollToTop';
 import RoomBookingForm from '@/components/rooms/booking/RoomBookingForm';
-import { getRoomById } from '@/data/rooms';
+import { getRoomById } from '@/lib/data/rooms';
 import { Suspense } from 'react';
 
 interface RoomBookingPageProps {

@@ -3,7 +3,7 @@ import {
   pointsHistory,
   userMembership,
 } from '@/lib/mock-data/my-account/membership';
-import { Membership, MembershipOffer, PointTransaction } from '@/types/my-account';
+import { Membership, MembershipOffer, PointTransaction } from '@/lib/types/my-account';
 
 /**
  * 멤버십 정보 조회 API

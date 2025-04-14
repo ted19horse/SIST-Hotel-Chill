@@ -4,7 +4,7 @@ import { Alert, AlertDescription } from '@/components/common/ui/Alert';
 import { Button } from '@/components/common/ui/Button';
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from '@/components/common/ui/Card';
 import { ReservationStep, useReservationStore } from '@/lib/stores/reservationStore';
-import { Restaurant } from '@/types/dining/restaurant';
+import { Restaurant } from '@/lib/types/dining/restaurant';
 import { AlertCircle, CheckCircle } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';

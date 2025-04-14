@@ -1,5 +1,5 @@
 import { roomReservations } from '@/lib/mock-data/my-account/reservations';
-import { RoomReservation } from '@/types/my-account';
+import { RoomReservation } from '@/lib/types/my-account';
 
 /**
  * 객실 예약 목록 조회 API

@@ -6,7 +6,7 @@
 
 'use client';
 
-import { RoomDisplay } from '@/types/room';
+import { RoomDisplay } from '@/lib/types/room';
 import { useCallback, useMemo } from 'react';
 import { addDays } from 'date-fns';
 

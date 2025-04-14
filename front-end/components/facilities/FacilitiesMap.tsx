@@ -1,6 +1,6 @@
 import { Button } from '@/components/common/ui/Button';
-import { PLACEHOLDER_IMAGES } from '@/data/static/constants';
-import { facilities } from '@/data/static/facilities/facilities-data';
+import { PLACEHOLDER_IMAGES } from '@/lib/data/static/constants';
+import { facilities } from '@/lib/data/static/facilities/facilities-data';
 import { ArrowUpRight, MapPin } from 'lucide-react';
 import Image from 'next/image';
 

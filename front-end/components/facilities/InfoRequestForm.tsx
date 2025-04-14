@@ -16,7 +16,7 @@ import {
   SelectValue,
 } from '@/components/common/ui/Select';
 import { Textarea } from '@/components/common/ui/Textarea';
-import { facilities } from '@/data/static/facilities/facilities-data';
+import { facilities } from '@/lib/data/static/facilities/facilities-data';
 import { cn } from '@/lib/utils';
 import { format } from 'date-fns';
 import { ko } from 'date-fns/locale';

@@ -1,15 +1,15 @@
-import { mockEvents } from '@/data/dining/mock/events';
-import { restaurants } from '@/data/dining/restaurants';
+import { mockEvents } from '@/lib/data/dining/mock/events';
+import { restaurants } from '@/lib/data/dining/restaurants';
 import { membershipFaqs } from '@/lib/data/membership/faqs';
 import { membershipDiscounts, membershipTiers } from '@/lib/data/membership/membership-tiers';
 import { dummyPointTransactions } from '@/lib/data/membership/points-system';
 import { specialEvents } from '@/lib/data/membership/special-events';
 import { testimonials } from '@/lib/data/membership/testimonials';
 import { MembershipTier } from '@/lib/types/membership';
-import { ApiResponse, PaginatedResponse } from '@/types/api/common';
-import { GetRestaurantsOptions } from '@/types/api/dining';
-import { Event } from '@/types/dining/event';
-import { Restaurant } from '@/types/dining/restaurant';
+import { ApiResponse, PaginatedResponse } from '@/lib/types/api/common';
+import { GetRestaurantsOptions } from '@/lib/types/api/dining';
+import { Event } from '@/lib/types/dining/event';
+import { Restaurant } from '@/lib/types/dining/restaurant';
 import { AxiosInstance, AxiosResponse, InternalAxiosRequestConfig } from 'axios';
 
 /**

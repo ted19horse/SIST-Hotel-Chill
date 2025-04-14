@@ -1,7 +1,7 @@
 /**
  * 멤버십 더미 데이터
  */
-import { Membership, MembershipBenefit, MembershipTier } from '@/types/my-account';
+import { Membership, MembershipBenefit, MembershipTier } from '@/lib/types/my-account';
 
 export const mockMemberships: Membership[] = [
   {

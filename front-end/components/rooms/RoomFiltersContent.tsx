@@ -7,8 +7,8 @@
 
 'use client';
 
-import { Building, RoomGrade, RoomSearchFilters, ViewType } from '@/types/room';
-import { ROOM_GRADE_DISPLAY } from '@/types/room';
+import { Building, RoomGrade, RoomSearchFilters, ViewType } from '@/lib/types/room';
+import { ROOM_GRADE_DISPLAY } from '@/lib/types/room';
 import { useCallback, useState } from 'react';
 import { Filter, CalendarDays, Users, DollarSign, Mountain, Building2 } from 'lucide-react';
 import { useRouter, useSearchParams } from 'next/navigation';

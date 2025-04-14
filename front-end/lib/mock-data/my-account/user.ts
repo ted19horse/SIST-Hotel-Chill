@@ -1,4 +1,4 @@
-import { User, UserPreferences } from '@/types/my-account';
+import { User, UserPreferences } from '@/lib/types/my-account';
 
 /**
  * 사용자 더미데이터

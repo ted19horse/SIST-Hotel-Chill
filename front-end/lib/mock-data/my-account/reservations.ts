@@ -1,4 +1,4 @@
-import { DiningReservation, RoomReservation } from '@/types/my-account';
+import { DiningReservation, RoomReservation } from '@/lib/types/my-account';
 
 /**
  * 객실 예약 더미데이터

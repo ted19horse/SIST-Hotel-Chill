@@ -5,7 +5,7 @@ import ProductFilters from '@/components/gift-shop/ProductFilters';
 import ShoppingCart from '@/components/gift-shop/ShoppingCart';
 import CategoryProducts from '@/components/gift-shop/client/CategoryProducts';
 import { getCategories } from '@/lib/api/gift-shop';
-import { ProductCategory } from '@/types/gift-shop';
+import { ProductCategory } from '@/lib/types/gift-shop';
 import { ChevronRight } from 'lucide-react';
 import Link from 'next/link';
 import { notFound } from 'next/navigation';

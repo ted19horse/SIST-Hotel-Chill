@@ -1,5 +1,5 @@
 import { userData } from '@/lib/mock-data/my-account/user';
-import { User } from '@/types/my-account';
+import { User } from '@/lib/types/my-account';
 
 /**
  * 사용자 프로필 조회 API

@@ -1,4 +1,4 @@
-import { PLACEHOLDER_IMAGES } from '@/data/static/constants';
+import { PLACEHOLDER_IMAGES } from '@/lib/data/static/constants';
 import Image from 'next/image';
 
 export default function FacilitiesIntro() {

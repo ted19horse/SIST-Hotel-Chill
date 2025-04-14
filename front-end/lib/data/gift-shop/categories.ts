@@ -1,4 +1,4 @@
-import { ProductCategory } from '@/types/gift-shop';
+import { ProductCategory } from '@/lib/types/gift-shop';
 
 /**
  * 기프트샵 카테고리 더미 데이터

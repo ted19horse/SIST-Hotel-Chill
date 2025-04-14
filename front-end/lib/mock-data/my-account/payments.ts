@@ -1,4 +1,4 @@
-import { PaymentMethod } from '@/types/my-account';
+import { PaymentMethod } from '@/lib/types/my-account';
 
 /**
  * 결제 수단 더미데이터

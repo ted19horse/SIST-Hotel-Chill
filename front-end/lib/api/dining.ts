@@ -1,4 +1,4 @@
-import { ApiResponse, PaginatedResponse } from '@/types/api/common';
+import { ApiResponse, PaginatedResponse } from '@/lib/types/api/common';
 import {
   AvailableTime,
   CreateReservationRequest,
@@ -7,9 +7,9 @@ import {
   GetRestaurantParams,
   GetRestaurantsOptions,
   Reservation,
-} from '@/types/api/dining';
-import { Event } from '@/types/dining/event';
-import { Restaurant } from '@/types/dining/restaurant';
+} from '@/lib/types/api/dining';
+import { Event } from '@/lib/types/dining/event';
+import { Restaurant } from '@/lib/types/dining/restaurant';
 import axios from 'axios';
 import { restaurantMenus } from '../data/dining/menus';
 import { restaurants } from '../data/dining/restaurants';

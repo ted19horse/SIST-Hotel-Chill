@@ -1,7 +1,7 @@
 /**
  * 다이닝 예약 더미 데이터
  */
-import { DiningReservation, DiningReservationStatus } from '@/types/my-account';
+import { DiningReservation, DiningReservationStatus } from '@/lib/types/my-account';
 
 export const mockDiningReservations: DiningReservation[] = [
   // 예정된 예약

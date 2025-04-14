@@ -3,7 +3,7 @@
 import { Button } from '@/components/common/ui/Button';
 import { getProducts } from '@/lib/api/gift-shop';
 import { useCart } from '@/lib/hooks/useCart';
-import { Product, ProductFilterParams } from '@/types/gift-shop';
+import { Product, ProductFilterParams } from '@/lib/types/gift-shop';
 import { Heart, ShoppingCart } from 'lucide-react';
 import Image from 'next/image';
 import { useRouter, useSearchParams } from 'next/navigation';

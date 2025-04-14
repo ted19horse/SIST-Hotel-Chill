@@ -1,4 +1,4 @@
-import { Membership } from '@/types/my-account';
+import { Membership } from '@/lib/types/my-account';
 import { InfoCircleOutlined } from '@ant-design/icons';
 import { Card, Progress, Tooltip } from 'antd';
 import { useTranslation } from 'next-i18next';

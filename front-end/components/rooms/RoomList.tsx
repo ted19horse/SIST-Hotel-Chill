@@ -6,9 +6,9 @@
  */
 
 import ClientComponentWrapper from '@/components/common/ClientComponentWrapper';
-import { RoomDisplay } from '@/types/room';
+import { RoomDisplay } from '@/lib/types/room';
 import RoomListContent from './RoomListContent';
-import { getRooms } from '@/data/rooms';
+import { getRooms } from '@/lib/data/rooms';
 
 interface RoomListProps {
   rooms?: RoomDisplay[];

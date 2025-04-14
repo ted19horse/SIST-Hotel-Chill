@@ -6,7 +6,7 @@
 
 'use client';
 
-import { RoomDisplay, ROOM_GRADE_DISPLAY } from '@/types/room';
+import { RoomDisplay, ROOM_GRADE_DISPLAY } from '@/lib/types/room';
 import { Maximize2, Users, Mountain } from 'lucide-react';
 import Image from 'next/image';
 

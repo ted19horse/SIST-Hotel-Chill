@@ -6,7 +6,7 @@
  */
 
 import ClientComponentWrapper from '@/components/common/ClientComponentWrapper';
-import { getRoomById } from '@/data/rooms';
+import { getRoomById } from '@/lib/data/rooms';
 import RoomDetailContent from './RoomDetailContent';
 
 interface RoomDetailProps {

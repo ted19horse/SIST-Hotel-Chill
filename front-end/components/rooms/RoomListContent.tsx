@@ -7,7 +7,7 @@
 
 'use client';
 
-import { RoomDisplay } from '@/types/room';
+import { RoomDisplay } from '@/lib/types/room';
 import { useCallback } from 'react';
 import { useRouter } from 'next/navigation';
 import RoomCard from './RoomGrid/RoomCard';

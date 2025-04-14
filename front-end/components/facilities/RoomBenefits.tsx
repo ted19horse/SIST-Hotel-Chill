@@ -6,7 +6,7 @@ import {
   TableHeader,
   TableRow,
 } from '@/components/common/ui/Table';
-import { roomBenefits } from '@/data/static/facilities/benefits-data';
+import { roomBenefits } from '@/lib/data/static/facilities/benefits-data';
 import { Check, X } from 'lucide-react';
 
 export default function RoomBenefits() {

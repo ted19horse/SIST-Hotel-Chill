@@ -9,7 +9,7 @@ import {
 import { Button } from '@/components/common/ui/Button';
 import { Checkbox } from '@/components/common/ui/Checkbox';
 import { getCategories } from '@/lib/api/gift-shop';
-import { ProductCategory } from '@/types/gift-shop';
+import { ProductCategory } from '@/lib/types/gift-shop';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { useEffect, useState } from 'react';
 

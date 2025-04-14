@@ -1,4 +1,4 @@
-import { Cart, Product } from '@/types/gift-shop';
+import { Cart, Product } from '@/lib/types/gift-shop';
 import { useEffect, useState } from 'react';
 
 const CART_STORAGE_KEY = 'chill-haven-cart';

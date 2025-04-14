@@ -1,5 +1,5 @@
-import { MAX_OCCUPANCY, PRICE_RANGE } from '@/data/rooms/constants/filters';
-import { RoomGrade } from '@/types/room';
+import { MAX_OCCUPANCY, PRICE_RANGE } from '@/lib/data/rooms/constants/filters';
+import { RoomGrade } from '@/lib/types/room';
 import { create } from 'zustand';
 
 interface RoomFilters {

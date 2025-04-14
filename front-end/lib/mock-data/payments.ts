@@ -1,7 +1,7 @@
 /**
  * 결제 수단 더미 데이터
  */
-import { PaymentMethod } from '@/types/my-account';
+import { PaymentMethod } from '@/lib/types/my-account';
 
 export const mockPaymentMethods: PaymentMethod[] = [
   {

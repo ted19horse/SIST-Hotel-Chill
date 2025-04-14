@@ -1,7 +1,7 @@
 /**
  * 포인트 트랜잭션 더미 데이터
  */
-import { PointTransaction, PointTransactionType } from '@/types/my-account';
+import { PointTransaction, PointTransactionType } from '@/lib/types/my-account';
 
 export const mockPointTransactions: PointTransaction[] = [
   {

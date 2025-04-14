@@ -1,4 +1,4 @@
-import { reservationInfo } from '@/data/static/facilities/reservation-info-data';
+import { reservationInfo } from '@/lib/data/static/facilities/reservation-info-data';
 import { CalendarClock, Clock, Sparkles, Users } from 'lucide-react';
 
 const IconComponent = (iconName: string) => {
