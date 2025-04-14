@@ -2,20 +2,15 @@
 
 import { Badge } from '@/components/common/ui/Badge';
 import { CardContent } from '@/components/common/ui/Card';
-import { Restaurant } from '@/lib/types/restaurant';
 import { formatOpeningHours } from '@/lib/utils/formatters';
 import { ChevronRight, Clock, MapPin, Star } from 'lucide-react';
 import Image from 'next/image';
 import Link from 'next/link';
 
-interface RestaurantCardProps {
-  restaurant: Restaurant;
-}
-
 /**
  * 레스토랑 정보를 보여주는 카드 컴포넌트
  */
-const RestaurantCard = ({ restaurant }: RestaurantCardProps) => {
+const RestaurantCard = ({ restaurant }) => {
   const {
     id,
     slug,
@@ -33,7 +28,7 @@ const RestaurantCard = ({ restaurant }: RestaurantCardProps) => {
   /**
    * 가격 범위 표시 (₩₩₩₩)를 숫자로 변환
    */
-  const getPriceRangeValue = (priceRange: string) => {
+  const getPriceRangeValue = (priceRange) => {
     return priceRange.length;
   };
 
