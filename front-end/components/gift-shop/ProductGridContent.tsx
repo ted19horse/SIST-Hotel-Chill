@@ -3,7 +3,6 @@
 import { Button } from '@/components/common/ui/Button';
 import { getProducts } from '@/lib/api/gift-shop';
 import { useCart } from '@/lib/hooks/useCart';
-import { Product, ProductFilterParams } from '@/lib/types/gift-shop';
 import { Heart, ShoppingCart } from 'lucide-react';
 import Image from 'next/image';
 import { useRouter, useSearchParams } from 'next/navigation';
@@ -12,10 +11,10 @@ import { useEffect, useState } from 'react';
 export default function ProductGridContent() {
   const searchParams = useSearchParams();
   const router = useRouter();
-  const [products, setProducts] = useState<Product[]>([]);
+  const [products, setProducts] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
-  const [wishlist, setWishlist] = useState<number[]>([]);
+  const [error, setError] = useState(null);
+  const [wishlist, setWishlist] = useState([]);
   const { addItem } = useCart();
 
   // 상품 로드
@@ -25,7 +24,7 @@ export default function ProductGridContent() {
         setIsLoading(true);
 
         // 검색 파라미터 구성
-        const params: ProductFilterParams = {};
+        const params = {};
 
         // 카테고리 필터링
         const categories = searchParams.get('categories');
@@ -99,18 +98,18 @@ export default function ProductGridContent() {
     fetchProducts();
   }, [searchParams]);
 
-  const toggleWishlist = (productId: number) => {
+  const toggleWishlist = (productId) => {
     setWishlist((prev) =>
       prev.includes(productId) ? prev.filter((id) => id !== productId) : [...prev, productId]
     );
   };
 
-  const handleAddToCart = (product: Product) => {
+  const handleAddToCart = (product) => {
     addItem(product, 1);
     alert('상품이 장바구니에 추가되었습니다.');
   };
 
-  const handleViewDetails = (productId: number) => {
+  const handleViewDetails = (productId) => {
     router.push(`/gift-shop/products/${productId}`);
   };
 
