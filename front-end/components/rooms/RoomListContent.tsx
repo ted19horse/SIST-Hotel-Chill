@@ -7,17 +7,10 @@
 
 'use client';
 
-import { RoomDisplay } from '@/lib/types/room';
 import { useCallback } from 'react';
 import { useRouter } from 'next/navigation';
 import RoomCard from './RoomGrid/RoomCard';
 import RoomCardSkeleton from './RoomGrid/RoomCardSkeleton';
-
-interface RoomListContentProps {
-  rooms: RoomDisplay[];
-  isLoading?: boolean;
-  error?: string;
-}
 
 /**
  * 객실 목록 내용 컴포넌트
@@ -32,14 +25,14 @@ export default function RoomListContent({
   rooms = [],
   isLoading,
   error,
-}: RoomListContentProps) {
+}) {
   const router = useRouter();
   
   /**
    * 객실 상세 보기 페이지로 이동
    * @param roomId 객실 ID
    */
-  const handleViewDetails = useCallback((roomId: string) => {
+  const handleViewDetails = useCallback((roomId) => {
     router.push(`/rooms/${roomId}`);
   }, [router]);
   
@@ -47,7 +40,7 @@ export default function RoomListContent({
    * 객실 예약 페이지로 이동
    * @param roomId 객실 ID
    */
-  const handleBookNow = useCallback((roomId: string) => {
+  const handleBookNow = useCallback((roomId) => {
     router.push(`/rooms/booking?roomId=${roomId}`);
   }, [router]);
 
