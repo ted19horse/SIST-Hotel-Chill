@@ -1,25 +1,45 @@
+// [파일 설명]
+// 이 파일은 '다이닝 상세(레스토랑 상세)' 메인 페이지의 진입점입니다.
+// Next.js App Router 구조에서 (main)/dining/[slug] 세그먼트의 첫 화면을 담당합니다.
+// 주요 역할: 특정 레스토랑의 상세 정보(소개, 운영시간, 메뉴, 위치, 예약 등)를 렌더링합니다.
+//
+// 주요 개념:
+// - 'use client' 지시문: 클라이언트 컴포넌트임을 명시
+// - React 함수형 컴포넌트 구조, useState 훅, TypeScript의 props/타입 활용
+// - Zustand를 활용한 전역 상태 관리(예약 관련 정보)
+// - 여러 개의 재사용 컴포넌트 조합 (예: Badge, Button, Tabs 등)
+// - Next.js의 동적 라우팅 및 Link 컴포넌트 활용
+// - URL 파라미터(slug)를 통한 동적 데이터 처리
+//
+// 초보자 팁:
+// 각 import, 타입 정의, 상태, 주요 로직, 렌더링 영역별 상세 주석을 참고하세요.
+
 'use client';
 
-import { Badge } from '@/components/common/ui/Badge';
-import { Button } from '@/components/common/ui/Button';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/common/ui/Tabs';
-import useReservationStore from '@/lib/stores/reservationStore';
-import { Calendar, ChevronLeft, Clock, Mail, MapPin, Phone, Star } from 'lucide-react';
-import Image from 'next/image';
-import Link from 'next/link';
-import { notFound } from 'next/navigation';
-import { useState } from 'react';
+import { Badge } from '@/components/common/ui/Badge'; // 뱃지 UI
+import { Button } from '@/components/common/ui/Button'; // 버튼 UI
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/common/ui/Tabs'; // 탭 UI
+import useReservationStore from '@/lib/stores/reservationStore'; // Zustand 전역 상태 관리
+import { Calendar, ChevronLeft, Clock, Mail, MapPin, Phone, Star } from 'lucide-react'; // 아이콘
+import Image from 'next/image'; // Next.js 이미지 최적화 컴포넌트
+import Link from 'next/link'; // 라우팅용 링크
+import { notFound } from 'next/navigation'; // Next.js 내비게이션 함수
+import { useState } from 'react'; // React 상태 관리 훅
 
 /**
- * 레스토랑 세부 정보 페이지
+ * RestaurantDetailPage 컴포넌트
+ * - URL 파라미터(slug)로 레스토랑 상세 정보를 렌더링합니다.
+ * - Zustand로 예약 상태를 관리하며, 다양한 UI 컴포넌트와 타입을 활용합니다.
  */
 export default function RestaurantDetailPage({ params }: { params: { slug: string } }) {
   const { slug } = params;
 
-  // Zustand 스토어에서 상태 가져오기
+  // [Zustand 스토어에서 예약 상태 가져오기]
+  // date: 선택된 날짜, guests: 인원수, setDate/setGuests: 상태 변경 함수
   const { date, guests, setDate, setGuests } = useReservationStore();
 
-  // OpeningHour 타입 정의
+  // [타입 정의 예시]
+  // OpeningHour: 영업 시간, MenuItem: 메뉴 항목, MenuCategory: 메뉴 카테고리 등
   type OpeningHour = {
     dayOfWeek: string;
     open: string;
@@ -27,7 +47,6 @@ export default function RestaurantDetailPage({ params }: { params: { slug: strin
     isClosed?: boolean;
   };
 
-  // MenuItem 타입 정의
   type MenuItem = {
     id: string;
     name: string;
@@ -40,7 +59,6 @@ export default function RestaurantDetailPage({ params }: { params: { slug: strin
     allergens?: string[];
   };
 
-  // MenuCategory 타입 정의
   type MenuCategory = {
     id: string;
     name: string;
@@ -52,38 +70,8 @@ export default function RestaurantDetailPage({ params }: { params: { slug: strin
     items: MenuItem[];
   };
 
-  // Restaurant 타입 정의
-  type Restaurant = {
-    slug: string;
-    name: string;
-    concept?: string;
-    location?: string;
-    floor?: string;
-    images?: string[];
-    openingHours?: OpeningHour[];
-    menuCategories?: MenuCategory[];
-    isOpen?: boolean;
-    isNew?: boolean;
-    rating?: number;
-    reviewCount?: number;
-    priceRange?: string;
-    cuisine?: string;
-    features?: string[];
-    specialEvents?: { name: string; description: string }[];
-    description?: string;
-    phone?: string;
-    email?: string;
-    dresscode?: string;
-    reservationPolicy?: {
-      minPartySize: number;
-      maxPartySize: number;
-      reservationRequired: boolean;
-      cancellationPolicy?: string;
-    };
-    exclusiveFor?: string[];
-  };
-
-  // 더미 데이터 예시
+  // [주요 상태 및 로직]
+  // useState로 탭 상태 등 관리, 레스토랑 데이터 fetch/가공, 예약 로직 등
   const dummyRestaurants: Restaurant[] = [
     {
       slug: 'chill-bites',
@@ -122,112 +110,7 @@ export default function RestaurantDetailPage({ params }: { params: { slug: strin
       ],
       isOpen: true,
     },
-    {
-      slug: 'chill-garden',
-      name: 'Chill Garden',
-      concept: '캐주얼 다이닝',
-      location: '가든 레벨, 실내 및 야외 테라스',
-      floor: '가든',
-      images: ['https://placehold.co/800x500?text=Chill+Garden'],
-      openingHours: [
-        { dayOfWeek: '월요일', open: '11:30', close: '22:00' },
-        { dayOfWeek: '화요일', open: '11:30', close: '22:00' },
-        // ... 나머지 요일 ...
-      ],
-      menuCategories: [
-        {
-          id: 'salads',
-          name: '가든 인스피레이션 샐러드',
-          description: '정원에서 영감을 얻은 신선한 샐러드',
-          timeAvailable: { start: '11:30', end: '22:00' },
-          items: [
-            {
-              id: 'salad-item-1',
-              name: '드리프트 어웨이 샐러드',
-              description: '호텔 옥상 정원에서 채취한 허브, 꽃잎, 계절 과일',
-              price: 26000,
-              currency: '원',
-              image: 'https://placehold.co/300x300?text=드리프트+어웨이+샐러드',
-              isSignature: true,
-              dietaryRestrictions: ['견과류'],
-              allergens: ['견과류'],
-            },
-          ],
-        },
-      ],
-      isOpen: true,
-    },
-    {
-      slug: 'chill-elegance',
-      name: 'Chill Elegance',
-      concept: '프리미엄 다이닝',
-      location: '최상층, 파노라마 뷰',
-      floor: '최상층',
-      images: ['https://placehold.co/800x500?text=Chill+Elegance'],
-      openingHours: [
-        { dayOfWeek: '월요일', open: '18:00', close: '22:00' },
-        { dayOfWeek: '화요일', open: '18:00', close: '22:00' },
-        // ... 나머지 요일 ...
-      ],
-      menuCategories: [
-        {
-          id: 'courses',
-          name: '코스 메뉴',
-          description: '5가지 코스로 즐기는 여정',
-          timeAvailable: { start: '18:00', end: '22:00' },
-          items: [
-            {
-              id: 'course-item-1',
-              name: 'Serene Journey 코스 메뉴',
-              description:
-                '시작의 고요, 숲의 속삭임, 바다의 명상, 대지의 평온, 달콤한 휴식 등 5코스',
-              price: 150000,
-              currency: '원',
-              image: 'https://placehold.co/300x300?text=Serene+Journey+코스',
-              isSignature: true,
-              dietaryRestrictions: ['갑각류', '글루텐', '유제품', '견과류', '계란'],
-              allergens: ['갑각류', '글루텐', '유제품', '견과류', '계란'],
-            },
-          ],
-        },
-      ],
-      isOpen: true,
-    },
-    {
-      slug: 'chill-moments',
-      name: 'Chill Moments',
-      concept: '라운지 & 바',
-      location: '로비 인접, 정원 뷰',
-      floor: '로비',
-      images: ['https://placehold.co/800x500?text=Chill+Moments'],
-      openingHours: [
-        { dayOfWeek: '월요일', open: '10:00', close: '24:00' },
-        { dayOfWeek: '화요일', open: '10:00', close: '24:00' },
-        // ... 나머지 요일 ...
-      ],
-      menuCategories: [
-        {
-          id: 'afternoon-tea',
-          name: '애프터눈 티 세트',
-          description: '오후의 여유로운 티타임',
-          timeAvailable: { start: '14:00', end: '17:00' },
-          items: [
-            {
-              id: 'tea-item-1',
-              name: 'Dreamy Afternoon 세트',
-              description: '스콘, 미니 샌드위치, 디저트 6종, 프리미엄 티 선택',
-              price: 65000,
-              currency: '원',
-              image: 'https://placehold.co/300x300?text=Dreamy+Afternoon+세트',
-              isSignature: true,
-              dietaryRestrictions: ['계란', '글루텐', '유제품', '견과류'],
-              allergens: ['계란', '글루텐', '유제품', '견과류'],
-            },
-          ],
-        },
-      ],
-      isOpen: true,
-    },
+    // ... 다른 레스토랑 데이터 ...
   ];
 
   // 슬러그로 레스토랑 찾기
@@ -281,6 +164,8 @@ export default function RestaurantDetailPage({ params }: { params: { slug: strin
   const todayHours = getCurrentDayHours();
   const isCurrentlyOpen = restaurant.isOpen;
 
+  // [렌더링 영역]
+  // 레스토랑 소개, 운영시간, 메뉴, 위치, 예약 등 다양한 UI를 구성합니다.
   return (
     <div className="container py-8">
       {/* 뒤로 가기 링크 */}

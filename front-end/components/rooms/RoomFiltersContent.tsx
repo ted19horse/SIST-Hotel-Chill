@@ -7,7 +7,7 @@
 
 'use client';
 
-import { ROOM_GRADE_DISPLAY } from '@/lib/types/room';
+// import { ROOM_GRADE_DISPLAY } from '@/lib/types/room';
 import { useCallback, useState } from 'react';
 import { Filter, CalendarDays, Users, DollarSign, Mountain, Building2 } from 'lucide-react';
 import { useRouter, useSearchParams } from 'next/navigation';
@@ -307,7 +307,7 @@ export default function RoomFiltersContent() {
           </span>
         </button>
         
-        {expandedSections.roomGrade && (
+        {/* {expandedSections.roomGrade && (
           <div className="mt-3 space-y-2">
             {Object.entries(ROOM_GRADE_DISPLAY).map(([grade, info]) => (
               <div key={grade} className="flex items-center">
@@ -324,7 +324,7 @@ export default function RoomFiltersContent() {
               </div>
             ))}
           </div>
-        )}
+        )} */}
       </div>
 
       {/* 가격 범위 필터 섹션 */}

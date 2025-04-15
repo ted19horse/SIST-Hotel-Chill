@@ -1,24 +1,44 @@
-import ScrollToTop from '@/components/common/home/ScrollToTop';
-import Footer from '@/components/common/layout/Footer';
-import Header from '@/components/common/layout/Header';
-import FacilitiesIntro from '@/components/facilities/FacilitiesIntro';
-import FacilitiesMap from '@/components/facilities/FacilitiesMap';
-import FacilityTabs from '@/components/facilities/FacilityTabs';
-import InfoRequestForm from '@/components/facilities/InfoRequestForm';
-import ReservationInfo from '@/components/facilities/ReservationInfo';
-import RoomBenefits from '@/components/facilities/RoomBenefits';
-import { PLACEHOLDER_IMAGES } from '@/lib/data/static/constants';
-import { ChevronRight } from 'lucide-react';
-import Link from 'next/link';
+// [파일 설명]
+// 이 파일은 '부대시설' 메인 페이지의 진입점입니다.
+// Next.js App Router 구조에서 (main)/facilities 세그먼트의 첫 화면을 담당합니다.
+// 주요 역할: 호텔 내 다양한 부대시설 소개, 지도, 예약 안내 등 부대시설 관련 주요 UI를 렌더링합니다.
+//
+// 주요 개념:
+// - React 함수형 컴포넌트 구조
+// - 여러 개의 재사용 컴포넌트 조합 (예: FacilitiesIntro, FacilityTabs, FacilitiesMap 등)
+// - Next.js의 동적 라우팅 및 Link 컴포넌트 활용
+// - TypeScript의 타입 추론(필요시)
+//
+// 초보자 팁:
+// 각 import, 렌더링 영역, 컴포넌트별로 상세 주석을 참고하세요.
 
+import ScrollToTop from '@/components/common/home/ScrollToTop'; // 페이지 상단 이동 버튼
+import Footer from '@/components/common/layout/Footer'; // 공통 푸터
+import Header from '@/components/common/layout/Header'; // 공통 헤더
+import FacilitiesIntro from '@/components/facilities/FacilitiesIntro'; // 부대시설 소개
+import FacilitiesMap from '@/components/facilities/FacilitiesMap'; // 시설 지도
+import FacilityTabs from '@/components/facilities/FacilityTabs'; // 시설별 탭
+import InfoRequestForm from '@/components/facilities/InfoRequestForm'; // 정보 요청 폼
+import ReservationInfo from '@/components/facilities/ReservationInfo'; // 예약 안내
+import RoomBenefits from '@/components/facilities/RoomBenefits'; // 객실 혜택 안내
+import { PLACEHOLDER_IMAGES } from '@/lib/data/static/constants'; // 이미지 상수
+import { ChevronRight } from 'lucide-react'; // 아이콘
+import Link from 'next/link'; // Next.js 라우팅용 링크 컴포넌트
+
+/**
+ * FacilitiesPage 컴포넌트
+ * - 부대시설 관련 주요 UI를 렌더링합니다.
+ * - 여러 개의 하위 컴포넌트(소개, 탭, 지도, 예약 안내, 객실 혜택 등)로 구성됩니다.
+ */
 export default function FacilitiesPage() {
   return (
     <main className="min-h-screen">
-      <ScrollToTop />
+      <ScrollToTop /> {/* 페이지 상단 이동 버튼 */}
       {/* 헤더 컴포넌트 */}
-      <Header />
+      <Header /> 
 
-      {/* 페이지 배너 */}
+      {/* [배너 영역] */}
+      {/* 배경 이미지와 타이틀, 네비게이션(홈 > 부대시설) 표시 */}
       <div className="relative h-[40vh] bg-neutral-900">
         <div
           className="absolute inset-0 bg-cover bg-center"
@@ -41,25 +61,25 @@ export default function FacilitiesPage() {
         </div>
       </div>
 
-      {/* 시설 소개 */}
+      {/* [시설 소개] */}
       <FacilitiesIntro />
 
-      {/* 시설 탭 */}
+      {/* [시설 탭] */}
       <FacilityTabs />
 
-      {/* 시설 지도 */}
+      {/* [시설 지도] */}
       <FacilitiesMap />
 
-      {/* 예약 정보 */}
+      {/* [예약 정보] */}
       <ReservationInfo />
 
-      {/* 객실 등급별 혜택 */}
+      {/* [객실 등급별 혜택] */}
       <RoomBenefits />
 
-      {/* 정보 요청 양식 */}
+      {/* [정보 요청 양식] */}
       <InfoRequestForm />
 
-      {/* 푸터 */}
+      {/* [푸터] */}
       <Footer />
     </main>
   );

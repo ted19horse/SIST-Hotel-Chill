@@ -1,12 +1,32 @@
+// [파일 설명]
+// 이 파일은 '다이닝' 메인 페이지의 진입점입니다.
+// Next.js App Router 구조에서 (main)/dining 세그먼트의 첫 화면을 담당합니다.
+// 주요 역할: 다이닝 레스토랑 목록, 검색/필터, 상세 이동 등 다이닝 관련 주요 UI를 렌더링합니다.
+//
+// 주요 개념:
+// - 'use client' 지시문: 이 파일이 클라이언트 컴포넌트임을 명시합니다.
+// - React 함수형 컴포넌트 구조, useState/useEffect 등 훅 사용
+// - TypeScript의 타입 추론 및 인터페이스 활용(필요시)
+// - Next.js의 동적 라우팅 및 URL 쿼리 파라미터 활용
+//
+// 초보자 팁:
+// 각 import, 상태, 효과, 렌더링 부분마다 상세 주석을 참고하세요.
+
 'use client';
 
+// [공통 UI 컴포넌트 import]
+// Header, Footer, ScrollToTop 등은 여러 페이지에서 재사용되는 공통 레이아웃 컴포넌트입니다.
 import ScrollToTop from '@/components/common/home/ScrollToTop';
 import Footer from '@/components/common/layout/Footer';
 import Header from '@/components/common/layout/Header';
+
+// [UI 요소 및 다이닝 관련 컴포넌트 import]
 import { Button } from '@/components/common/ui/Button';
 import { Input } from '@/components/common/ui/Input';
 import RestaurantCard from '@/components/dining/RestaurantCard';
 import RestaurantFilter from '@/components/dining/RestaurantFilter';
+
+// [데이터 및 아이콘 import]
 import { restaurants } from '@/lib/data/dining/restaurants';
 import { ChevronRight, Search } from 'lucide-react';
 import Link from 'next/link';
@@ -14,15 +34,25 @@ import { useSearchParams } from 'next/navigation';
 import { useEffect, useState } from 'react';
 
 /**
- * 다이닝 메인 페이지
+ * 다이닝 메인 페이지 컴포넌트
+ * - 레스토랑 목록, 검색, 필터 기능을 제공합니다.
+ * - Next.js의 클라이언트 컴포넌트이며, React 훅으로 상태와 효과를 관리합니다.
  */
 export default function DiningPage() {
+  // [URL 쿼리 파라미터 관리]
+  // useSearchParams 훅을 사용해 URL의 query 파라미터 값을 읽습니다.
   const searchParams = useSearchParams();
+
+  // [상태 정의]
+  // searchTerm: 검색어
+  // activeFilters: 선택된 필터(객체 형태)
+  // filteredRestaurants: 현재 화면에 표시할 레스토랑 목록
   const [searchTerm, setSearchTerm] = useState('');
   const [activeFilters, setActiveFilters] = useState({});
   const [filteredRestaurants, setFilteredRestaurants] = useState(restaurants);
 
-  // URL 쿼리 파라미터에서 검색어 초기화
+  // [초기 검색어 세팅]
+  // 컴포넌트가 마운트될 때 URL의 query 파라미터를 읽어 검색어를 초기화합니다.
   useEffect(() => {
     const query = searchParams.get('query');
     if (query) {
@@ -30,11 +60,14 @@ export default function DiningPage() {
     }
   }, [searchParams]);
 
-  // 검색어 및 필터 변경 시 레스토랑 목록 필터링
+  // [레스토랑 목록 필터링]
+  // 검색어 또는 필터가 변경될 때마다 레스토랑 목록을 필터링합니다.
+  // useEffect는 React의 사이드 이펙트 관리 훅입니다.
   useEffect(() => {
     let results = [...restaurants];
 
-    // 검색어로 필터링
+    // [검색어 필터]
+    // 사용자가 입력한 검색어가 레스토랑의 여러 속성에 포함되는지 검사합니다.
     if (searchTerm) {
       const term = searchTerm.toLowerCase();
       results = results.filter(
@@ -48,7 +81,8 @@ export default function DiningPage() {
       );
     }
 
-    // 필터로 필터링
+    // [필터 적용]
+    // activeFilters 객체의 각 필터 조건에 따라 추가적으로 목록을 필터링합니다.
     if (activeFilters) {
       // 요리 종류 필터링
       if (activeFilters.cuisine?.length) {
@@ -111,16 +145,20 @@ export default function DiningPage() {
     setFilteredRestaurants(results);
   }, [searchTerm, activeFilters]);
 
-  // 검색어 변경 핸들러
+  // [검색어 변경 핸들러]
+  // 사용자가 검색어를 입력할 때마다 searchTerm 상태를 업데이트합니다.
   const handleSearchChange = (e) => {
     setSearchTerm(e.target.value);
   };
 
-  // 필터 변경 핸들러
+  // [필터 변경 핸들러]
+  // 사용자가 필터를 선택할 때마다 activeFilters 상태를 업데이트합니다.
   const handleFilterChange = (filters) => {
     setActiveFilters(filters);
   };
 
+  // [렌더링 영역]
+  // 실제 UI를 반환합니다. 각 컴포넌트/요소 위에 주석을 추가해 역할을 설명할 수 있습니다.
   return (
     <main className="min-h-screen">
       <ScrollToTop />
