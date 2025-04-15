@@ -9,7 +9,6 @@ import {
 import { Button } from '@/components/common/ui/Button';
 import { Checkbox } from '@/components/common/ui/Checkbox';
 import { getCategories } from '@/lib/api/gift-shop';
-import { ProductCategory } from '@/lib/types/gift-shop';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { useEffect, useState } from 'react';
 
@@ -23,16 +22,16 @@ const priceRanges = [
 export default function ProductFiltersContent() {
   const router = useRouter();
   const searchParams = useSearchParams();
-  const [categories, setCategories] = useState<ProductCategory[]>([]);
+  const [categories, setCategories] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
-  const [selectedCategories, setSelectedCategories] = useState<number[]>(
+  const [selectedCategories, setSelectedCategories] = useState(
     searchParams
       .get('categories')
       ?.split(',')
       .map(Number)
       .filter((id) => !isNaN(id)) || []
   );
-  const [selectedPriceRanges, setSelectedPriceRanges] = useState<string[]>(
+  const [selectedPriceRanges, setSelectedPriceRanges] = useState(
     searchParams.get('priceRanges')?.split(',') || []
   );
   const [selectedFeatures, setSelectedFeatures] = useState({
