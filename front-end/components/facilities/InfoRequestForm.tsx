@@ -1,7 +1,5 @@
 'use client';
 
-import type React from 'react';
-
 import { Button } from '@/components/common/ui/Button';
 import { Calendar } from '@/components/common/ui/Calendar';
 import { Checkbox } from '@/components/common/ui/Checkbox';
@@ -27,13 +25,13 @@ export default function InfoRequestForm() {
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [phone, setPhone] = useState('');
-  const [date, setDate] = useState<Date | undefined>(undefined);
+  const [date, setDate] = useState(undefined);
   const [facility, setFacility] = useState('');
   const [message, setMessage] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isSubmitted, setIsSubmitted] = useState(false);
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = (e) => {
     e.preventDefault();
     setIsSubmitting(true);
 

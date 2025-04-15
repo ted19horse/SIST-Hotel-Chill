@@ -108,8 +108,8 @@ export default function ReservationDateTimePage({ params }: { params: { slug: st
       setError('날짜, 시간, 인원을 모두 선택해주세요.');
       return;
     }
-
-    router.push('/dining/reserve');
+    // 예약 정보가 모두 유효하면 slug 기반 예약 확인 페이지로 이동
+    router.push(`/dining/${slug}/confirmation`);
   };
 
   // 날짜 선택 핸들러

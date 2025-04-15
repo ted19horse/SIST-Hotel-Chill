@@ -7,8 +7,7 @@
 
 'use client';
 
-import { Building, RoomGrade, RoomSearchFilters, ViewType } from '@/lib/types/room';
-import { ROOM_GRADE_DISPLAY } from '@/lib/types/room';
+// import { ROOM_GRADE_DISPLAY } from '@/lib/types/room';
 import { useCallback, useState } from 'react';
 import { Filter, CalendarDays, Users, DollarSign, Mountain, Building2 } from 'lucide-react';
 import { useRouter, useSearchParams } from 'next/navigation';
@@ -25,9 +24,9 @@ export default function RoomFiltersContent() {
   const searchParams = useSearchParams();
   
   // 기본 필터 상태 설정 (URL 쿼리 파라미터에서 초기값 가져오기)
-  const [filters, setFilters] = useState<RoomSearchFilters>({
-    checkIn: searchParams.get('checkIn') ? new Date(searchParams.get('checkIn') as string) : undefined,
-    checkOut: searchParams.get('checkOut') ? new Date(searchParams.get('checkOut') as string) : undefined,
+  const [filters, setFilters] = useState({
+    checkIn: searchParams.get('checkIn') ? new Date(searchParams.get('checkIn')) : undefined,
+    checkOut: searchParams.get('checkOut') ? new Date(searchParams.get('checkOut')) : undefined,
     adults: searchParams.get('adults') ? Number(searchParams.get('adults')) : 2,
     children: searchParams.get('children') ? Number(searchParams.get('children')) : 0,
     roomGrade: parseQueryArray(searchParams.get('roomGrade')),
@@ -37,17 +36,10 @@ export default function RoomFiltersContent() {
   });
   
   // 필터 적용 상태
-  const [isFilterApplied, setIsFilterApplied] = useState<boolean>(false);
+  const [isFilterApplied, setIsFilterApplied] = useState(false);
   
   // 필터 섹션 확장/축소 상태
-  const [expandedSections, setExpandedSections] = useState<{
-    dates: boolean;
-    occupancy: boolean;
-    roomGrade: boolean;
-    price: boolean;
-    viewType: boolean;
-    building: boolean;
-  }>({
+  const [expandedSections, setExpandedSections] = useState({
     dates: true,     // 날짜 섹션 기본 확장
     occupancy: true, // 인원 섹션 기본 확장
     roomGrade: false,
@@ -59,15 +51,15 @@ export default function RoomFiltersContent() {
   /**
    * 쿼리 파라미터 배열 파싱 헬퍼 함수
    */
-  function parseQueryArray<T extends string>(param: string | null): T[] | undefined {
+  function parseQueryArray(param) {
     if (!param) return undefined;
-    return param.split(',') as T[];
+    return param.split(',');
   }
 
   /**
    * 가격 범위 쿼리 파라미터 파싱 헬퍼 함수
    */
-  function parseQueryPriceRange(param: string | null): [number, number] | undefined {
+  function parseQueryPriceRange(param) {
     if (!param) return undefined;
     const [min, max] = param.split(',').map(Number);
     if (isNaN(min) || isNaN(max)) return undefined;
@@ -77,7 +69,7 @@ export default function RoomFiltersContent() {
   /**
    * 필터 섹션 토글 처리
    */
-  const toggleSection = useCallback((section: keyof typeof expandedSections) => {
+  const toggleSection = useCallback((section) => {
     setExpandedSections(prev => ({
       ...prev,
       [section]: !prev[section]
@@ -87,7 +79,7 @@ export default function RoomFiltersContent() {
   /**
    * 필터 변경 처리
    */
-  const handleFilterChange = useCallback((key: keyof RoomSearchFilters, value: any) => {
+  const handleFilterChange = useCallback((key, value) => {
     setFilters(prev => ({
       ...prev,
       [key]: value
@@ -97,9 +89,9 @@ export default function RoomFiltersContent() {
   /**
    * 체크박스 필터 변경 처리 (배열 값)
    */
-  const handleArrayFilterChange = useCallback((key: keyof RoomSearchFilters, value: string, checked: boolean) => {
+  const handleArrayFilterChange = useCallback((key, value, checked) => {
     setFilters(prev => {
-      const currentValues = prev[key] as string[] || [];
+      const currentValues = prev[key] || [];
       
       if (checked) {
         return {
@@ -315,15 +307,15 @@ export default function RoomFiltersContent() {
           </span>
         </button>
         
-        {expandedSections.roomGrade && (
+        {/* {expandedSections.roomGrade && (
           <div className="mt-3 space-y-2">
             {Object.entries(ROOM_GRADE_DISPLAY).map(([grade, info]) => (
               <div key={grade} className="flex items-center">
                 <input
                   type="checkbox"
                   id={`grade-${grade}`}
-                  checked={filters.roomGrade?.includes(grade as RoomGrade) || false}
-                  onChange={(e) => handleArrayFilterChange('roomGrade', grade as RoomGrade, e.target.checked)}
+                  checked={filters.roomGrade?.includes(grade) || false}
+                  onChange={(e) => handleArrayFilterChange('roomGrade', grade, e.target.checked)}
                   className="h-4 w-4 text-blue-600 rounded"
                 />
                 <label htmlFor={`grade-${grade}`} className="ml-2 text-sm text-neutral-700">
@@ -332,7 +324,7 @@ export default function RoomFiltersContent() {
               </div>
             ))}
           </div>
-        )}
+        )} */}
       </div>
 
       {/* 가격 범위 필터 섹션 */}
@@ -417,8 +409,8 @@ export default function RoomFiltersContent() {
                 <input
                   type="checkbox"
                   id={`view-${view.value}`}
-                  checked={filters.viewType?.includes(view.value as ViewType) || false}
-                  onChange={(e) => handleArrayFilterChange('viewType', view.value as ViewType, e.target.checked)}
+                  checked={filters.viewType?.includes(view.value) || false}
+                  onChange={(e) => handleArrayFilterChange('viewType', view.value, e.target.checked)}
                   className="h-4 w-4 text-blue-600 rounded"
                 />
                 <label htmlFor={`view-${view.value}`} className="ml-2 text-sm text-neutral-700">
@@ -453,8 +445,8 @@ export default function RoomFiltersContent() {
                 <input
                   type="checkbox"
                   id={`building-${building}`}
-                  checked={filters.building?.includes(building as Building) || false}
-                  onChange={(e) => handleArrayFilterChange('building', building as Building, e.target.checked)}
+                  checked={filters.building?.includes(building) || false}
+                  onChange={(e) => handleArrayFilterChange('building', building, e.target.checked)}
                   className="h-4 w-4 text-blue-600 rounded"
                 />
                 <label htmlFor={`building-${building}`} className="ml-2 text-sm text-neutral-700">

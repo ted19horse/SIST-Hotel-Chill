@@ -6,15 +6,9 @@
 
 'use client';
 
-import { RoomDisplay, ROOM_GRADE_DISPLAY } from '@/lib/types/room';
+import { ROOM_GRADE_DISPLAY } from '@/lib/types/room';
 import { Maximize2, Users, Mountain } from 'lucide-react';
 import Image from 'next/image';
-
-interface RoomCardProps {
-  room: RoomDisplay;
-  onViewDetails: (roomId: string) => void;
-  onBookNow: (roomId: string) => void;
-}
 
 /**
  * 객실 카드 컴포넌트
@@ -26,7 +20,7 @@ export default function RoomCard({
   room,
   onViewDetails,
   onBookNow,
-}: RoomCardProps) {
+}) {
   // 등급 정보
   const gradeInfo = ROOM_GRADE_DISPLAY[room.grade];
   

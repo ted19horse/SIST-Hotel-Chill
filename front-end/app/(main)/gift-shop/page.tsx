@@ -1,21 +1,40 @@
-import ScrollToTop from '@/components/common/home/ScrollToTop';
-import Footer from '@/components/common/layout/Footer';
-import Header from '@/components/common/layout/Header';
-import CategoryGrid from '@/components/gift-shop/CategoryGrid';
-import FeaturedProducts from '@/components/gift-shop/FeaturedProducts';
-import ShopInfo from '@/components/gift-shop/ShopInfo';
-import ShopIntro from '@/components/gift-shop/ShopIntro';
-import { ChevronRight } from 'lucide-react';
-import Link from 'next/link';
+// [파일 설명]
+// 이 파일은 '기프트샵' 메인 페이지의 진입점입니다.
+// Next.js App Router 구조에서 (main)/gift-shop 세그먼트의 첫 화면을 담당합니다.
+// 주요 역할: 기프트샵 소개, 카테고리, 추천 상품, 정보 등 기프트샵 관련 주요 UI를 렌더링합니다.
+//
+// 주요 개념:
+// - React 함수형 컴포넌트 구조
+// - 여러 개의 재사용 컴포넌트 조합
+// - Next.js의 동적 라우팅 및 Link 컴포넌트 활용
+// - TypeScript의 타입 추론(필요시)
+//
+// 초보자 팁:
+// 각 import, 렌더링 영역, 컴포넌트별로 상세 주석을 참고하세요.
 
+import ScrollToTop from '@/components/common/home/ScrollToTop'; // 페이지 상단 이동 버튼
+import Footer from '@/components/common/layout/Footer'; // 공통 푸터
+import Header from '@/components/common/layout/Header'; // 공통 헤더
+import CategoryGrid from '@/components/gift-shop/CategoryGrid'; // 상품 카테고리 그리드
+import FeaturedProducts from '@/components/gift-shop/FeaturedProducts'; // 추천 상품
+import ShopInfo from '@/components/gift-shop/ShopInfo'; // 기프트샵 정보
+import ShopIntro from '@/components/gift-shop/ShopIntro'; // 기프트샵 소개
+import { ChevronRight } from 'lucide-react'; // 아이콘
+import Link from 'next/link'; // Next.js 라우팅용 링크 컴포넌트
+
+/**
+ * GiftShopPage 컴포넌트
+ * - 기프트샵 관련 주요 UI를 렌더링합니다.
+ * - 여러 개의 하위 컴포넌트(소개, 카테고리, 추천 상품, 정보 등)로 구성됩니다.
+ */
 export default function GiftShopPage() {
   return (
     <main className="min-h-screen">
-      <ScrollToTop />
-      {/* Header is imported as a component */}
-      <Header />
+      <ScrollToTop /> {/* 페이지 상단 이동 버튼 */}
+      <Header /> {/* 공통 헤더 */}
 
-      {/* Page Banner */}
+      {/* [배너 영역] */}
+      {/* 배경 이미지와 타이틀, 네비게이션(홈 > 기프트샵) 표시 */}
       <div className="relative h-[40vh] bg-neutral-900">
         <div
           className="absolute inset-0 bg-cover bg-center"
@@ -38,19 +57,19 @@ export default function GiftShopPage() {
         </div>
       </div>
 
-      {/* Shop Introduction */}
+      {/* [기프트샵 소개] */}
       <ShopIntro />
 
-      {/* Product Categories */}
+      {/* [카테고리 그리드] */}
       <CategoryGrid />
 
-      {/* Featured Products */}
+      {/* [추천 상품] */}
       <FeaturedProducts />
 
-      {/* Shop Information */}
+      {/* [기프트샵 정보] */}
       <ShopInfo />
 
-      {/* Footer */}
+      {/* [공통 푸터] */}
       <Footer />
     </main>
   );

@@ -1,7 +1,5 @@
 'use client';
 
-import type React from 'react';
-
 import { Button } from '@/components/common/ui/Button';
 import { Calendar } from '@/components/common/ui/Calendar';
 import { Checkbox } from '@/components/common/ui/Checkbox';
@@ -18,7 +16,7 @@ export default function RegistrationForm() {
   const [lastName, setLastName] = useState('');
   const [email, setEmail] = useState('');
   const [phone, setPhone] = useState('');
-  const [birthDate, setBirthDate] = useState<Date | undefined>(undefined);
+  const [birthDate, setBirthDate] = useState(undefined);
   const [address, setAddress] = useState('');
   const [city, setCity] = useState('');
   const [postalCode, setPostalCode] = useState('');
@@ -28,7 +26,7 @@ export default function RegistrationForm() {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isSubmitted, setIsSubmitted] = useState(false);
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = (e) => {
     e.preventDefault();
     setIsSubmitting(true);
 
@@ -228,7 +226,7 @@ export default function RegistrationForm() {
                     <Checkbox
                       id="terms"
                       checked={agreedToTerms}
-                      onCheckedChange={(checked) => setAgreedToTerms(checked as boolean)}
+                      onCheckedChange={(checked) => setAgreedToTerms(checked)}
                       required
                     />
                     <div className="grid gap-1.5 leading-none">
@@ -256,7 +254,7 @@ export default function RegistrationForm() {
                     <Checkbox
                       id="marketing"
                       checked={agreedToMarketing}
-                      onCheckedChange={(checked) => setAgreedToMarketing(checked as boolean)}
+                      onCheckedChange={(checked) => setAgreedToMarketing(checked)}
                     />
                     <div className="grid gap-1.5 leading-none">
                       <label

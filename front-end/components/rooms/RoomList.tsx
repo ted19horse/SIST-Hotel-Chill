@@ -6,15 +6,8 @@
  */
 
 import ClientComponentWrapper from '@/components/common/ClientComponentWrapper';
-import { RoomDisplay } from '@/lib/types/room';
 import RoomListContent from './RoomListContent';
 import { getRooms } from '@/lib/data/rooms';
-
-interface RoomListProps {
-  rooms?: RoomDisplay[];
-  isLoading?: boolean;
-  error?: string;
-}
 
 /**
  * 객실 목록 컴포넌트
@@ -25,7 +18,7 @@ interface RoomListProps {
  * @param props 컴포넌트 속성
  * @returns JSX.Element
  */
-export default function RoomList({ rooms, isLoading, error }: RoomListProps) {
+export default function RoomList({ rooms, isLoading, error }) {
   // props로 받지 않았을 경우 데이터 직접 로드
   // 백엔드 연결 후에는 fetch API 호출로 대체
   const roomsData = rooms || getRooms();

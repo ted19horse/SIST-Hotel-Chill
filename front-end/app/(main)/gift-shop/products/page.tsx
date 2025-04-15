@@ -1,21 +1,39 @@
-import ScrollToTop from '@/components/common/home/ScrollToTop';
-import Footer from '@/components/common/layout/Footer';
-import Header from '@/components/common/layout/Header';
-import ProductFilters from '@/components/gift-shop/ProductFilters';
-import ProductGrid from '@/components/gift-shop/ProductGrid';
-import ProductSearch from '@/components/gift-shop/ProductSearch';
-import ShoppingCart from '@/components/gift-shop/ShoppingCart';
-import { ChevronRight } from 'lucide-react';
-import Link from 'next/link';
+// [파일 설명]
+// 이 파일은 '기프트샵 상품 목록' 메인 페이지의 진입점입니다.
+// Next.js App Router 구조에서 (main)/gift-shop/products 세그먼트의 첫 화면을 담당합니다.
+// 주요 역할: 기프트샵 상품 검색, 필터링, 상품 목록, 장바구니 등 주요 UI를 렌더링합니다.
+//
+// 주요 개념:
+// - React 함수형 컴포넌트 구조
+// - 여러 개의 재사용 컴포넌트 조합 (예: ProductFilters, ProductGrid, ShoppingCart 등)
+// - Next.js의 Link 컴포넌트와 동적 내비게이션
+// - 상품 필터링, 검색, 장바구니 등 상태 기반 UI 구현
+//
+// 초보자 팁:
+// 각 import, 주요 컴포넌트, 렌더링 영역별 상세 주석을 참고하세요.
 
+import ScrollToTop from '@/components/common/home/ScrollToTop'; // 페이지 상단 이동 버튼
+import Footer from '@/components/common/layout/Footer'; // 공통 푸터
+import Header from '@/components/common/layout/Header'; // 공통 헤더
+import ProductFilters from '@/components/gift-shop/ProductFilters'; // 상품 필터 컴포넌트
+import ProductGrid from '@/components/gift-shop/ProductGrid'; // 상품 목록 컴포넌트
+import ProductSearch from '@/components/gift-shop/ProductSearch'; // 상품 검색 컴포넌트
+import ShoppingCart from '@/components/gift-shop/ShoppingCart'; // 장바구니 컴포넌트
+import { ChevronRight } from 'lucide-react'; // 아이콘
+import Link from 'next/link'; // 라우팅용 링크
+
+/**
+ * GiftShopProductsPage 컴포넌트
+ * - 기프트샵 상품 목록, 검색, 필터, 장바구니 등 다양한 UI를 렌더링합니다.
+ */
 export default function GiftShopProductsPage() {
   return (
     <main className="min-h-screen">
-      <ScrollToTop />
-      {/* Header is imported as a component */}
+      <ScrollToTop /> {/* 페이지 상단 이동 버튼 */}
+      {/* [헤더 영역] */}
       <Header />
 
-      {/* Page Banner */}
+      {/* [페이지 배너 영역] */}
       <div className="relative h-[30vh] bg-neutral-900">
         <div
           className="absolute inset-0 bg-cover bg-center"
@@ -42,26 +60,25 @@ export default function GiftShopProductsPage() {
         </div>
       </div>
 
-      {/* Shop Content */}
+      {/* [메인 콘텐츠 영역] */}
       <div className="container mx-auto px-4 py-12">
         <div className="flex flex-col md:flex-row gap-8">
-          {/* Sidebar */}
+          {/* [사이드바 - 필터/검색/장바구니] */}
           <div className="w-full md:w-1/4">
             <div className="sticky top-24">
-              <ProductSearch />
-              <ProductFilters />
-              <ShoppingCart />
+              <ProductSearch /> {/* 상품 검색 */}
+              <ProductFilters /> {/* 상품 필터 */}
+              <ShoppingCart /> {/* 장바구니 */}
             </div>
           </div>
-
-          {/* Main Content */}
+          {/* [상품 목록 영역] */}
           <div className="w-full md:w-3/4">
-            <ProductGrid />
+            <ProductGrid /> {/* 상품 목록 */}
           </div>
         </div>
       </div>
 
-      {/* Footer */}
+      {/* [푸터 영역] */}
       <Footer />
     </main>
   );
