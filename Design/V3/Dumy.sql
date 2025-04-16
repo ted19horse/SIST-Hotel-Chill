@@ -1,5 +1,5 @@
 -- Chill Haven Resort & Spa 더미 데이터
--- 간소화된 DDL에 맞춰 작성된 더미 데이터입니다.
+-- MySQL 8.0, DBeaver 환경용 (외래키 제약 없음)
 
 USE chill;
 
@@ -51,28 +51,99 @@ INSERT INTO payment_methods (users_id, card_type, last_four_digits, is_default) 
 
 
 
--- 4. 객실 유형 테이블 데이터
-INSERT INTO room_types (name, max_adults, max_children, weekday_price, weekend_price) VALUES
-('Chill Comfort Room', 2, 1, 220000, 270000),
-('Chill Harmony Room', 2, 1, 280000, 350000),
-('Chill Serenity Room', 2, 2, 380000, 450000),
-('Chill Family Suite', 4, 2, 520000, 650000),
-('Chill Lake Suite', 2, 2, 680000, 820000),
-('Ultimate Chill Suite', 4, 4, 950000, 1200000);
+-- 어메니티 그룹 데이터
+INSERT INTO amenity_groups (name, icon_name, sort_order) VALUES
+('공통 어메니티', 'BedDouble', 1),
+('디럭스 어메니티', 'Coffee', 2),
+('프리미엄 어메니티', 'Tablet', 3),
+('프레지덴셜 어메니티', 'UserCog', 4);
+
+-- 어메니티 아이템 데이터
+INSERT INTO amenity_items (amenity_groups_id, name, icon_name, sort_order) VALUES
+-- 공통 어메니티
+(1, '고급 침구', 'BedDouble', 1),
+(1, '43인치 스마트 TV', 'Tv', 2),
+(1, '고속 무선 인터넷', 'Wifi', 3),
+(1, '객실 내 금고', 'Lock', 4),
+(1, '미니바/미니 냉장고', 'Coffee', 5),
+(1, '친환경 욕실 용품 세트', 'ShowerHead', 6),
+(1, '슬리퍼 및 목욕 가운', 'Footprints', 7),
+(1, 'USB 충전 포트 및 멀티 어댑터', 'BatteryCharging', 8),
+(1, '헤어 드라이어', 'Scissors', 9),
+(1, '커피/차 메이커', 'Coffee', 10),
+
+-- 디럭스 어메니티
+(2, '에스프레소 머신', 'Coffee', 1),
+(2, '필로우 미스트', 'Droplets', 2),
+(2, '욕실 체중계', 'Scale', 3),
+(2, '추가 욕실 용품', 'Bath', 4),
+(2, '블루투스 스피커', 'Speaker', 5),
+(2, '다회용 텀블러', 'Coffee', 6),
+
+-- 프리미엄 어메니티
+(3, '태블릿 객실 컨트롤 시스템', 'Tablet', 1),
+(3, '개별 공기청정기', 'Wind', 2),
+(3, '전용 라운지 이용권', 'Lounge', 3),
+(3, '턴다운 서비스', 'Moon', 4),
+(3, '조식 무료 제공', 'Utensils', 5),
+(3, '웰컴 과일 또는 스낵', 'Apple', 6),
+
+-- 프레지덴셜 어메니티
+(4, '개인 집사 서비스', 'UserCog', 1),
+(4, '프라이빗 체크인/체크아웃', 'Key', 2),
+(4, '객실 내 자쿠지', 'Waves', 3),
+(4, '프리미엄 와인/주류 셀렉션', 'Wine', 4),
+(4, '프라이빗 다이닝 옵션', 'ChefHat', 5),
+(4, '스페셜 스파 트리트먼트 패키지', 'Heart', 6);
 
 
 
--- 5. 객실 테이블 데이터 (수정된 방 번호 규칙 적용)
--- 건물 식별자 + 층수(1자리) + 호수(2자리) 형식
--- 6등급: F 건물, 각 층 30개 객실, 총 4층
--- 5등급: E 건물, 각 층 25개 객실, 총 4층
--- 4등급: D 건물, 각 층 15개 객실, 총 4층
--- 3등급: C 건물, 각 층 10개 객실, 총 4층
--- 2등급: B 건물, 각 층 5개 객실, 총 4층
--- 1등급: A 건물, 각 층 4개 객실, 총 2층
+-- 객실 유형 데이터
+INSERT INTO room_types (
+    name, description, size, max_adults, max_children,
+    weekday_price, weekend_price, peak_season_price,
+    building, floor_count, rooms_per_floor, view_type
+) VALUES
+('Chill Comfort Room', 
+ '심플하고 편안한 기본형 객실로, 자연적 요소가 가미된 인테리어와 가든 뷰를 제공하는 30㎡ 크기의 객실입니다.',
+ 30, 2, 1, 220000, 270000, 320000, 'F', 4, 30, '가든 뷰'),
 
--- 기존 rooms 테이블 데이터 삭제
--- TRUNCATE TABLE rooms;
+('Chill Harmony Room',
+ '넓은 공간과 고급스러운 인테리어, 휴식을 위한 전용 소파 공간이 있는 45㎡ 크기의 객실입니다.',
+ 45, 2, 1, 280000, 350000, 400000, 'E', 4, 25, '가든 뷰'),
+
+('Chill Serenity Room',
+ '고급 침구와 가구, 넓은 욕실, 일부 객실 테라스가 포함된 70㎡ 크기의 객실입니다.',
+ 70, 2, 2, 380000, 450000, 520000, 'D', 4, 15, '가든 뷰'),
+
+('Chill Family Suite',
+ '가족 단위 투숙객을 위한 분리된 거실과 침실, 울창한 숲과 아름다운 오솔길 전망을 제공하는 90㎡ 크기의 객실입니다.',
+ 90, 4, 2, 520000, 650000, 750000, 'C', 4, 10, '숲 & 오솔길 뷰'),
+
+('Chill Lake Suite',
+ '비즈니스와 휴식을 동시에, 넓은 업무공간과 휴식공간, 호수와 산이 어우러진 아름다운 전망을 제공하는 100㎡ 크기의 객실입니다.',
+ 100, 2, 2, 680000, 820000, 950000, 'B', 4, 5, '호수 & 산 뷰'),
+
+('Ultimate Chill Suite',
+ '최고급 시설과 개인 맞춤 서비스, 넓은 공간, 고객이 선호하는 프리미엄 전망 선택이 가능한 120㎡ 크기의 객실입니다.',
+ 120, 4, 4, 950000, 1200000, 1500000, 'A', 2, 4, '선택 가능 프리미엄 뷰');
+
+
+
+-- 객실 유형별 어메니티 그룹 연결
+INSERT INTO room_type_amenity_groups (room_types_id, amenity_groups_id)
+SELECT rt.room_types_id, ag.amenity_groups_id
+FROM room_types rt
+CROSS JOIN amenity_groups ag
+WHERE 
+    (rt.name = 'Chill Comfort Room' AND ag.name = '공통 어메니티')
+    OR (rt.name = 'Chill Harmony Room' AND ag.name IN ('공통 어메니티', '디럭스 어메니티'))
+    OR (rt.name IN ('Chill Serenity Room', 'Chill Family Suite', 'Chill Lake Suite') 
+        AND ag.name IN ('공통 어메니티', '디럭스 어메니티', '프리미엄 어메니티'))
+    OR (rt.name = 'Ultimate Chill Suite' 
+        AND ag.name IN ('공통 어메니티', '디럭스 어메니티', '프리미엄 어메니티', '프레지덴셜 어메니티'));
+
+
 
 -- 5-1. 6등급: Chill Comfort Room (F 건물, 각 층 30개, 총 4개 층) - 120개
 INSERT INTO rooms (room_types_id, room_number, status)
@@ -176,36 +247,8 @@ FROM (
     LIMIT 8
 ) as numbers;
 
--- 모든 객실 확인
--- SELECT room_number, rooms_id, room_types_id, status FROM rooms ORDER BY room_number;
-
--- 각 건물별 객실 수 확인
--- SELECT 
---     SUBSTRING(room_number, 1, 1) AS building,
---     COUNT(*) AS total_rooms,
---     SUM(CASE WHEN status = 'AVAILABLE' THEN 1 ELSE 0 END) AS available_rooms,
---     SUM(CASE WHEN status = 'OCCUPIED' THEN 1 ELSE 0 END) AS occupied_rooms,
---     SUM(CASE WHEN status = 'MAINTENANCE' THEN 1 ELSE 0 END) AS maintenance_rooms
--- FROM rooms
--- GROUP BY building
--- ORDER BY building;
-
--- 각 등급별 객실 수 확인
--- SELECT 
---     rt.name AS room_type,
---     COUNT(*) AS total_rooms,
---     SUM(CASE WHEN r.status = 'AVAILABLE' THEN 1 ELSE 0 END) AS available_rooms,
---     SUM(CASE WHEN r.status = 'OCCUPIED' THEN 1 ELSE 0 END) AS occupied_rooms,
---     SUM(CASE WHEN r.status = 'MAINTENANCE' THEN 1 ELSE 0 END) AS maintenance_rooms
--- FROM rooms r
--- JOIN room_types rt ON r.room_types_id = rt.room_types_id
--- GROUP BY rt.name
--- ORDER BY rt.room_types_id;
-
-
-
 -- 6. 예약 테이블 데이터 (객실 ID를 실제 존재하는 것으로 대체)
-INSERT INTO reservations (users_id, rooms_id, check_in_date, check_out_date, adults, children, status, total_amount, payment_methods_id, reservation_number) VALUES
+INSERT INTO room_reservations (users_id, rooms_id, check_in_date, check_out_date, adults, children, status, total_amount, payment_methods_id, reservation_number) VALUES
 -- 확정된 예약 (미래 날짜)
 -- 각 예약에는 다양한 등급의 객실을 사용합니다
 (1, (SELECT rooms_id FROM rooms WHERE room_number = 'A101' LIMIT 1), '2025-03-25', '2025-03-27', 2, 0, 'CONFIRMED', 1900000, 1, 'RES20250325001'),
@@ -226,48 +269,6 @@ INSERT INTO reservations (users_id, rooms_id, check_in_date, check_out_date, adu
 -- 취소된 예약
 (1, (SELECT rooms_id FROM rooms WHERE room_number = 'F103' LIMIT 1), '2025-03-10', '2025-03-12', 2, 0, 'CANCELLED', 440000, 1, 'RES20250310001'),
 (2, (SELECT rooms_id FROM rooms WHERE room_number = 'E103' LIMIT 1), '2025-03-12', '2025-03-14', 2, 1, 'CANCELLED', 560000, 3, 'RES20250312001');
-
--- 예약 데이터 확인
--- SELECT 
---     r.reservations_id,
---     r.reservation_number,
---     u.name AS guest_name,
---     rm.room_number,
---     rt.name AS room_type,
---     r.check_in_date,
---     r.check_out_date,
---     r.adults,
---     r.children,
---     r.status,
---     r.total_amount
--- FROM 
---     reservations r
--- JOIN 
---     users u ON r.users_id = u.users_id
--- JOIN 
---     rooms rm ON r.rooms_id = rm.rooms_id
--- JOIN 
---     room_types rt ON rm.room_types_id = rt.room_types_id
--- ORDER BY 
---     r.check_in_date;
-
--- 각 사용자별 예약 횟수 확인
--- SELECT 
---     u.name,
---     COUNT(r.reservations_id) AS total_reservations,
---     SUM(CASE WHEN r.status = 'CONFIRMED' THEN 1 ELSE 0 END) AS confirmed_reservations,
---     SUM(CASE WHEN r.status = 'COMPLETED' THEN 1 ELSE 0 END) AS completed_reservations,
---     SUM(CASE WHEN r.status = 'CANCELLED' THEN 1 ELSE 0 END) AS cancelled_reservations
--- FROM 
---     users u
--- LEFT JOIN 
---     reservations r ON u.users_id = r.users_id
--- GROUP BY 
---     u.name
--- HAVING 
---     total_reservations > 0
--- ORDER BY 
---     total_reservations DESC;
 
 
 
@@ -541,49 +542,6 @@ INSERT INTO order_items (orders_id, products_id, quantity, price, total_price) V
 -- 열 번째 주문 - 문지영님 (ORD20250420001)
 ((SELECT orders_id FROM orders WHERE order_number = 'ORD20250420001'), 30, 1, 250000, 250000); -- 럭셔리 힐링 프리미엄 웰빙 박스
 
--- 취소된 주문에는 주문 아이템을 추가하지 않음 (주문이 취소되었으므로)
-
--- 주문 아이템 데이터 확인
--- SELECT 
---     o.order_number,
---     u.name AS customer_name,
---     o.status,
---     p.sku,
---     p.name AS product_name,
---     p.category AS product_category,
---     oi.quantity,
---     oi.price,
---     oi.total_price
--- FROM 
---     order_items oi
--- JOIN 
---     orders o ON oi.orders_id = o.orders_id
--- JOIN 
---     users u ON o.users_id = u.users_id
--- JOIN 
---     products p ON oi.products_id = p.products_id
--- ORDER BY 
---     o.order_number, oi.order_items_id;
--- 
--- 주문별 합계 및 검증
--- SELECT 
---     o.orders_id,
---     o.order_number,
---     o.total_amount AS order_total_amount,
---     SUM(oi.total_price) AS calculated_total,
---     CASE 
---         WHEN o.total_amount = SUM(oi.total_price) THEN 'Match'
---         ELSE 'Mismatch'
---     END AS validation
--- FROM 
---     orders o
--- JOIN 
---     order_items oi ON o.orders_id = oi.orders_id
--- GROUP BY 
---     o.orders_id, o.order_number, o.total_amount
--- ORDER BY 
---     o.order_number;
-
 
 
 -- 14. 포인트 트랜잭션 테이블 데이터 재삽입 (실제 예약 ID와 주문 ID를 서브쿼리로 조회하여 참조)
@@ -591,32 +549,32 @@ INSERT INTO point_transactions
 (users_id, points, reference_id, reference_type, transaction_type, transaction_date) 
 VALUES
 -- 김민준 포인트 내역
-(1, 300, (SELECT reservations_id FROM reservations WHERE reservation_number = 'RES20250215001'), 'ROOM', 'EARN_STAY', '2025-02-17 12:00:00'),
+(1, 300, (SELECT room_reservations_id FROM room_reservations WHERE reservation_number = 'RES20250215001'), 'ROOM', 'EARN_STAY', '2025-02-17 12:00:00'),
 (1, 200, (SELECT dining_reservations_id FROM dining_reservations WHERE reservation_number = 'DRES20250216001'), 'DINING', 'EARN_DINING', '2025-02-16 21:30:00'),
 (1, 190, (SELECT orders_id FROM orders WHERE order_number = 'ORD20250216001'), 'GIFTSHOP', 'EARN_SHOPPING', '2025-02-16 15:45:00'),
-(1, -500, (SELECT reservations_id FROM reservations WHERE reservation_number = 'RES20250325001'), 'ROOM', 'REDEMPTION_ROOM', '2025-03-25 10:15:00'),
+(1, -500, (SELECT room_reservations_id FROM room_reservations WHERE reservation_number = 'RES20250325001'), 'ROOM', 'REDEMPTION_ROOM', '2025-03-25 10:15:00'),
 
 -- 이수진 포인트 내역
 (2, 200, NULL, 'ROOM', 'EARN_STAY', '2025-02-22 14:30:00'), -- 이력이 없으므로 NULL 참조
 (2, 85, (SELECT orders_id FROM orders WHERE order_number = 'ORD20250221001'), 'GIFTSHOP', 'EARN_SHOPPING', '2025-02-21 16:20:00'),
 
 -- 최유나 포인트 내역
-(4, 200, (SELECT reservations_id FROM reservations WHERE reservation_number = 'RES20250220001'), 'ROOM', 'EARN_STAY', '2025-02-22 11:45:00'),
+(4, 200, (SELECT room_reservations_id FROM room_reservations WHERE reservation_number = 'RES20250220001'), 'ROOM', 'EARN_STAY', '2025-02-22 11:45:00'),
 (4, 150, (SELECT dining_reservations_id FROM dining_reservations WHERE reservation_number = 'DRES20250221001'), 'DINING', 'EARN_DINING', '2025-02-21 20:10:00'),
 (4, 120, (SELECT orders_id FROM orders WHERE order_number = 'ORD20250221002'), 'GIFTSHOP', 'EARN_SHOPPING', '2025-02-21 10:30:00'),
 
 -- 강은비 포인트 내역
-(6, 300, (SELECT reservations_id FROM reservations WHERE reservation_number = 'RES20250223001'), 'ROOM', 'EARN_STAY', '2025-02-25 12:30:00'),
+(6, 300, (SELECT room_reservations_id FROM room_reservations WHERE reservation_number = 'RES20250223001'), 'ROOM', 'EARN_STAY', '2025-02-25 12:30:00'),
 (6, 200, (SELECT dining_reservations_id FROM dining_reservations WHERE reservation_number = 'DRES20250224001'), 'DINING', 'EARN_DINING', '2025-02-24 21:15:00'),
 (6, 255, (SELECT orders_id FROM orders WHERE order_number = 'ORD20250224001'), 'GIFTSHOP', 'EARN_SHOPPING', '2025-02-24 15:00:00'),
 
 -- 윤서연 포인트 내역
-(8, 300, (SELECT reservations_id FROM reservations WHERE reservation_number = 'RES20250227001'), 'ROOM', 'EARN_STAY', '2025-03-01 11:00:00'),
+(8, 300, (SELECT room_reservations_id FROM room_reservations WHERE reservation_number = 'RES20250227001'), 'ROOM', 'EARN_STAY', '2025-03-01 11:00:00'),
 (8, 200, (SELECT dining_reservations_id FROM dining_reservations WHERE reservation_number = 'DRES20250228001'), 'DINING', 'EARN_DINING', '2025-02-28 20:45:00'),
 (8, 135, (SELECT orders_id FROM orders WHERE order_number = 'ORD20250228001'), 'GIFTSHOP', 'EARN_SHOPPING', '2025-02-28 16:30:00'),
 
 -- 문지영 포인트 내역
-(10, 300, (SELECT reservations_id FROM reservations WHERE reservation_number = 'RES20250303001'), 'ROOM', 'EARN_STAY', '2025-03-08 12:15:00'),
+(10, 300, (SELECT room_reservations_id FROM room_reservations WHERE reservation_number = 'RES20250303001'), 'ROOM', 'EARN_STAY', '2025-03-08 12:15:00'),
 (10, 150, (SELECT dining_reservations_id FROM dining_reservations WHERE reservation_number = 'DRES20250305001'), 'DINING', 'EARN_DINING', '2025-03-05 19:30:00'),
 (10, 370, (SELECT orders_id FROM orders WHERE order_number = 'ORD20250305001'), 'GIFTSHOP', 'EARN_SHOPPING', '2025-03-05 14:45:00'),
 (10, -1000, NULL, 'SPA', 'REDEMPTION_SPA', '2025-04-20 15:00:00'),
@@ -626,48 +584,6 @@ VALUES
 (5, 100, NULL, NULL, 'SIGNUP_BONUS', '2025-02-20 14:45:00'),
 (7, 100, NULL, NULL, 'SIGNUP_BONUS', '2025-01-10 11:15:00'),
 (9, 100, NULL, NULL, 'SIGNUP_BONUS', '2025-01-25 16:30:00');
-
--- 포인트 트랜잭션 데이터 확인
--- SELECT 
---     pt.point_transactions_id,
---     u.name AS user_name,
---     pt.points,
---     pt.transaction_type,
---     pt.reference_type,
---     CASE 
---         WHEN pt.reference_type = 'ROOM' THEN (SELECT reservation_number FROM reservations WHERE reservations_id = pt.reference_id)
---         WHEN pt.reference_type = 'DINING' THEN (SELECT reservation_number FROM dining_reservations WHERE dining_reservations_id = pt.reference_id)
---         WHEN pt.reference_type = 'GIFTSHOP' THEN (SELECT order_number FROM orders WHERE orders_id = pt.reference_id)
---         ELSE NULL
---     END AS reference_number,
---     pt.transaction_date
--- FROM 
---     point_transactions pt
--- JOIN 
---     users u ON pt.users_id = u.users_id
--- ORDER BY 
---     pt.transaction_date;
--- 
--- 사용자별 포인트 합계 확인
--- SELECT 
---     u.name,
---     m.membership_tier,
---     m.points AS current_points_in_membership,
---     SUM(pt.points) AS calculated_total_points,
---     CASE 
---         WHEN m.points = SUM(pt.points) THEN 'Match'
---         ELSE 'Mismatch'
---     END AS validation
--- FROM 
---     users u
--- JOIN 
---     memberships m ON u.users_id = m.users_id
--- LEFT JOIN 
---     point_transactions pt ON u.users_id = pt.users_id
--- GROUP BY 
---     u.name, m.membership_tier, m.points
--- ORDER BY 
---     m.points DESC;
 
 
 

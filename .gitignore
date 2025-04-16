@@ -1,4 +1,10 @@
-Design/
+### Design ###
+Design/develop-guide/
+Design/senario/
+Design/V1/
+Design/V2/
+
+### Config ###
 .vscode/
 .idea/
 .cursor/

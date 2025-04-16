@@ -1,0 +1,29 @@
+spring:
+  profiles:
+    active: dev # 기본적으로 활성화되는 프로파일
+    include:
+      - db # 데이터베이스 설정 프로파일 포함
+      - secret # 보안 관련 설정 프로파일 포함
+  jpa:
+    hibernate:
+      ddl-auto: update # 애플리케이션 실행 시 엔티티와 테이블 자동 매핑(개발 환경용)
+    properties:
+      hibernate:
+        format_sql: true # SQL 쿼리 포맷팅
+    show-sql: true # SQL 쿼리 로깅 활성화
+  jackson:
+    date-format: yyyy-MM-dd HH:mm:ss # 날짜 형식 지정
+    time-zone: Asia/Seoul # 타임존 설정
+
+server:
+  port: 8080 # 서버 포트 설정
+  servlet:
+    context-path: / # 애플리케이션 컨텍스트 경로
+    encoding:
+      charset: UTF-8 # 인코딩 설정
+      enabled: true
+
+logging:
+  level:
+    org.hibernate.SQL: debug # SQL 쿼리 디버그 레벨 로깅
+    com.sist.hotel: debug # 애플리케이션 로깅 레벨
