@@ -6,21 +6,16 @@ import lombok.*;
 /**
  * Lombok 어노테이션 설명
  *
- * @Getter         // 모든 필드의 getter 메서드 자동 생성
- * @Setter         // 모든 필드의 setter 메서드 자동 생성
- * @NoArgsConstructor // 기본 생성자 자동 생성
- * @AllArgsConstructor // 전체 필드 생성자 자동 생성
- * @Builder        // 빌더 패턴 지원
- * @ToString(exclude = {"amenityGroups"}) // toString()에서 양방향 관계 필드 제외 (순환참조 방지)
- *
+ * @Getter         // 각 필드에 대한 getter 메서드를 Lombok이 자동 생성합니다.
+ * @NoArgsConstructor // 파라미터 없는 기본 생성자를 Lombok이 자동 생성합니다. (JPA 필수)
+ * @AllArgsConstructor // 모든 필드를 파라미터로 받는 생성자를 Lombok이 자동 생성합니다.
+ * 
  * AmenityItems 엔티티는 어메니티 그룹에 속한 개별 아이템 정보를 저장합니다.
  */
 @Entity
 @Getter
-@Setter
 @NoArgsConstructor
 @AllArgsConstructor
-@Builder
 @ToString(exclude = {"amenityGroups"})
 public class AmenityItems {
     /**

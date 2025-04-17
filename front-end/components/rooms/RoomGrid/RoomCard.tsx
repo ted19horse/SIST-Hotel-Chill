@@ -6,7 +6,7 @@
 
 'use client';
 
-import { ROOM_GRADE_DISPLAY } from '@/lib/types/room';
+// import { ROOM_GRADE_DISPLAY } from '@/lib/types/room';
 import { Maximize2, Users, Mountain } from 'lucide-react';
 import Image from 'next/image';
 
@@ -22,7 +22,7 @@ export default function RoomCard({
   onBookNow,
 }) {
   // 등급 정보
-  const gradeInfo = ROOM_GRADE_DISPLAY[room.grade];
+  // const gradeInfo = ROOM_GRADE_DISPLAY[room.grade];
   
   // 전망 표시 텍스트
   const viewText = {
@@ -55,12 +55,12 @@ export default function RoomCard({
         <div className="flex justify-between items-start mb-2">
           <h3 className="text-lg font-bold">{room.name}</h3>
           <span className="text-sm font-medium text-blue-600 border border-blue-200 rounded-full px-2 py-1 bg-blue-50">
-            {gradeInfo.name}
+            {/* {gradeInfo.name} */}
           </span>
         </div>
         
         <p className="text-neutral-600 text-sm mb-4 line-clamp-2">
-          {room.description || gradeInfo.description}
+          {/* {room.description || gradeInfo.description} */}
         </p>
         
         {/* 객실 특징 */}

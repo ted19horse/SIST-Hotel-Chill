@@ -1,28 +1,22 @@
 package sist.backend.room.entity;
 
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.AllArgsConstructor;
 import jakarta.persistence.*;
-import lombok.*;
 import java.util.List;
 
 /**
- * Lombok 어노테이션 설명
- *
- * @Getter         // 모든 필드의 getter 메서드 자동 생성
- * @Setter         // 모든 필드의 setter 메서드 자동 생성
- * @NoArgsConstructor // 기본 생성자 자동 생성
- * @AllArgsConstructor // 전체 필드 생성자 자동 생성
- * @Builder        // 빌더 패턴 지원
- * @ToString(exclude = {"amenityItems", "roomTypeAmenityGroups"}) // toString()에서 양방향 관계 필드 제외 (순환참조 방지)
- *
- * AmenityGroups 엔티티는 객실 어메니티(편의시설) 그룹 정보를 저장합니다.
+ * AmenityGroups 엔티티는 어매니티 그룹(예: 욕실, 침구 등) 정보를 나타냅니다.
+ * @Getter: 각 필드에 대한 getter 메서드를 Lombok이 자동 생성합니다.
+ * @NoArgsConstructor: 파라미터 없는 기본 생성자를 Lombok이 자동 생성합니다. (JPA 필수)
+ * @AllArgsConstructor: 모든 필드를 파라미터로 받는 생성자를 Lombok이 자동 생성합니다.
  */
 @Entity
 @Getter
-@Setter
 @NoArgsConstructor
 @AllArgsConstructor
-@Builder
-@ToString(exclude = {"amenityItems", "roomTypeAmenityGroups"})
+@Table(name = "amenity_groups")
 public class AmenityGroups {
     /**
      * 어메니티 그룹의 고유 식별자 (Primary Key)

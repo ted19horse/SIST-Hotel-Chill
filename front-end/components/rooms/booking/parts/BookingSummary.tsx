@@ -10,7 +10,7 @@ import { RoomDisplay, ROOM_GRADE_DISPLAY } from '@/lib/types/room';
 import Image from 'next/image';
 
 interface BookingSummaryProps {
-  room: RoomDisplay;
+  room: any;
   bookingInfo: {
     checkIn: Date;
     checkOut: Date;
@@ -40,7 +40,7 @@ export default function BookingSummary({
   errorMessage
 }: BookingSummaryProps) {
   // 객실 등급 정보
-  const gradeInfo = ROOM_GRADE_DISPLAY[room.grade];
+  // const gradeInfo = ROOM_GRADE_DISPLAY[room.grade];
 
   return (
     <div className="bg-white rounded-lg shadow-md p-6 sticky top-24">
@@ -65,7 +65,7 @@ export default function BookingSummary({
         
         <div className="ml-4">
           <h3 className="font-semibold">{room.name}</h3>
-          <p className="text-sm text-neutral-600">{gradeInfo.description.split(',')[0]}</p>
+          {/* <p className="text-sm text-neutral-600">{gradeInfo.description.split(',')[0]}</p> */}
         </div>
       </div>
       

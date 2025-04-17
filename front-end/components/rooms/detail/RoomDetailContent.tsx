@@ -7,7 +7,7 @@
 
 'use client';
 
-import { RoomDisplay, ROOM_GRADE_DISPLAY } from '@/lib/types/room';
+// import { RoomDisplay, ROOM_GRADE_DISPLAY } from '@/lib/types/room';
 import { useState, useCallback } from 'react';
 import { useRouter } from 'next/navigation';
 import { 
@@ -24,7 +24,7 @@ import {
 import Image from 'next/image';
 
 interface RoomDetailContentProps {
-  room: RoomDisplay;
+  room: any;
 }
 
 /**
@@ -40,7 +40,7 @@ export default function RoomDetailContent({ room }: RoomDetailContentProps) {
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
   
   // 등급 정보 가져오기
-  const gradeInfo = ROOM_GRADE_DISPLAY[room.grade];
+  // const gradeInfo = ROOM_GRADE_DISPLAY[room.grade];
   
   /**
    * 예약 페이지로 이동
@@ -127,7 +127,7 @@ export default function RoomDetailContent({ room }: RoomDetailContentProps) {
         {/* 객실 정보 */}
         <div className="mb-8">
           <h1 className="text-3xl font-bold mb-2">{room.name}</h1>
-          <p className="text-neutral-600 text-lg mb-4">{gradeInfo.description}</p>
+          {/* <p className="text-neutral-600 text-lg mb-4">{gradeInfo.description}</p> */}
         </div>
 
         {/* 객실 특징 */}

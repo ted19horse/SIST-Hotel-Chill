@@ -108,7 +108,8 @@ export default function ReservationCompletePage() {
                   <Users2 className="h-5 w-5 text-gray-400 mt-0.5" />
                   <div>
                     <p className="text-sm text-gray-500">인원</p>
-                    <p className="font-bold">{formData.party || '-'}명</p>
+                    {/* <p className="font-bold">{formData.party || '-'}명</p> */}
+                    <p className="font-bold">{'-'}명</p>
                   </div>
                 </div>
                 <div className="flex items-start space-x-3">

@@ -1,13 +1,14 @@
 'use client'; // 이 지시문은 Next.js에서 이 컴포넌트가 클라이언트 측에서 실행됨을 나타냅니다
 
 import { Button } from '@/components/common/ui/Button'; // 버튼 UI 컴포넌트 가져오기
-import { rooms } from '@/lib/data/rooms/types/rooms'; // 객실 데이터 가져오기
+// import { rooms } from '@/lib/data/rooms/types/rooms'; // 객실 데이터 가져오기
 import { useIntersectionObserver } from '@/lib/hooks/useIntersectionObserver'; // 요소가 화면에 보이는지 감지하는 커스텀 훅
 import { cn } from '@/lib/utils'; // 클래스 이름을 조건부로 결합하는 유틸리티 함수
 import { ChevronRight } from 'lucide-react'; // 오른쪽 화살표 아이콘 컴포넌트
 import Link from 'next/link'; // Next.js의 클라이언트 사이드 라우팅을 위한 링크 컴포넌트
 import { useEffect, useRef, useState } from 'react'; // React 훅
 import { RoomCarousel } from './carousel/RoomCarousel'; // 객실 캐러셀 컴포넌트
+import axios from 'axios';
 
 /**
  * RoomSection 컴포넌트
@@ -23,6 +24,40 @@ export default function RoomSection() {
   const isVisible = useIntersectionObserver({ ref: sectionRef });
   // 애니메이션이 이미 실행되었는지 추적하는 상태
   const [hasAnimated, setHasAnimated] = useState(false);
+
+  // DB에서 호출하는 객실 데이터
+  const [rooms, setRooms] = useState([]);
+  // api 호출
+  useEffect(() => {
+    const getRoomsData = async () => {
+      const response = await axios.get('/api/rooms/getRoomTypes');
+      setRooms(response.data);
+      /*
+      response.Data = [
+        {
+          "roomTypesId": 1,
+          "name": "Chill Comfort Room",
+          "description": "심플하고 편안한 기본형 객실로, 자연적 요소가 가미된 인테리어와 가든 뷰를 제공하는 30㎡ 크기의 객실입니다.",
+          "size": 30,
+          "maxAdults": 2,
+          "maxChildren": 1,
+          "weekdayPrice": 220000,
+          "weekendPrice": 270000,
+          "peakSeasonPrice": 320000,
+          "building": "F",
+          "floorCount": 4,
+          "roomsPerFloor": 30,
+          "viewType": "가든 뷰",
+          "imageUrl": "/images/rooms/placeholder.jpg",
+          "createdAt": "2025-04-16 11:01:28",
+          "updatedAt": "2025-04-16 11:01:28"
+        }, ...
+      ]
+      */
+    };
+
+    getRoomsData();
+  }, []);
 
   /**
    * 섹션이 화면에 보일 때 애니메이션 효과 적용

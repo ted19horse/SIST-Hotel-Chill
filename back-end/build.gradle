@@ -1,41 +1,70 @@
+// Gradle 플러그인 선언부
 plugins {
-    id 'java'
-    id 'org.springframework.boot' version '3.4.4'
-    id 'io.spring.dependency-management' version '1.1.7'
+    id 'java' // 자바 프로젝트임을 명시
+    id 'org.springframework.boot' version '3.4.4' // 스프링 부트 플러그인
+    id 'io.spring.dependency-management' version '1.1.7' // 의존성 버전 자동 관리
 }
 
-group = 'sist'
-version = '0.0.1-SNAPSHOT'
+group = 'sist' // 그룹명(패키지 네임스페이스)
+version = '0.0.1-SNAPSHOT' // 버전 정보
+sourceCompatibility = '17' // 자바 17 사용
 
-java {
-    toolchain {
-        languageVersion = JavaLanguageVersion.of(17)
-    }
-}
-
-configurations {
-    compileOnly {
-        extendsFrom annotationProcessor
-    }
-}
-
+// 의존성(라이브러리) 다운로드 위치
 repositories {
-    mavenCentral()
+    mavenCentral() // 중앙 저장소(mavenCentral) 사용
 }
 
+// 실제 프로젝트에서 사용하는 라이브러리 목록
 dependencies {
-    implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
-    implementation 'org.springframework.boot:spring-boot-starter-security'
-    implementation 'org.springframework.boot:spring-boot-starter-web'
-    compileOnly 'org.projectlombok:lombok'
+    // QueryDSL
+    implementation 'jakarta.persistence:jakarta.persistence-api:3.1.0'
+    annotationProcessor 'jakarta.persistence:jakarta.persistence-api:3.1.0'
+
+    // Spring Boot 기본 스타터 의존성
+    implementation 'org.springframework.boot:spring-boot-starter-data-jpa' // JPA 지원
+    implementation 'org.springframework.boot:spring-boot-starter-security' // Spring Security
+    implementation 'org.springframework.boot:spring-boot-starter-web' // 웹 MVC
+
+    // Lombok: 코드 자동 생성(게터/세터 등)
+    compileOnly 'org.projectlombok:lombok' // 컴파일 시에만 lombok 적용
+    annotationProcessor 'org.projectlombok:lombok' // lombok 어노테이션 프로세서
+
+    // 개발 편의성(핫리로드 등)
     developmentOnly 'org.springframework.boot:spring-boot-devtools'
+
+    // MySQL 드라이버
     runtimeOnly 'com.mysql:mysql-connector-j'
-    annotationProcessor 'org.projectlombok:lombok'
+
+    // QueryDSL
+    implementation 'com.querydsl:querydsl-jpa:5.0.0'
+    annotationProcessor 'com.querydsl:querydsl-apt:5.0.0:jakarta'
+
+    // 테스트 관련 의존성
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
     testImplementation 'org.springframework.security:spring-security-test'
     testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
 }
 
+// Q타입 생성 경로 명시
+def generated = "$buildDir/generated/querydsl"
+sourceSets {
+    main.java.srcDirs += [generated]
+}
+
+// 테스트 프레임워크로 JUnit Platform 사용
 tasks.named('test') {
     useJUnitPlatform()
+}
+
+// JavaCompile 태스크에 annotationProcessorPath를 명시적으로 지정
+tasks.withType(JavaCompile) {
+    options.fork = true
+    options.forkOptions.jvmArgs += ['--illegal-access=permit']
+    options.compilerArgs += [
+        "-Aquerydsl.verbose=true"
+    ]
+}
+
+tasks.withType(JavaCompile).configureEach {
+    options.annotationProcessorGeneratedSourcesDirectory = file(generated)
 }

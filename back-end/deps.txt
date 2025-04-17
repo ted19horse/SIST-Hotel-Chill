@@ -1,0 +1,163 @@
+
+> Task :dependencies
+
+------------------------------------------------------------
+Root project 'back-end'
+------------------------------------------------------------
+
+compileClasspath - Compile classpath for source set 'main'.
++--- org.projectlombok:lombok -> 1.18.36
++--- org.springframework.boot:spring-boot-starter-data-jpa -> 3.4.4
+|    +--- org.springframework.boot:spring-boot-starter:3.4.4
+|    |    +--- org.springframework.boot:spring-boot:3.4.4
+|    |    |    +--- org.springframework:spring-core:6.2.5
+|    |    |    |    \--- org.springframework:spring-jcl:6.2.5
+|    |    |    \--- org.springframework:spring-context:6.2.5
+|    |    |         +--- org.springframework:spring-aop:6.2.5
+|    |    |         |    +--- org.springframework:spring-beans:6.2.5
+|    |    |         |    |    \--- org.springframework:spring-core:6.2.5 (*)
+|    |    |         |    \--- org.springframework:spring-core:6.2.5 (*)
+|    |    |         +--- org.springframework:spring-beans:6.2.5 (*)
+|    |    |         +--- org.springframework:spring-core:6.2.5 (*)
+|    |    |         +--- org.springframework:spring-expression:6.2.5
+|    |    |         |    \--- org.springframework:spring-core:6.2.5 (*)
+|    |    |         \--- io.micrometer:micrometer-observation:1.14.5
+|    |    |              \--- io.micrometer:micrometer-commons:1.14.5
+|    |    +--- org.springframework.boot:spring-boot-autoconfigure:3.4.4
+|    |    |    \--- org.springframework.boot:spring-boot:3.4.4 (*)
+|    |    +--- org.springframework.boot:spring-boot-starter-logging:3.4.4
+|    |    |    +--- ch.qos.logback:logback-classic:1.5.18
+|    |    |    |    +--- ch.qos.logback:logback-core:1.5.18
+|    |    |    |    \--- org.slf4j:slf4j-api:2.0.17
+|    |    |    +--- org.apache.logging.log4j:log4j-to-slf4j:2.24.3
+|    |    |    |    +--- org.apache.logging.log4j:log4j-api:2.24.3
+|    |    |    |    \--- org.slf4j:slf4j-api:2.0.16 -> 2.0.17
+|    |    |    \--- org.slf4j:jul-to-slf4j:2.0.17
+|    |    |         \--- org.slf4j:slf4j-api:2.0.17
+|    |    +--- jakarta.annotation:jakarta.annotation-api:2.1.1
+|    |    +--- org.springframework:spring-core:6.2.5 (*)
+|    |    \--- org.yaml:snakeyaml:2.3
+|    +--- org.springframework.boot:spring-boot-starter-jdbc:3.4.4
+|    |    +--- org.springframework.boot:spring-boot-starter:3.4.4 (*)
+|    |    +--- com.zaxxer:HikariCP:5.1.0
+|    |    |    \--- org.slf4j:slf4j-api:1.7.36 -> 2.0.17
+|    |    \--- org.springframework:spring-jdbc:6.2.5
+|    |         +--- org.springframework:spring-beans:6.2.5 (*)
+|    |         +--- org.springframework:spring-core:6.2.5 (*)
+|    |         \--- org.springframework:spring-tx:6.2.5
+|    |              +--- org.springframework:spring-beans:6.2.5 (*)
+|    |              \--- org.springframework:spring-core:6.2.5 (*)
+|    +--- org.hibernate.orm:hibernate-core:6.6.11.Final
+|    |    +--- jakarta.persistence:jakarta.persistence-api:3.1.0
+|    |    \--- jakarta.transaction:jakarta.transaction-api:2.0.1
+|    +--- org.springframework.data:spring-data-jpa:3.4.4
+|    |    +--- org.springframework.data:spring-data-commons:3.4.4
+|    |    |    +--- org.springframework:spring-core:6.2.4 -> 6.2.5 (*)
+|    |    |    +--- org.springframework:spring-beans:6.2.4 -> 6.2.5 (*)
+|    |    |    \--- org.slf4j:slf4j-api:2.0.2 -> 2.0.17
+|    |    +--- org.springframework:spring-orm:6.2.4 -> 6.2.5
+|    |    |    +--- org.springframework:spring-beans:6.2.5 (*)
+|    |    |    +--- org.springframework:spring-core:6.2.5 (*)
+|    |    |    +--- org.springframework:spring-jdbc:6.2.5 (*)
+|    |    |    \--- org.springframework:spring-tx:6.2.5 (*)
+|    |    +--- org.springframework:spring-context:6.2.4 -> 6.2.5 (*)
+|    |    +--- org.springframework:spring-aop:6.2.4 -> 6.2.5 (*)
+|    |    +--- org.springframework:spring-tx:6.2.4 -> 6.2.5 (*)
+|    |    +--- org.springframework:spring-beans:6.2.4 -> 6.2.5 (*)
+|    |    +--- org.springframework:spring-core:6.2.4 -> 6.2.5 (*)
+|    |    +--- org.antlr:antlr4-runtime:4.13.0
+|    |    +--- jakarta.annotation:jakarta.annotation-api:2.0.0 -> 2.1.1
+|    |    \--- org.slf4j:slf4j-api:2.0.2 -> 2.0.17
+|    \--- org.springframework:spring-aspects:6.2.5
+|         \--- org.aspectj:aspectjweaver:1.9.22.1 -> 1.9.23
++--- org.springframework.boot:spring-boot-starter-security -> 3.4.4
+|    +--- org.springframework.boot:spring-boot-starter:3.4.4 (*)
+|    +--- org.springframework:spring-aop:6.2.5 (*)
+|    +--- org.springframework.security:spring-security-config:6.4.4
+|    |    +--- org.springframework.security:spring-security-core:6.4.4
+|    |    |    +--- org.springframework.security:spring-security-crypto:6.4.4
+|    |    |    +--- org.springframework:spring-aop:6.2.4 -> 6.2.5 (*)
+|    |    |    +--- org.springframework:spring-beans:6.2.4 -> 6.2.5 (*)
+|    |    |    +--- org.springframework:spring-context:6.2.4 -> 6.2.5 (*)
+|    |    |    +--- org.springframework:spring-core:6.2.4 -> 6.2.5 (*)
+|    |    |    +--- org.springframework:spring-expression:6.2.4 -> 6.2.5 (*)
+|    |    |    \--- io.micrometer:micrometer-observation:1.14.5 (*)
+|    |    +--- org.springframework:spring-aop:6.2.4 -> 6.2.5 (*)
+|    |    +--- org.springframework:spring-beans:6.2.4 -> 6.2.5 (*)
+|    |    +--- org.springframework:spring-context:6.2.4 -> 6.2.5 (*)
+|    |    \--- org.springframework:spring-core:6.2.4 -> 6.2.5 (*)
+|    \--- org.springframework.security:spring-security-web:6.4.4
+|         +--- org.springframework.security:spring-security-core:6.4.4 (*)
+|         +--- org.springframework:spring-core:6.2.4 -> 6.2.5 (*)
+|         +--- org.springframework:spring-aop:6.2.4 -> 6.2.5 (*)
+|         +--- org.springframework:spring-beans:6.2.4 -> 6.2.5 (*)
+|         +--- org.springframework:spring-context:6.2.4 -> 6.2.5 (*)
+|         +--- org.springframework:spring-expression:6.2.4 -> 6.2.5 (*)
+|         \--- org.springframework:spring-web:6.2.4 -> 6.2.5
+|              +--- org.springframework:spring-beans:6.2.5 (*)
+|              +--- org.springframework:spring-core:6.2.5 (*)
+|              \--- io.micrometer:micrometer-observation:1.14.5 (*)
++--- org.springframework.boot:spring-boot-starter-web -> 3.4.4
+|    +--- org.springframework.boot:spring-boot-starter:3.4.4 (*)
+|    +--- org.springframework.boot:spring-boot-starter-json:3.4.4
+|    |    +--- org.springframework.boot:spring-boot-starter:3.4.4 (*)
+|    |    +--- org.springframework:spring-web:6.2.5 (*)
+|    |    +--- com.fasterxml.jackson.core:jackson-databind:2.18.3
+|    |    |    +--- com.fasterxml.jackson.core:jackson-annotations:2.18.3
+|    |    |    |    \--- com.fasterxml.jackson:jackson-bom:2.18.3
+|    |    |    |         +--- com.fasterxml.jackson.core:jackson-annotations:2.18.3 (c)
+|    |    |    |         +--- com.fasterxml.jackson.core:jackson-core:2.18.3 (c)
+|    |    |    |         +--- com.fasterxml.jackson.core:jackson-databind:2.18.3 (c)
+|    |    |    |         +--- com.fasterxml.jackson.datatype:jackson-datatype-jdk8:2.18.3 (c)
+|    |    |    |         +--- com.fasterxml.jackson.datatype:jackson-datatype-jsr310:2.18.3 (c)
+|    |    |    |         \--- com.fasterxml.jackson.module:jackson-module-parameter-names:2.18.3 (c)
+|    |    |    +--- com.fasterxml.jackson.core:jackson-core:2.18.3
+|    |    |    |    \--- com.fasterxml.jackson:jackson-bom:2.18.3 (*)
+|    |    |    \--- com.fasterxml.jackson:jackson-bom:2.18.3 (*)
+|    |    +--- com.fasterxml.jackson.datatype:jackson-datatype-jdk8:2.18.3
+|    |    |    +--- com.fasterxml.jackson.core:jackson-core:2.18.3 (*)
+|    |    |    +--- com.fasterxml.jackson.core:jackson-databind:2.18.3 (*)
+|    |    |    \--- com.fasterxml.jackson:jackson-bom:2.18.3 (*)
+|    |    +--- com.fasterxml.jackson.datatype:jackson-datatype-jsr310:2.18.3
+|    |    |    +--- com.fasterxml.jackson.core:jackson-annotations:2.18.3 (*)
+|    |    |    +--- com.fasterxml.jackson.core:jackson-core:2.18.3 (*)
+|    |    |    +--- com.fasterxml.jackson.core:jackson-databind:2.18.3 (*)
+|    |    |    \--- com.fasterxml.jackson:jackson-bom:2.18.3 (*)
+|    |    \--- com.fasterxml.jackson.module:jackson-module-parameter-names:2.18.3
+|    |         +--- com.fasterxml.jackson.core:jackson-core:2.18.3 (*)
+|    |         +--- com.fasterxml.jackson.core:jackson-databind:2.18.3 (*)
+|    |         \--- com.fasterxml.jackson:jackson-bom:2.18.3 (*)
+|    +--- org.springframework.boot:spring-boot-starter-tomcat:3.4.4
+|    |    +--- jakarta.annotation:jakarta.annotation-api:2.1.1
+|    |    +--- org.apache.tomcat.embed:tomcat-embed-core:10.1.39
+|    |    +--- org.apache.tomcat.embed:tomcat-embed-el:10.1.39
+|    |    \--- org.apache.tomcat.embed:tomcat-embed-websocket:10.1.39
+|    |         \--- org.apache.tomcat.embed:tomcat-embed-core:10.1.39
+|    +--- org.springframework:spring-web:6.2.5 (*)
+|    \--- org.springframework:spring-webmvc:6.2.5
+|         +--- org.springframework:spring-aop:6.2.5 (*)
+|         +--- org.springframework:spring-beans:6.2.5 (*)
+|         +--- org.springframework:spring-context:6.2.5 (*)
+|         +--- org.springframework:spring-core:6.2.5 (*)
+|         +--- org.springframework:spring-expression:6.2.5 (*)
+|         \--- org.springframework:spring-web:6.2.5 (*)
++--- com.querydsl:querydsl-jpa:5.0.0
+|    \--- com.querydsl:querydsl-core:5.0.0 -> 5.1.0
+|         \--- com.mysema.commons:mysema-commons-lang:0.2.4
+\--- jakarta.persistence:jakarta.persistence-api:3.1.0
+
+(c) - A dependency constraint, not a dependency. The dependency affected by the constraint occurs elsewhere in the tree.
+(*) - Indicates repeated occurrences of a transitive dependency subtree. Gradle expands transitive dependency subtrees only once per project; repeat occurrences only display the root of the subtree, followed by this annotation.
+
+A web-based, searchable dependency report is available by adding the --scan option.
+
+[Incubating] Problems report is available at: file:///C:/Code/SIST-Hotel-Personal-Project/back-end/build/reports/problems/problems-report.html
+
+Deprecated Gradle features were used in this build, making it incompatible with Gradle 9.0.
+
+You can use '--warning-mode all' to show the individual deprecation warnings and determine if they come from your own scripts or plugins.
+
+For more on this, please refer to https://docs.gradle.org/8.13/userguide/command_line_interface.html#sec:command_line_warnings in the Gradle documentation.
+
+BUILD SUCCESSFUL in 2s
+1 actionable task: 1 executed

@@ -9,25 +9,25 @@ spring:
     database-platform: org.hibernate.dialect.MySQL8Dialect # Hibernate 방언 설정
 
 # 개발 환경 설정
----
-spring:
-  config:
-    activate:
-      on-profile: dev # 'dev' 프로파일 활성화 시 적용
-  datasource:
-    url: jdbc:mysql://localhost:3306/hotel_chill_dev?serverTimezone=Asia/Seoul&characterEncoding=UTF-8 # 개발 DB URL
-  jpa:
-    hibernate:
-      ddl-auto: update # 개발 환경에서는 스키마 자동 업데이트
+# ---
+# spring:
+#   config:
+#     activate:
+#       on-profile: dev # 'dev' 프로파일 활성화 시 적용
+#   datasource:
+#     url: jdbc:mysql://localhost:3306/hotel_chill_dev?serverTimezone=Asia/Seoul&characterEncoding=UTF-8 # 개발 DB URL
+#   jpa:
+#     hibernate:
+#       ddl-auto: update # 개발 환경에서는 스키마 자동 업데이트
 
-# 테스트 환경 설정
----
-spring:
-  config:
-    activate:
-      on-profile: test # 'test' 프로파일 활성화 시 적용
-  datasource:
-    url: jdbc:mysql://localhost:3306/hotel_chill_test?serverTimezone=Asia/Seoul&characterEncoding=UTF-8 # 테스트 DB URL
-  jpa:
-    hibernate:
-      ddl-auto: create-drop # 테스트 환경에서는 매번 스키마 재생성
+# # 테스트 환경 설정
+# ---
+# spring:
+#   config:
+#     activate:
+#       on-profile: test # 'test' 프로파일 활성화 시 적용
+#   datasource:
+#     url: jdbc:mysql://localhost:3306/hotel_chill_test?serverTimezone=Asia/Seoul&characterEncoding=UTF-8 # 테스트 DB URL
+#   jpa:
+#     hibernate:
+#       ddl-auto: create-drop # 테스트 환경에서는 매번 스키마 재생성
