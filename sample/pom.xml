@@ -53,13 +53,15 @@
             <artifactId>jakarta.persistence-api</artifactId>
             <version>3.1.0</version>
         </dependency>
+        
+        <!-- H2 Database 의존성 추가 -->
         <dependency>
-            <groupId>com.mysql</groupId>
-            <artifactId>mysql-connector-j</artifactId>
+            <groupId>com.h2database</groupId>
+            <artifactId>h2</artifactId>
             <scope>runtime</scope>
         </dependency>
         
-        <!-- 테스트 의존성 추가 -->
+        <!-- 테스트 의존성 -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-test</artifactId>
@@ -101,7 +103,7 @@
                 </configuration>
             </plugin>
             
-            <!-- 테스트 건너뛰기 설정 (선택 사항) -->
+            <!-- 테스트 건너뛰기 설정 -->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-surefire-plugin</artifactId>
