@@ -15,14 +15,22 @@
 1. `@PersistenceContext` 어노테이션 사용
 2. QuerydslConfiguration 클래스 추가
 3. application.properties에서 데이터베이스 설정
-4. Q클래스 생성을 위한 maven 설정 수정
+4. Q클래스 생성을 위한 빌드 설정 수정
 
-## 실행 방법
+## Maven으로 실행 방법
 
 ```bash
 cd sample
 mvn clean install
 mvn spring-boot:run
+```
+
+## Gradle로 실행 방법
+
+```bash
+cd sample
+./gradlew clean build
+./gradlew bootRun
 ```
 
 ## 테스트 엔드포인트
