@@ -9,7 +9,8 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import sist.sample.entity.User;
-// QUser 임포트 제거
+// Remove QUser import
+
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import org.springframework.transaction.annotation.Transactional;
@@ -53,7 +54,7 @@ public class UserController {
     @GetMapping
     @Transactional(readOnly = true)
     public List<User> getAllUsers() {
-        // JPQL을 사용하여 모든 사용자 조회
+        // Use JPQL instead of Querydsl
         return entityManager.createQuery("SELECT u FROM User u", User.class).getResultList();
     }
 }
