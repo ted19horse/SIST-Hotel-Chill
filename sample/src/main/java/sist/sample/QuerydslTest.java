@@ -20,10 +20,10 @@ public class QuerydslTest {
     
     @Transactional
     public void test() {
-        // 직접 EntityManager 사용
+        // Use EntityManager directly
         System.out.println("EntityManager: " + entityManager);
         
-        // Bean으로 등록된 JPAQueryFactory 사용
+        // Use JPAQueryFactory from the bean
         System.out.println("QueryFactory: " + queryFactory);
     }
 }
