@@ -74,7 +74,7 @@
                 </executions>
             </plugin>
             
-            <!-- 방법 1: maven-compiler-plugin 설정 -->
+            <!-- 기본 컴파일러 설정 (Querydsl 관련 설정 제거) -->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
@@ -83,33 +83,11 @@
                     <source>${java.version}</source>
                     <target>${java.version}</target>
                     <encoding>UTF-8</encoding>
-                    <annotationProcessorPaths>
-                        <path>
-                            <groupId>com.querydsl</groupId>
-                            <artifactId>querydsl-apt</artifactId>
-                            <classifier>jakarta</classifier>
-                            <version>${querydsl.version}</version>
-                        </path>
-                        <path>
-                            <groupId>jakarta.persistence</groupId>
-                            <artifactId>jakarta.persistence-api</artifactId>
-                            <version>3.1.0</version>
-                        </path>
-                        <path>
-                            <groupId>jakarta.annotation</groupId>
-                            <artifactId>jakarta.annotation-api</artifactId>
-                            <version>2.1.1</version>
-                        </path>
-                    </annotationProcessorPaths>
-                    <compilerArgs>
-                        <arg>-Aquerydsl.entityAccessors=true</arg>
-                        <arg>-Aquerydsl.useFields=true</arg>
-                        <arg>-Aquerydsl.generatedAnnotationClass=jakarta.annotation.Generated</arg>
-                    </compilerArgs>
+                    <!-- 주석 처리: annotationProcessorPaths와 compilerArgs 제거 -->
                 </configuration>
             </plugin>
             
-            <!-- 방법 2: apt-maven-plugin 추가 -->
+            <!-- apt-maven-plugin만 사용 -->
             <plugin>
                 <groupId>com.mysema.maven</groupId>
                 <artifactId>apt-maven-plugin</artifactId>
@@ -122,11 +100,6 @@
                         <configuration>
                             <outputDirectory>target/generated-sources/java</outputDirectory>
                             <processor>com.querydsl.apt.jpa.JPAAnnotationProcessor</processor>
-                            <options>
-                                <querydsl.entityAccessors>true</querydsl.entityAccessors>
-                                <querydsl.useFields>true</querydsl.useFields>
-                                <querydsl.generatedAnnotationClass>jakarta.annotation.Generated</querydsl.generatedAnnotationClass>
-                            </options>
                         </configuration>
                     </execution>
                 </executions>
