@@ -7,10 +7,8 @@ import jakarta.persistence.*;
 import java.util.List;
 
 /**
- * AmenityGroups 엔티티는 어매니티 그룹(예: 욕실, 침구 등) 정보를 나타냅니다.
- * @Getter: 각 필드에 대한 getter 메서드를 Lombok이 자동 생성합니다.
- * @NoArgsConstructor: 파라미터 없는 기본 생성자를 Lombok이 자동 생성합니다. (JPA 필수)
- * @AllArgsConstructor: 모든 필드를 파라미터로 받는 생성자를 Lombok이 자동 생성합니다.
+ * AmenityGroups 엔티티는 DDL.sql의 amenity_groups 테이블과 1:1로 매핑됩니다.
+ * 컬럼명, 타입, 길이, 제약조건을 엄격하게 일치시킵니다.
  */
 @Entity
 @Getter
@@ -23,26 +21,31 @@ public class AmenityGroups {
      */
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "amenity_groups_id")
     private Long amenityGroupsId;
 
     /**
-     * 어메니티 그룹 이름
+     * 어메니티 그룹 이름 (VARCHAR(50) NOT NULL)
      */
+    @Column(name = "name", length = 50, nullable = false)
     private String name;
 
     /**
-     * 어메니티 그룹 아이콘 이름
+     * 어메니티 그룹 아이콘 이름 (VARCHAR(50) NOT NULL)
      */
+    @Column(name = "icon_name", length = 50, nullable = false)
     private String iconName;
 
     /**
-     * 정렬 순서
+     * 정렬 순서 (INT NOT NULL DEFAULT 0)
      */
+    @Column(name = "sort_order", nullable = false, columnDefinition = "INT DEFAULT 0")
     private Integer sortOrder;
 
     /**
-     * 생성일시
+     * 생성일시 (TIMESTAMP DEFAULT CURRENT_TIMESTAMP)
      */
+    @Column(name = "created_at", columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
     private java.sql.Timestamp createdAt;
 
     /**

@@ -1,152 +1,159 @@
-'use client';
+// AmenityGroupComponent: 각 객실의 어메니티 그룹(예: 공통 어메니티, 욕실 어메니티 등)과
+// 그 안의 아이템 목록을 표시하는 컴포넌트입니다.
+// iconName을 받아 실제 아이콘을 표시하도록 개선
 
 import { Badge } from '@/components/common/ui/Badge';
 import { Button } from '@/components/common/ui/Button';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/common/ui/Popover';
 import { cn } from '@/lib/utils';
-import { AmenityItem as AmenityItemType } from '@/lib/types/room';
-import { AlertCircle, Plus } from 'lucide-react';
-import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import {
+  Bed,
+  CupSoda,
+  TabletSmartphone,
+  Crown,
+  Tv,
+  Wifi,
+  Coffee,
+  Bath,
+  ShowerHead,
+  AirVent,
+  Fan,
+  Refrigerator,
+  ShieldCheck,
+  Phone,
+  Lamp,
+  Thermometer,
+  Footprints,
+  Shirt,
+  FlaskConical,
+  Droplet,
+  GlassWater,
+  ParkingCircle,
+  Car,
+  Utensils,
+  Wine,
+  Dumbbell,
+  PawPrint,
+  Accessibility,
+  CircleSlash,
+  Wind,
+  KeyRound,
+  AlarmClock,
+  Plug,
+  Ruler,
+  Users,
+  Mountain,
+  AlertCircle,
+  Plus,
+} from 'lucide-react';
+import React, { useState, useRef, useCallback, useMemo } from 'react';
 
-interface AmenityItemProps {
-  item: AmenityItemType;
-  onError?: () => void;
-}
+const ICON_MAP = {
+  Bed,
+  CupSoda,
+  TabletSmartphone,
+  Crown,
+  Tv,
+  Wifi,
+  Coffee,
+  Bath,
+  ShowerHead,
+  AirVent,
+  Fan,
+  Refrigerator,
+  ShieldCheck,
+  Phone,
+  Lamp,
+  Thermometer,
+  Footprints,
+  Shirt,
+  FlaskConical,
+  Droplet,
+  GlassWater,
+  ParkingCircle,
+  Car,
+  Utensils,
+  Wine,
+  Dumbbell,
+  PawPrint,
+  Accessibility,
+  CircleSlash,
+  Wind,
+  KeyRound,
+  AlarmClock,
+  Plug,
+  Ruler,
+  Users,
+  Mountain,
+  Plus,
+};
 
-// 아이템 컴포넌트 분리 및 메모이제이션
-const AmenityItem = React.memo(function AmenityItem({ item, onError }: AmenityItemProps) {
-  const handleError = useCallback(() => {
-    onError?.();
-  }, [onError]);
+export function AmenityGroupComponent({ group }) {
+  const { groupName, iconName, amenities } = group;
 
-  return (
-    <div
-      className={cn(
-        'flex items-center gap-2 p-2 rounded-lg',
-        'transition-all duration-200 ease-in-out',
-        'hover:bg-primary/5 hover:scale-[1.02]',
-        'focus-within:ring-2 focus-within:ring-primary',
-        'group cursor-default',
-        'will-change-transform will-change-opacity'
-      )}
-      role="listitem"
-    >
-      <span
-        className={cn(
-          'flex items-center justify-center w-5 h-5',
-          'text-muted-foreground group-hover:text-primary',
-          'transition-colors duration-200'
-        )}
-        aria-hidden="true"
-        onError={handleError}
-      >
-        {item.icon()}
-      </span>
-      <span className="text-xs text-muted-foreground group-hover:text-foreground transition-colors duration-200">
-        {item.name}
-      </span>
-    </div>
-  );
-});
-
-AmenityItem.displayName = 'AmenityItem';
-
-interface AmenityGroupProps {
-  group: string;
-  items: AmenityItemType[];
-}
-
-export function AmenityGroupComponent({ group, items }: AmenityGroupProps) {
+  // isOpen: 상세 목록이 열려있는지 여부를 관리하는 상태
   const [isOpen, setIsOpen] = useState(false);
   const [hasError, setHasError] = useState(false);
   const [isAnimating, setIsAnimating] = useState(false);
 
-  const timeoutRef = useRef<NodeJS.Timeout>();
-  const animationFrameRef = useRef<number>();
+  const timeoutRef = useRef();
+  const animationFrameRef = useRef();
 
+  // 그룹 대표 아이콘 렌더링 (ICON_MAP을 통한 동적 매핑)
+  const GroupIcon = ICON_MAP[iconName] || AlertCircle;
+  const groupIcon = useMemo(() => (
+    <GroupIcon className="w-4 h-4 mr-1" />
+  ), [iconName]);
+
+  // 키보드(ESC)로 상세 목록 닫기
   const handleKeyDown = useCallback(
-    (e: KeyboardEvent) => {
+    (e) => {
       if (e.key === 'Escape' && isOpen) {
-        setIsOpen(false);
+        setIsOpen(false); // ESC키를 누르면 닫힘
       }
     },
     [isOpen]
   );
 
+  // 마우스가 그룹 영역에 들어왔을 때: 애니메이션과 함께 상세 목록 열기
   const handleMouseEnter = useCallback(() => {
-    clearTimeout(timeoutRef.current);
-    cancelAnimationFrame(animationFrameRef.current!);
+    clearTimeout(timeoutRef.current); // 기존 타이머 제거
+    cancelAnimationFrame(animationFrameRef.current);
 
     animationFrameRef.current = requestAnimationFrame(() => {
-      setIsAnimating(true);
-      setIsOpen(true);
+      setIsAnimating(true); // 애니메이션 시작
+      setIsOpen(true);      // 목록 열기
     });
   }, []);
 
+  // 마우스가 그룹 영역에서 나갔을 때: 일정 시간 후 상세 목록 닫기
   const handleMouseLeave = useCallback(() => {
     timeoutRef.current = setTimeout(() => {
-      cancelAnimationFrame(animationFrameRef.current!);
+      cancelAnimationFrame(animationFrameRef.current);
 
       animationFrameRef.current = requestAnimationFrame(() => {
-        setIsOpen(false);
-        setTimeout(() => setIsAnimating(false), 200);
+        setIsOpen(false); // 목록 닫기
+        setTimeout(() => setIsAnimating(false), 200); // 애니메이션 종료
       });
-    }, 100);
+    }, 100); // 0.1초 후 닫힘
   }, []);
 
-  const handleTouchStart = useCallback(() => {
-    cancelAnimationFrame(animationFrameRef.current!);
-
-    animationFrameRef.current = requestAnimationFrame(() => {
-      setIsAnimating(true);
-      setIsOpen(true);
-    });
-  }, []);
-
-  const handleTouchEnd = useCallback(() => {
-    // 터치 디바이스에서는 팝업이 열린 상태를 유지
-  }, []);
-
-  const handleIconError = useCallback(() => {
-    setHasError(true);
-  }, []);
-
-  useEffect(() => {
-    document.addEventListener('keydown', handleKeyDown);
-    return () => {
-      document.removeEventListener('keydown', handleKeyDown);
-      clearTimeout(timeoutRef.current);
-      cancelAnimationFrame(animationFrameRef.current!);
-    };
-  }, [handleKeyDown]);
-
+  // 아이템 목록 렌더링 (ICON_MAP을 통한 동적 매핑)
   const renderedItems = useMemo(() => {
-    return items.map((item, index) => (
-      <AmenityItem key={`${group}-${index}`} item={item} onError={handleIconError} />
-    ));
-  }, [items, group, handleIconError]);
-
-  const firstIcon = useMemo(() => {
-    try {
+    return amenities.map((item, index) => {
+      const ItemIcon = ICON_MAP[item.iconName] || AlertCircle;
       return (
-        <span
-          className={cn(
-            'flex items-center justify-center w-4 h-4',
-            'text-primary/70 group-hover:text-primary',
-            'transition-colors duration-200',
-            'will-change-transform'
-          )}
-          aria-hidden="true"
-        >
-          {hasError ? <AlertCircle className="text-destructive" /> : items[0].icon()}
-        </span>
+        <div key={item.itemId || index} className="flex items-center gap-2 p-2 rounded-lg">
+          <ItemIcon className="w-4 h-4 mr-1" />
+          <span className="text-xs text-muted-foreground group-hover:text-foreground transition-colors duration-200">
+            {item.itemName}
+          </span>
+        </div>
       );
-    } catch (error) {
-      return <AlertCircle className="w-4 h-4 text-destructive" />;
-    }
-  }, [items, hasError]);
+    });
+  }, [amenities]);
 
-  if (!items.length) {
+  if (!amenities.length) {
     return null;
   }
 
@@ -167,12 +174,12 @@ export function AmenityGroupComponent({ group, items }: AmenityGroupProps) {
           'will-change-transform will-change-opacity'
         )}
       >
-        {firstIcon}
+        {groupIcon}
         <span className="text-sm font-medium text-foreground/80 group-hover:text-foreground transition-colors duration-200">
-          {group}
+          {groupName}
         </span>
       </Badge>
-      {items.length > 1 && (
+      {amenities.length > 1 && (
         <Popover open={isOpen} onOpenChange={setIsOpen}>
           <PopoverTrigger asChild>
             <Button
@@ -187,12 +194,10 @@ export function AmenityGroupComponent({ group, items }: AmenityGroupProps) {
                 'focus-visible:outline-none focus-visible:ring-0',
                 'will-change-transform'
               )}
-              aria-label={`${group} 어메니티 상세 정보 ${isOpen ? '닫기' : '열기'}`}
+              aria-label={`${groupName} 어메니티 상세 정보 ${isOpen ? '닫기' : '열기'}`}
               aria-expanded={isOpen}
               onMouseEnter={handleMouseEnter}
               onMouseLeave={handleMouseLeave}
-              onTouchStart={handleTouchStart}
-              onTouchEnd={handleTouchEnd}
             >
               <Plus
                 className={cn(
@@ -219,10 +224,8 @@ export function AmenityGroupComponent({ group, items }: AmenityGroupProps) {
             )}
             onMouseEnter={handleMouseEnter}
             onMouseLeave={handleMouseLeave}
-            onTouchStart={handleTouchStart}
-            onTouchEnd={handleTouchEnd}
             role="dialog"
-            aria-label={`${group} 어메니티 목록`}
+            aria-label={`${groupName} 어메니티 목록`}
             sideOffset={8}
             align="start"
           >
@@ -230,9 +233,9 @@ export function AmenityGroupComponent({ group, items }: AmenityGroupProps) {
               <div className="space-y-1.5 border-b border-primary/10 pb-3">
                 <h4
                   className="text-sm font-medium leading-none text-foreground/90"
-                  id={`amenity-group-${group}`}
+                  id={`amenity-group-${groupName}`}
                 >
-                  {group}
+                  {groupName}
                 </h4>
                 <p className="text-xs text-muted-foreground">제공되는 모든 어메니티를 확인하세요</p>
               </div>
@@ -244,7 +247,7 @@ export function AmenityGroupComponent({ group, items }: AmenityGroupProps) {
                   'will-change-transform will-change-opacity'
                 )}
                 role="list"
-                aria-labelledby={`amenity-group-${group}`}
+                aria-labelledby={`amenity-group-${groupName}`}
               >
                 {renderedItems}
               </div>

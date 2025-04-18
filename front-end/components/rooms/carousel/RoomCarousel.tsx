@@ -17,23 +17,48 @@ export function RoomCarousel({ rooms }) {
   /*
   rooms = [
     {
-      "roomTypesId": 1,
-      "name": "Chill Comfort Room",
-      "description": "심플하고 편안한 기본형 객실로, 자연적 요소가 가미된 인테리어와 가든 뷰를 제공하는 30㎡ 크기의 객실입니다.",
-      "size": 30,
-      "maxAdults": 2,
-      "maxChildren": 1,
-      "weekdayPrice": 220000,
-      "weekendPrice": 270000,
-      "peakSeasonPrice": 320000,
-      "building": "F",
-      "floorCount": 4,
-      "roomsPerFloor": 30,
-      "viewType": "가든 뷰",
-      "imageUrl": "/images/rooms/placeholder.jpg",
-      "createdAt": "2025-04-16 11:01:28",
-      "updatedAt": "2025-04-16 11:01:28"
-    }, ...
+        "id": 1,
+        "name": "Chill Comfort Room",
+        "description": "심플하고 편안한 기본형 객실로, 자연적 요소가 가미된 인테리어와 가든 뷰를 제공하는 30㎡ 크기의 객실입니다.",
+        "size": 30,
+        "maxAdults": 2,
+        "maxChildren": 1,
+        "weekdayPrice": 220000,
+        "weekendPrice": 270000,
+        "peakSeasonPrice": 320000,
+        "building": "F",
+        "floorCount": 4,
+        "roomsPerFloor": 30,
+        "viewType": "가든 뷰",
+        "imageUrl": "/images/rooms/placeholder.jpg",
+        "amenityGroups": [
+            {
+                "amenityGroupsId": 1,
+                "name": "공통 어메니티",
+                "iconName": "Bed",
+                "sortOrder": 1,
+                "createdAt": "2025-04-19 05:38:33.0",
+                "amenities": [
+                    {
+                        "amenityItemsId": 1,
+                        "amenityGroupsId": 1,
+                        "name": "고급 침구",
+                        "iconName": "Bed",
+                        "sortOrder": 1,
+                        "createdAt": "2025-04-19 05:38:33.0"
+                    },...,
+                    {
+                        "amenityItemsId": 10,
+                        "amenityGroupsId": 1,
+                        "name": "커피/차 메이커",
+                        "iconName": "Coffee",
+                        "sortOrder": 10,
+                        "createdAt": "2025-04-19 05:38:33.0"
+                    }
+                ]
+            }
+        ]
+    },...
   ]
   */
   // 현재 보여주고 있는 첫 번째 객실의 인덱스(슬라이드 위치)
@@ -167,17 +192,13 @@ export function RoomCarousel({ rooms }) {
                   </div>
                   {/* 객실 어메니티(편의시설) 그룹 표시 */}
                   <div className="flex flex-col gap-2 mb-4">
-                    {/* {room.type &&
-                      roomAmenityGroups[room.type]?.map((groupKey) => {
-                        const group = amenityGroups[groupKey];
-                        return (
-                          <AmenityGroupComponent
-                            key={groupKey}
-                            group={group.name}
-                            items={group.items}
-                          />
-                        );
-                      })} */}
+                    {/*
+                      백엔드에서 내려준 room.amenityGroups 배열을 그대로 AmenityGroupComponent에 전달
+                      - group 전체 객체를 {...group} 방식으로 넘김
+                    */}
+                    {room.amenityGroups && room.amenityGroups.map((group) => (
+                      <AmenityGroupComponent key={group.groupId} group={group} />
+                    ))}
                   </div>
                   {/* 가격 정보 및 상세 보기 링크 */}
                   <div className="mt-auto">

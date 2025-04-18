@@ -2,44 +2,38 @@ package sist.backend.room.entity;
 
 import jakarta.persistence.*;
 import lombok.*;
+import sist.backend.room.entity.RoomTypeAmenityGroupsId;
 
 /**
- * Lombok 어노테이션 설명
- *
- * @Getter         // 각 필드에 대한 getter 메서드를 자동 생성합니다.
- * @NoArgsConstructor // 파라미터 없는 기본 생성자를 자동 생성합니다. (JPA 필수)
- * @AllArgsConstructor // 모든 필드를 파라미터로 받는 생성자를 자동 생성합니다.
- * 
- * 객실 유형별 어메니티 그룹 연결 엔티티
- * (room_type_amenity_groups 테이블)
- * 이 엔티티는 객실 유형(RoomTypes)과 어메니티 그룹(AmenityGroups)의 N:M 관계를 표현합니다.
- * 복합 기본키(객실유형ID, 어메니티그룹ID)와 생성일시 필드를 포함합니다.
+ * RoomTypeAmenityGroups 엔티티는 DDL.sql의 room_type_amenity_groups 테이블과 1:1로 매핑됩니다.
+ * 복합 PK, 컬럼명, 타입, 제약조건, FK까지 엄격하게 일치시킵니다.
  */
 @Entity
-@Table(name = "room_type_amenity_groups")
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
+@Table(name = "room_type_amenity_groups")
+@IdClass(RoomTypeAmenityGroupsId.class)
 public class RoomTypeAmenityGroups {
     /**
-     * 객실 유형 (RoomTypes와 양방향 다대일 관계, 복합키의 일부)
+     * 객실 유형 (복합 PK, FK, NOT NULL)
      */
     @Id
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "room_types_id", nullable = false)
     private RoomTypes roomTypes;
 
     /**
-     * 어메니티 그룹 (AmenityGroups와 양방향 다대일 관계, 복합키의 일부)
+     * 어메니티 그룹 (복합 PK, FK, NOT NULL)
      */
     @Id
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "amenity_groups_id", nullable = false)
     private AmenityGroups amenityGroups;
 
     /**
-     * 생성일시 (기본값: 현재 시간)
+     * 생성일시 (TIMESTAMP DEFAULT CURRENT_TIMESTAMP)
      */
-    @Column(name = "created_at", nullable = false, columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
+    @Column(name = "created_at", columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
     private java.sql.Timestamp createdAt;
 }

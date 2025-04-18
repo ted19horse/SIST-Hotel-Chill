@@ -95,7 +95,24 @@ public class RoomTypesRepositoryImpl implements RoomTypesRepositoryCustom {
             if (rt == null) continue; // LEFT JOIN이므로 NULL 가능
             // roomTypeMap에 없으면 새 DTO 생성, 있으면 기존 DTO 반환
             RoomTypeWithAmenitiesDto roomDto = roomTypeMap.computeIfAbsent(rt.getRoomTypesId(), id ->
-                    new RoomTypeWithAmenitiesDto(rt.getRoomTypesId(), rt.getName(), rt.getDescription(), new ArrayList<>())
+                    // RoomType 엔티티의 모든 필드를 DTO에 전달
+                    new RoomTypeWithAmenitiesDto(
+                        rt.getRoomTypesId(),              // roomTypesId
+                        rt.getName(),                     // name
+                        rt.getDescription(),              // description
+                        rt.getSize(),                     // size
+                        rt.getMaxAdults(),                // maxAdults
+                        rt.getMaxChildren(),              // maxChildren
+                        rt.getWeekdayPrice(),             // weekdayPrice
+                        rt.getWeekendPrice(),             // weekendPrice
+                        rt.getPeakSeasonPrice(),          // peakSeasonPrice
+                        rt.getBuilding(),                 // building
+                        rt.getFloorCount(),               // floorCount
+                        rt.getRoomsPerFloor(),            // roomsPerFloor
+                        rt.getViewType(),                 // viewType
+                        rt.getImageUrl(),                 // imageUrl
+                        new ArrayList<>()                 // amenityGroups
+                    )
             );
 
             // (2) 어메니티 그룹(AmenityGroups) 엔티티 추출
@@ -104,11 +121,18 @@ public class RoomTypesRepositoryImpl implements RoomTypesRepositoryCustom {
             if (group != null) {
                 // 이미 추가된 AmenityGroupDto가 있는지 확인 (groupId는 엔티티의 PK)
                 AmenityGroupDto groupDto = roomDto.getAmenityGroups().stream()
-                        .filter(g -> g.getGroupId().equals(group.getAmenityGroupsId()))
+                        .filter(g -> g.getAmenityGroupsId().equals(group.getAmenityGroupsId()))
                         .findFirst()
                         .orElseGet(() -> {
-                            // 없으면 새로 생성해서 추가
-                            AmenityGroupDto newGroup = new AmenityGroupDto(group.getAmenityGroupsId(), group.getName(), new ArrayList<>());
+                            // 없으면 새로 생성해서 추가 (DDL.sql 기준 모든 필드 전달)
+                            AmenityGroupDto newGroup = new AmenityGroupDto(
+                                group.getAmenityGroupsId(),
+                                group.getName(),
+                                group.getIconName(),
+                                group.getSortOrder(),
+                                group.getCreatedAt() != null ? group.getCreatedAt().toString() : null,
+                                new ArrayList<>()
+                            );
                             roomDto.getAmenityGroups().add(newGroup);
                             return newGroup;
                         });
@@ -116,12 +140,21 @@ public class RoomTypesRepositoryImpl implements RoomTypesRepositoryCustom {
                 // (3) 어메니티 아이템(AmenityItems) 엔티티 추출
                 AmenityItems item = tuple.get(amenityItem);
                 if (item != null) {
-                    // 이미 추가된 AmenityItemDto가 있는지 확인 (itemId는 엔티티의 PK)
+                    // 이미 추가된 AmenityItemDto가 있는지 확인 (amenityItemsId는 엔티티의 PK)
                     boolean exists = groupDto.getAmenities().stream()
-                            .anyMatch(i -> i.getItemId().equals(item.getAmenityItemsId()));
+                            .anyMatch(i -> i.getAmenityItemsId().equals(item.getAmenityItemsId()));
                     if (!exists) {
-                        // 없으면 새로 추가
-                        groupDto.getAmenities().add(new AmenityItemDto(item.getAmenityItemsId(), item.getName()));
+                        // 없으면 새로 추가 (DDL.sql 기준 모든 필드 전달)
+                        groupDto.getAmenities().add(
+                            new AmenityItemDto(
+                                item.getAmenityItemsId(),
+                                item.getAmenityGroups() != null ? item.getAmenityGroups().getAmenityGroupsId() : null,
+                                item.getName(),
+                                item.getIconName(),
+                                item.getSortOrder(),
+                                item.getCreatedAt() != null ? item.getCreatedAt().toString() : null
+                            )
+                        );
                     }
                 }
             }

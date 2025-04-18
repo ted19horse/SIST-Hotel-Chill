@@ -51,50 +51,50 @@ INSERT INTO payment_methods (users_id, card_type, last_four_digits, is_default) 
 
 
 
--- 어메니티 그룹 데이터
+-- 어메니티 그룹 데이터 (수정된 아이콘 이름)
 INSERT INTO amenity_groups (name, icon_name, sort_order) VALUES
-('공통 어메니티', 'BedDouble', 1),
-('디럭스 어메니티', 'Coffee', 2),
-('프리미엄 어메니티', 'Tablet', 3),
-('프레지덴셜 어메니티', 'UserCog', 4);
+('공통 어메니티', 'Bed', 1),
+('디럭스 어메니티', 'CupSoda', 2),
+('프리미엄 어메니티', 'TabletSmartphone', 3),
+('프레지덴셜 어메니티', 'Crown', 4);
 
--- 어메니티 아이템 데이터
+-- 어메니티 아이템 데이터 (수정된 아이콘 이름)
 INSERT INTO amenity_items (amenity_groups_id, name, icon_name, sort_order) VALUES
 -- 공통 어메니티
-(1, '고급 침구', 'BedDouble', 1),
+(1, '고급 침구', 'Bed', 1),
 (1, '43인치 스마트 TV', 'Tv', 2),
 (1, '고속 무선 인터넷', 'Wifi', 3),
-(1, '객실 내 금고', 'Lock', 4),
-(1, '미니바/미니 냉장고', 'Coffee', 5),
-(1, '친환경 욕실 용품 세트', 'ShowerHead', 6),
+(1, '객실 내 금고', 'ShieldCheck', 4),
+(1, '미니바/미니 냉장고', 'Refrigerator', 5),
+(1, '친환경 욕실 용품 세트', 'Droplet', 6),
 (1, '슬리퍼 및 목욕 가운', 'Footprints', 7),
 (1, 'USB 충전 포트 및 멀티 어댑터', 'BatteryCharging', 8),
-(1, '헤어 드라이어', 'Scissors', 9),
+(1, '헤어 드라이어', 'Fan', 9),
 (1, '커피/차 메이커', 'Coffee', 10),
 
 -- 디럭스 어메니티
 (2, '에스프레소 머신', 'Coffee', 1),
-(2, '필로우 미스트', 'Droplets', 2),
-(2, '욕실 체중계', 'Scale', 3),
+(2, '필로우 미스트', 'CloudDrizzle', 2),
+(2, '욕실 체중계', 'Weight', 3),
 (2, '추가 욕실 용품', 'Bath', 4),
-(2, '블루투스 스피커', 'Speaker', 5),
-(2, '다회용 텀블러', 'Coffee', 6),
+(2, '블루투스 스피커', 'Music', 5),
+(2, '다회용 텀블러', 'CupSoda', 6),
 
 -- 프리미엄 어메니티
-(3, '태블릿 객실 컨트롤 시스템', 'Tablet', 1),
+(3, '태블릿 객실 컨트롤 시스템', 'TabletSmartphone', 1),
 (3, '개별 공기청정기', 'Wind', 2),
-(3, '전용 라운지 이용권', 'Lounge', 3),
+(3, '전용 라운지 이용권', 'Sofa', 3),
 (3, '턴다운 서비스', 'Moon', 4),
-(3, '조식 무료 제공', 'Utensils', 5),
+(3, '조식 무료 제공', 'UtensilsCrossed', 5),
 (3, '웰컴 과일 또는 스낵', 'Apple', 6),
 
 -- 프레지덴셜 어메니티
-(4, '개인 집사 서비스', 'UserCog', 1),
-(4, '프라이빗 체크인/체크아웃', 'Key', 2),
+(4, '개인 집사 서비스', 'UserCheck', 1),
+(4, '프라이빗 체크인/체크아웃', 'KeySquare', 2),
 (4, '객실 내 자쿠지', 'Waves', 3),
-(4, '프리미엄 와인/주류 셀렉션', 'Wine', 4),
+(4, '프리미엄 와인/주류 셀렉션', 'GlassWater', 4),
 (4, '프라이빗 다이닝 옵션', 'ChefHat', 5),
-(4, '스페셜 스파 트리트먼트 패키지', 'Heart', 6);
+(4, '스페셜 스파 트리트먼트 패키지', 'Flower', 6);
 
 
 

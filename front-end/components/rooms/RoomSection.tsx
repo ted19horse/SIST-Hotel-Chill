@@ -12,7 +12,7 @@ import axios from 'axios';
 
 /**
  * RoomSection 컴포넌트
- * 
+ *
  * 홈페이지의 객실 소개 섹션을 구현합니다.
  * 스크롤 시 애니메이션 효과가 적용되며, 객실 캐러셀과 '모든 객실 보기' 버튼을 포함합니다.
  * Intersection Observer API를 활용하여 컴포넌트가 화면에 보일 때 애니메이션을 트리거합니다.
@@ -35,23 +35,48 @@ export default function RoomSection() {
       /*
       response.Data = [
         {
-          "roomTypesId": 1,
-          "name": "Chill Comfort Room",
-          "description": "심플하고 편안한 기본형 객실로, 자연적 요소가 가미된 인테리어와 가든 뷰를 제공하는 30㎡ 크기의 객실입니다.",
-          "size": 30,
-          "maxAdults": 2,
-          "maxChildren": 1,
-          "weekdayPrice": 220000,
-          "weekendPrice": 270000,
-          "peakSeasonPrice": 320000,
-          "building": "F",
-          "floorCount": 4,
-          "roomsPerFloor": 30,
-          "viewType": "가든 뷰",
-          "imageUrl": "/images/rooms/placeholder.jpg",
-          "createdAt": "2025-04-16 11:01:28",
-          "updatedAt": "2025-04-16 11:01:28"
-        }, ...
+            "id": 1,
+            "name": "Chill Comfort Room",
+            "description": "심플하고 편안한 기본형 객실로, 자연적 요소가 가미된 인테리어와 가든 뷰를 제공하는 30㎡ 크기의 객실입니다.",
+            "size": 30,
+            "maxAdults": 2,
+            "maxChildren": 1,
+            "weekdayPrice": 220000,
+            "weekendPrice": 270000,
+            "peakSeasonPrice": 320000,
+            "building": "F",
+            "floorCount": 4,
+            "roomsPerFloor": 30,
+            "viewType": "가든 뷰",
+            "imageUrl": "/images/rooms/placeholder.jpg",
+            "amenityGroups": [
+                {
+                    "amenityGroupsId": 1,
+                    "name": "공통 어메니티",
+                    "iconName": "Bed",
+                    "sortOrder": 1,
+                    "createdAt": "2025-04-19 05:38:33.0",
+                    "amenities": [
+                        {
+                            "amenityItemsId": 1,
+                            "amenityGroupsId": 1,
+                            "name": "고급 침구",
+                            "iconName": "Bed",
+                            "sortOrder": 1,
+                            "createdAt": "2025-04-19 05:38:33.0"
+                        },...,
+                        {
+                            "amenityItemsId": 10,
+                            "amenityGroupsId": 1,
+                            "name": "커피/차 메이커",
+                            "iconName": "Coffee",
+                            "sortOrder": 10,
+                            "createdAt": "2025-04-19 05:38:33.0"
+                        }
+                    ]
+                }
+            ]
+        },...
       ]
       */
     };

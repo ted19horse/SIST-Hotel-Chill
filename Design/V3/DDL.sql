@@ -52,7 +52,7 @@ CREATE TABLE memberships (
     total_stays INT NOT NULL DEFAULT 0,
     total_spending DECIMAL(12, 2) NOT NULL DEFAULT 0,
     membership_number VARCHAR(20) NOT NULL UNIQUE,
-    -- FOREIGN KEY (users_id) REFERENCES users (users_id) ON DELETE CASCADE,
+    FOREIGN KEY (users_id) REFERENCES users (users_id) ON DELETE CASCADE,
     INDEX idx_membership_tier (membership_tier),
     INDEX idx_membership_number (membership_number)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
@@ -64,7 +64,7 @@ CREATE TABLE payment_methods (
     card_type VARCHAR(50) NOT NULL,
     last_four_digits VARCHAR(4) NOT NULL,
     is_default BOOLEAN NOT NULL DEFAULT false,
-    -- FOREIGN KEY (users_id) REFERENCES users (users_id) ON DELETE CASCADE,
+    FOREIGN KEY (users_id) REFERENCES users (users_id) ON DELETE CASCADE,
     INDEX idx_users_id (users_id)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
@@ -78,9 +78,9 @@ CREATE TABLE room_types (
     size INT NOT NULL,
     max_adults INT NOT NULL,
     max_children INT NOT NULL,
-    weekday_price DECIMAL(10, 2) NOT NULL,
-    weekend_price DECIMAL(10, 2) NOT NULL,
-    peak_season_price DECIMAL(10, 2) NOT NULL,
+    weekday_price INT NOT NULL,
+    weekend_price INT NOT NULL,
+    peak_season_price INT NOT NULL,
     building CHAR(1) NOT NULL,
     floor_count INT NOT NULL,
     rooms_per_floor INT NOT NULL,
@@ -112,7 +112,7 @@ CREATE TABLE amenity_items (
     icon_name VARCHAR(50) NOT NULL,
     sort_order INT NOT NULL DEFAULT 0,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    -- FOREIGN KEY (amenity_groups_id) REFERENCES amenity_groups (amenity_groups_id),
+    FOREIGN KEY (amenity_groups_id) REFERENCES amenity_groups (amenity_groups_id),
     UNIQUE KEY uk_name_group (name, amenity_groups_id),
     INDEX idx_sort_order (sort_order)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
@@ -122,9 +122,9 @@ CREATE TABLE room_type_amenity_groups (
     room_types_id BIGINT NOT NULL,
     amenity_groups_id BIGINT NOT NULL,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    PRIMARY KEY (room_types_id, amenity_groups_id)
-    -- FOREIGN KEY (room_types_id) REFERENCES room_types (room_types_id),
-    -- FOREIGN KEY (amenity_groups_id) REFERENCES amenity_groups (amenity_groups_id)
+    PRIMARY KEY (room_types_id, amenity_groups_id),
+    FOREIGN KEY (room_types_id) REFERENCES room_types (room_types_id),
+    FOREIGN KEY (amenity_groups_id) REFERENCES amenity_groups (amenity_groups_id)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- 객실 테이블
@@ -135,7 +135,7 @@ CREATE TABLE rooms (
     status VARCHAR(20) NOT NULL DEFAULT 'AVAILABLE',
     floor INT GENERATED ALWAYS AS (CAST(SUBSTRING(room_number, 2, 1) AS SIGNED)) STORED,
     room_order INT GENERATED ALWAYS AS (CAST(SUBSTRING(room_number, 3, 2) AS SIGNED)) STORED,
-    -- FOREIGN KEY (room_types_id) REFERENCES room_types (room_types_id),
+    FOREIGN KEY (room_types_id) REFERENCES room_types (room_types_id),
     INDEX idx_room_number (room_number),
     INDEX idx_status (status),
     INDEX idx_floor (floor),
@@ -155,9 +155,9 @@ CREATE TABLE room_reservations (
     total_amount DECIMAL(10, 2) NOT NULL,
     payment_methods_id BIGINT NULL,
     reservation_number VARCHAR(20) NOT NULL UNIQUE,
-    -- FOREIGN KEY (users_id) REFERENCES users (users_id),
-    -- FOREIGN KEY (rooms_id) REFERENCES rooms (rooms_id),
-    -- FOREIGN KEY (payment_methods_id) REFERENCES payment_methods (payment_methods_id),
+    FOREIGN KEY (users_id) REFERENCES users (users_id),
+    FOREIGN KEY (rooms_id) REFERENCES rooms (rooms_id),
+    FOREIGN KEY (payment_methods_id) REFERENCES payment_methods (payment_methods_id),
     INDEX idx_check_in_date (check_in_date),
     INDEX idx_check_out_date (check_out_date),
     INDEX idx_status (status),
@@ -185,7 +185,7 @@ CREATE TABLE menu_categories (
     sort_order INT NOT NULL DEFAULT 0,
     availability_start TIME NULL,
     availability_end TIME NULL,
-    -- FOREIGN KEY (restaurants_id) REFERENCES restaurants (restaurants_id) ON DELETE CASCADE,
+    FOREIGN KEY (restaurants_id) REFERENCES restaurants (restaurants_id) ON DELETE CASCADE,
     INDEX idx_restaurants_id (restaurants_id),
     INDEX idx_sort_order (sort_order)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
@@ -202,7 +202,7 @@ CREATE TABLE menu_items (
     is_signature BOOLEAN NOT NULL DEFAULT false,
     is_available BOOLEAN NOT NULL DEFAULT true,
     allergens VARCHAR(255) NULL,
-    -- FOREIGN KEY (menu_categories_id) REFERENCES menu_categories (menu_categories_id) ON DELETE CASCADE,
+    FOREIGN KEY (menu_categories_id) REFERENCES menu_categories (menu_categories_id) ON DELETE CASCADE,
     INDEX idx_menu_categories_id (menu_categories_id),
     INDEX idx_is_available (is_available),
     INDEX idx_is_signature (is_signature)
@@ -218,8 +218,8 @@ CREATE TABLE dining_reservations (
     guests INT NOT NULL,
     status VARCHAR(20) NOT NULL,
     reservation_number VARCHAR(20) NOT NULL UNIQUE,
-    -- FOREIGN KEY (users_id) REFERENCES users (users_id),
-    -- FOREIGN KEY (restaurants_id) REFERENCES restaurants (restaurants_id),
+    FOREIGN KEY (users_id) REFERENCES users (users_id),
+    FOREIGN KEY (restaurants_id) REFERENCES restaurants (restaurants_id),
     INDEX idx_reservation_date (reservation_date),
     INDEX idx_status (status),
     INDEX idx_reservation_number (reservation_number)
@@ -248,8 +248,8 @@ CREATE TABLE orders (
     payment_methods_id BIGINT NOT NULL,
     order_number VARCHAR(20) NOT NULL UNIQUE,
     is_in_room_delivery BOOLEAN NOT NULL DEFAULT false,
-    -- FOREIGN KEY (users_id) REFERENCES users (users_id),
-    -- FOREIGN KEY (payment_methods_id) REFERENCES payment_methods (payment_methods_id),
+    FOREIGN KEY (users_id) REFERENCES users (users_id),
+    FOREIGN KEY (payment_methods_id) REFERENCES payment_methods (payment_methods_id),
     INDEX idx_status (status),
     INDEX idx_order_number (order_number)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
@@ -262,8 +262,8 @@ CREATE TABLE order_items (
     quantity INT NOT NULL,
     price DECIMAL(10, 2) NOT NULL,
     total_price DECIMAL(10, 2) NOT NULL,
-    -- FOREIGN KEY (orders_id) REFERENCES orders (orders_id) ON DELETE CASCADE,
-    -- FOREIGN KEY (products_id) REFERENCES products (products_id),
+    FOREIGN KEY (orders_id) REFERENCES orders (orders_id) ON DELETE CASCADE,
+    FOREIGN KEY (products_id) REFERENCES products (products_id),
     INDEX idx_orders_id (orders_id),
     INDEX idx_products_id (products_id)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
@@ -279,7 +279,7 @@ CREATE TABLE point_transactions (
     reference_type VARCHAR(50) NULL,
     transaction_type VARCHAR(50) NOT NULL,
     transaction_date TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    -- FOREIGN KEY (users_id) REFERENCES users (users_id),
+    FOREIGN KEY (users_id) REFERENCES users (users_id),
     INDEX idx_users_id (users_id),
     INDEX idx_transaction_date (transaction_date),
     INDEX idx_transaction_type (transaction_type)
