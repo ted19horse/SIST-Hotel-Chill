@@ -16,7 +16,6 @@
 
 'use client';
 
-import ScrollToTop from '@/components/common/home/ScrollToTop'; // 페이지 상단 이동 버튼
 import Footer from '@/components/common/layout/Footer'; // 공통 푸터
 import Header from '@/components/common/layout/Header'; // 공통 헤더
 import AccountLayout from '@/components/my-account/AccountLayout'; // 마이페이지 전체 레이아웃
@@ -84,7 +83,6 @@ export default function MyAccountPage() {
   // 헤더, 네비게이션, 탭 UI, 각 섹션별 컨텐츠, 푸터를 렌더링합니다.
   return (
     <main className="min-h-screen">
-      <ScrollToTop /> {/* 페이지 상단 이동 버튼 */}
       <Header /> {/* 공통 헤더 */}
 
       {/* [배너 영역] */}

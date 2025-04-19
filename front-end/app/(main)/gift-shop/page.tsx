@@ -12,7 +12,6 @@
 // 초보자 팁:
 // 각 import, 렌더링 영역, 컴포넌트별로 상세 주석을 참고하세요.
 
-import ScrollToTop from '@/components/common/home/ScrollToTop'; // 페이지 상단 이동 버튼
 import Footer from '@/components/common/layout/Footer'; // 공통 푸터
 import Header from '@/components/common/layout/Header'; // 공통 헤더
 import CategoryGrid from '@/components/gift-shop/CategoryGrid'; // 상품 카테고리 그리드
@@ -30,7 +29,6 @@ import Link from 'next/link'; // Next.js 라우팅용 링크 컴포넌트
 export default function GiftShopPage() {
   return (
     <main className="min-h-screen">
-      <ScrollToTop /> {/* 페이지 상단 이동 버튼 */}
       <Header /> {/* 공통 헤더 */}
 
       {/* [배너 영역] */}

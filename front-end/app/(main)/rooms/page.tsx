@@ -20,7 +20,6 @@
  */
 
 import PageBanner from '@/components/common/layout/PageBanner'; // 공통 배너 컴포넌트
-import ScrollToTop from '@/components/common/home/ScrollToTop'; // 페이지 상단 이동 버튼
 import RoomFilters from '@/components/rooms/RoomFilters'; // 객실 필터
 import RoomList from '@/components/rooms/RoomList'; // 객실 목록
 import { Suspense } from 'react'; // 비동기 컴포넌트 처리용
@@ -33,8 +32,6 @@ import { Suspense } from 'react'; // 비동기 컴포넌트 처리용
 export default function RoomsPage() {
   return (
     <main className="min-h-screen">
-      <ScrollToTop /> {/* 페이지 상단 이동 버튼 */}
-      
       {/* [배너 영역] */}
       {/* 공통 PageBanner 컴포넌트로 타이틀, 네비게이션, 배경이미지 표시 */}
       <PageBanner 

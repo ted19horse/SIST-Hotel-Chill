@@ -1,6 +1,3 @@
-import ScrollToTop from '@/components/common/home/ScrollToTop';
-import Footer from '@/components/common/layout/Footer';
-import Header from '@/components/common/layout/Header';
 import { Badge } from '@/components/common/ui/Badge';
 import { Button } from '@/components/common/ui/Button';
 import AddToCartClient from '@/components/gift-shop/client/AddToCartClient';
@@ -60,9 +57,6 @@ export default async function ProductDetailPage({ params }: ProductDetailPagePro
 
   return (
     <main className="min-h-screen">
-      <ScrollToTop />
-      <Header />
-
       {/* 페이지 상단 배너 */}
       <div className="relative h-[30vh] bg-neutral-900">
         <div
@@ -211,8 +205,6 @@ export default async function ProductDetailPage({ params }: ProductDetailPagePro
           </div>
         </section>
       )}
-
-      <Footer />
     </main>
   );
 }

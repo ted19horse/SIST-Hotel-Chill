@@ -1,6 +1,3 @@
-import ScrollToTop from '@/components/common/home/ScrollToTop';
-import Footer from '@/components/common/layout/Footer';
-import Header from '@/components/common/layout/Header';
 import ProductFilters from '@/components/gift-shop/ProductFilters';
 import ShoppingCart from '@/components/gift-shop/ShoppingCart';
 import CategoryProducts from '@/components/gift-shop/client/CategoryProducts';
@@ -38,9 +35,6 @@ export default async function CategoryPage({ params }: CategoryPageProps) {
 
   return (
     <main className="min-h-screen">
-      <ScrollToTop />
-      <Header />
-
       {/* 페이지 상단 배너 */}
       <div className="relative h-[30vh] bg-neutral-900">
         <div
@@ -94,8 +88,6 @@ export default async function CategoryPage({ params }: CategoryPageProps) {
           </div>
         </div>
       </div>
-
-      <Footer />
     </main>
   );
 }

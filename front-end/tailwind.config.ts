@@ -1,15 +1,15 @@
-import type { Config } from 'tailwindcss';
+import type { Config } from 'tailwindcss'; // Tailwind 타입 지원용 import
 
-const config = {
-    darkMode: ['class'],
-    content: [
-    './pages/**/*.{ts,tsx}',
-    './components/**/*.{ts,tsx}',
-    './app/**/*.{ts,tsx}',
-    './src/**/*.{ts,tsx}',
-    '*.{js,ts,jsx,tsx,mdx}'
+const config = { // Tailwind 전체 설정 객체
+    darkMode: ['class'], // 다크모드를 class 방식으로 적용
+    content: [ // Tailwind가 CSS 클래스를 찾을 파일 경로 목록
+    './pages/**/*.{ts,tsx}', // pages 폴더 내 ts, tsx 파일 모두 포함
+    './components/**/*.{ts,tsx}', // components 폴더 내 ts, tsx 파일 모두 포함
+    './app/**/*.{ts,tsx}', // app 폴더 내 ts, tsx 파일 모두 포함
+    './src/**/*.{ts,tsx}', // src 폴더 내 ts, tsx 파일 모두 포함
+    '*.{js,ts,jsx,tsx,mdx}' // 루트의 js, ts, jsx, tsx, mdx 파일 포함
   ],
-  prefix: '',
+  prefix: '', // Tailwind 클래스 앞에 접두사 사용 안 함
   theme: {
   	container: {
   		center: true,
@@ -59,6 +59,16 @@ const config = {
   				'3': 'hsl(var(--chart-3))',
   				'4': 'hsl(var(--chart-4))',
   				'5': 'hsl(var(--chart-5))'
+  			},
+  			sidebar: {
+  				DEFAULT: 'hsl(var(--sidebar-background))',
+  				foreground: 'hsl(var(--sidebar-foreground))',
+  				primary: 'hsl(var(--sidebar-primary))',
+  				'primary-foreground': 'hsl(var(--sidebar-primary-foreground))',
+  				accent: 'hsl(var(--sidebar-accent))',
+  				'accent-foreground': 'hsl(var(--sidebar-accent-foreground))',
+  				border: 'hsl(var(--sidebar-border))',
+  				ring: 'hsl(var(--sidebar-ring))'
   			}
   		},
   		borderRadius: {
@@ -90,7 +100,7 @@ const config = {
   		}
   	}
   },
-  plugins: [require('tailwindcss-animate')]
-} satisfies Config;
+  plugins: [require('tailwindcss-animate')], // 애니메이션 플러그인 적용
+} satisfies Config; // 타입 검사(공식 방식)
 
-export default config;
+export default config; // config 객체를 기본 내보내기

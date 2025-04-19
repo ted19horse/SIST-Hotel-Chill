@@ -22,7 +22,6 @@
 
 import { notFound, redirect } from 'next/navigation'; // Next.js 내비게이션 함수
 import PageBanner from '@/components/common/layout/PageBanner'; // 공통 배너 컴포넌트
-import ScrollToTop from '@/components/common/home/ScrollToTop'; // 페이지 상단 이동 버튼
 import RoomBookingForm from '@/components/rooms/booking/RoomBookingForm'; // 객실 예약 폼
 import { getRoomById } from '@/lib/data/rooms'; // 객실 데이터 조회 함수
 import { Suspense } from 'react'; // 비동기 컴포넌트 처리용
@@ -73,7 +72,6 @@ export default function RoomBookingPage({ searchParams }: RoomBookingPageProps) 
   // 배너, 예약 폼 등 주요 UI를 렌더링합니다.
   return (
     <main className="min-h-screen">
-      <ScrollToTop /> {/* 페이지 상단 이동 버튼 */}
       {/* [배너 영역] */}
       <PageBanner
         title="객실 예약"

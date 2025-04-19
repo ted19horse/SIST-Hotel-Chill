@@ -12,7 +12,6 @@
 // 초보자 팁:
 // 각 import, 주요 컴포넌트, 렌더링 영역별 상세 주석을 참고하세요.
 
-import ScrollToTop from '@/components/common/home/ScrollToTop'; // 페이지 상단 이동 버튼
 import Footer from '@/components/common/layout/Footer'; // 공통 푸터
 import Header from '@/components/common/layout/Header'; // 공통 헤더
 import ProductFilters from '@/components/gift-shop/ProductFilters'; // 상품 필터 컴포넌트
@@ -29,7 +28,6 @@ import Link from 'next/link'; // 라우팅용 링크
 export default function GiftShopProductsPage() {
   return (
     <main className="min-h-screen">
-      <ScrollToTop /> {/* 페이지 상단 이동 버튼 */}
       {/* [헤더 영역] */}
       <Header />
 

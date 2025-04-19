@@ -14,12 +14,6 @@
 
 'use client';
 
-// [공통 UI 컴포넌트 import]
-// Header, Footer, ScrollToTop 등은 여러 페이지에서 재사용되는 공통 레이아웃 컴포넌트입니다.
-import ScrollToTop from '@/components/common/home/ScrollToTop';
-import Footer from '@/components/common/layout/Footer';
-import Header from '@/components/common/layout/Header';
-
 // [UI 요소 및 다이닝 관련 컴포넌트 import]
 import { Button } from '@/components/common/ui/Button';
 import { Input } from '@/components/common/ui/Input';
@@ -161,10 +155,6 @@ export default function DiningPage() {
   // 실제 UI를 반환합니다. 각 컴포넌트/요소 위에 주석을 추가해 역할을 설명할 수 있습니다.
   return (
     <main className="min-h-screen">
-      <ScrollToTop />
-      {/* Header is imported as a component */}
-      <Header />
-
       {/* Page Banner */}
       <div className="relative h-[40vh] bg-neutral-900">
         <div
@@ -251,9 +241,6 @@ export default function DiningPage() {
           </div>
         </div>
       </div>
-
-      {/* Footer */}
-      <Footer />
     </main>
   );
 }

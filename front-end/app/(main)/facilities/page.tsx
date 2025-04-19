@@ -12,9 +12,6 @@
 // 초보자 팁:
 // 각 import, 렌더링 영역, 컴포넌트별로 상세 주석을 참고하세요.
 
-import ScrollToTop from '@/components/common/home/ScrollToTop'; // 페이지 상단 이동 버튼
-import Footer from '@/components/common/layout/Footer'; // 공통 푸터
-import Header from '@/components/common/layout/Header'; // 공통 헤더
 import FacilitiesIntro from '@/components/facilities/FacilitiesIntro'; // 부대시설 소개
 import FacilitiesMap from '@/components/facilities/FacilitiesMap'; // 시설 지도
 import FacilityTabs from '@/components/facilities/FacilityTabs'; // 시설별 탭
@@ -33,10 +30,6 @@ import Link from 'next/link'; // Next.js 라우팅용 링크 컴포넌트
 export default function FacilitiesPage() {
   return (
     <main className="min-h-screen">
-      <ScrollToTop /> {/* 페이지 상단 이동 버튼 */}
-      {/* 헤더 컴포넌트 */}
-      <Header /> 
-
       {/* [배너 영역] */}
       {/* 배경 이미지와 타이틀, 네비게이션(홈 > 부대시설) 표시 */}
       <div className="relative h-[40vh] bg-neutral-900">
@@ -78,9 +71,6 @@ export default function FacilitiesPage() {
 
       {/* [정보 요청 양식] */}
       <InfoRequestForm />
-
-      {/* [푸터] */}
-      <Footer />
     </main>
   );
 }

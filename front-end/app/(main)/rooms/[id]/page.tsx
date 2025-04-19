@@ -22,7 +22,6 @@
 
 import { notFound } from 'next/navigation'; // Next.js 내비게이션 함수
 import PageBanner from '@/components/common/layout/PageBanner'; // 공통 배너 컴포넌트
-import ScrollToTop from '@/components/common/home/ScrollToTop'; // 페이지 상단 이동 버튼
 import RoomDetail from '@/components/rooms/detail/RoomDetail'; // 객실 상세 정보 컴포넌트
 import { getRoomById } from '@/lib/data/rooms'; // 객실 데이터 조회 함수
 import { Suspense } from 'react'; // 비동기 컴포넌트 처리용
