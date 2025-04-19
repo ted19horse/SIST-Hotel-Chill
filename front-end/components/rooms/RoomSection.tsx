@@ -19,14 +19,15 @@ import axios from 'axios';
  */
 export default function RoomSection() {
   // 섹션 요소에 대한 참조 생성 (DOM 요소에 접근하기 위함)
-  const sectionRef = useRef<HTMLElement>(null);
+  const sectionRef = useRef(null);
   // 커스텀 훅을 사용하여 섹션이 화면에 보이는지 감지
   const isVisible = useIntersectionObserver({ ref: sectionRef });
   // 애니메이션이 이미 실행되었는지 추적하는 상태
   const [hasAnimated, setHasAnimated] = useState(false);
 
-  // DB에서 호출하는 객실 데이터
+  // DB에서 호출하는 객실 데이터 
   const [rooms, setRooms] = useState([]);
+
   // api 호출
   useEffect(() => {
     const getRoomsData = async () => {
@@ -98,7 +99,7 @@ export default function RoomSection() {
     <section
       ref={sectionRef} // ref를 통해 DOM 요소 참조
       className={cn(
-        'py-20 bg-neutral-50 transition-opacity duration-1000 ease-in-out',
+        'py-20 bg-neutral-50 transition-opacity duration-500 ease-in-out',
         // 섹션이 화면에 보이거나 이미 애니메이션이 실행되었으면 완전히 표시, 아니면 투명하게 처리
         isVisible || hasAnimated ? 'opacity-100' : 'opacity-0'
       )}

@@ -13,7 +13,7 @@ import Link from 'next/link'; // 페이지 이동을 위한 Next.js 라우팅 �
 import { useEffect, useRef, useState } from 'react'; // React의 주요 훅: 상태 관리, 참조, 생명주기 제어
 import { AmenityGroupComponent } from './AmenityGroupComponent'; // 객실 어메니티 그룹을 보여주는 하위 컴포넌트
 
-export function RoomCarousel({ rooms }) {
+export function RoomCarousel({ rooms }: any) {
   /*
   rooms = [
     {
@@ -66,7 +66,7 @@ export function RoomCarousel({ rooms }) {
   // 마우스 오버 시 자동 슬라이드 일시정지 여부를 저장
   const [isPaused, setIsPaused] = useState(false);
   // 캐러셀 전체 영역의 DOM 요소를 참조할 때 사용
-  const carouselRef = useRef<HTMLDivElement>(null);
+  const carouselRef = useRef(null);
 
   // 한 번에 보여줄 객실 카드 개수(예: 3개)
   const visibleRooms = 3;
@@ -137,8 +137,8 @@ export function RoomCarousel({ rooms }) {
           style={{ transform: `translateX(-${currentIndex * (100 / visibleRooms)}%)` }}
         >
           {/* 객실(room) 배열을 순회하며 각 객실 카드 렌더링 */}
-          {rooms.map((room) => (
-            <div key={room.roomTypesId} className="w-full md:w-1/3 flex-shrink-0 px-4">
+          {rooms.map((room: any) => (
+            <div key={room.id} className="w-full md:w-1/3 flex-shrink-0 px-4">
               <div className="bg-white rounded-lg overflow-hidden shadow-md hover:shadow-lg transition-shadow h-full flex flex-col">
                 {/* 객실 이미지 영역 */}
                 <div className="relative h-64 bg-neutral-100">
@@ -192,12 +192,9 @@ export function RoomCarousel({ rooms }) {
                   </div>
                   {/* 객실 어메니티(편의시설) 그룹 표시 */}
                   <div className="flex flex-col gap-2 mb-4">
-                    {/*
-                      백엔드에서 내려준 room.amenityGroups 배열을 그대로 AmenityGroupComponent에 전달
-                      - group 전체 객체를 {...group} 방식으로 넘김
-                    */}
-                    {room.amenityGroups && room.amenityGroups.map((group) => (
-                      <AmenityGroupComponent key={group.groupId} group={group} />
+                    {/* any 타입 지정으로 린트 에러 방지 */}
+                    {room.amenityGroups && room.amenityGroups.map((group: any) => (
+                      <AmenityGroupComponent key={group.amenityGroupsId || group.id} group={group} />
                     ))}
                   </div>
                   {/* 가격 정보 및 상세 보기 링크 */}
