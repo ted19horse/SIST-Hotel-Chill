@@ -1,87 +1,96 @@
 /**
- * Placehold.co 서비스를 사용하여 더미 이미지 URL을 생성합니다.
- *
- * @param width 이미지 너비 (픽셀)
- * @param height 이미지 높이 (픽셀)
- * @param bgColor 배경색 (hex 코드, # 제외)
- * @param textColor 텍스트 색상 (hex 코드, # 제외)
- * @param text 이미지에 표시할 텍스트
- * @returns 생성된 이미지 URL
+ * 이미지 최적화 유틸리티 함수 모음
+ * 
+ * 이 파일은 이미지 관련 최적화 유틸리티 함수를 제공합니다.
  */
-export function getPlaceholderImage(
-  width: number = 600,
-  height: number = 400,
-  bgColor: string = 'f5f5f5',
-  textColor: string = '333333',
-  text: string = 'Image Placeholder'
-): string {
-  // URL 인코딩하여 안전하게 처리
-  const encodedText = encodeURIComponent(text);
-  return `https://placehold.co/${width}x${height}/${bgColor}/${textColor}?text=${encodedText}`;
+
+/**
+ * 이미지 로딩 우선순위 유형
+ */
+export type ImagePriority = 'high' | 'medium' | 'low';
+
+/**
+ * 이미지 부하 전략 유형
+ */
+export type ImageLoadingStrategy = 'eager' | 'lazy';
+
+/**
+ * 이미지 크기 상수
+ */
+export const IMAGE_SIZES = {
+  THUMBNAIL: '(max-width: 640px) 100vw, 300px',
+  MEDIUM: '(max-width: 768px) 100vw, (max-width: 1024px) 50vw, 500px',
+  LARGE: '(max-width: 1024px) 100vw, 1200px',
+  FULL: '100vw',
+};
+
+/**
+ * 이미지 품질 상수
+ */
+export const IMAGE_QUALITY = {
+  LOW: 60,
+  MEDIUM: 75,
+  HIGH: 85,
+  PREMIUM: 95,
+};
+
+/**
+ * 반응형 이미지 크기 문자열 생성 함수
+ * 
+ * @param {string | string[]} sizes - 단일 크기 또는 크기 배열
+ * @returns {string} 반응형 이미지 크기 문자열
+ */
+export function getResponsiveImageSizes(sizes: string | string[]): string {
+  if (Array.isArray(sizes)) {
+    return sizes.join(', ');
+  }
+  return sizes;
 }
 
 /**
- * 멤버십 등급별 테마 색상을 기반으로 플레이스홀더 이미지를 생성합니다.
- *
- * @param tier 멤버십 등급 ('CHILL_BREEZE', 'CHILL_FLOW', 'DEEP_CHILL')
- * @param width 이미지 너비 (픽셀)
- * @param height 이미지 높이 (픽셀)
- * @param text 이미지에 표시할 텍스트
- * @returns 생성된 이미지 URL
+ * 이미지 로딩 전략 결정 함수
+ * 
+ * @param {ImagePriority} priority - 이미지 우선순위
+ * @param {number} index - 이미지 인덱스 (선택적)
+ * @returns {ImageLoadingStrategy} 이미지 로딩 전략
  */
-export function getMembershipTierImage(
-  tier: 'CHILL_BREEZE' | 'CHILL_FLOW' | 'DEEP_CHILL',
-  width: number = 600,
-  height: number = 400,
-  text: string = ''
-): string {
-  let bgColor = 'e3f2fd';
-  let textColor = '1565c0';
-  let defaultText = 'Chill Breeze';
-
-  if (tier === 'CHILL_FLOW') {
-    bgColor = 'e0f2f1';
-    textColor = '00695c';
-    defaultText = 'Chill Flow';
-  } else if (tier === 'DEEP_CHILL') {
-    bgColor = 'f3e5f5';
-    textColor = '6a1b9a';
-    defaultText = 'Deep Chill';
+export function getImageLoadingStrategy(
+  priority: ImagePriority, 
+  index: number = 0
+): ImageLoadingStrategy {
+  if (priority === 'high' || index === 0) {
+    return 'eager';
   }
-
-  const displayText = text || defaultText;
-  return getPlaceholderImage(width, height, bgColor, textColor, displayText);
+  return 'lazy';
 }
 
 /**
- * 사용자 아바타 이미지를 생성합니다.
- *
- * @param name 사용자 이름 (이니셜로 변환됨)
- * @param size 이미지 크기 (픽셀)
- * @param bgColor 배경색 (hex 코드, # 제외)
- * @param textColor 텍스트 색상 (hex 코드, # 제외)
- * @returns 생성된 아바타 이미지 URL
+ * 이미지 품질 결정 함수
+ * 
+ * @param {ImagePriority} priority - 이미지 우선순위
+ * @returns {number} 이미지 품질 값
  */
-export function getUserAvatarImage(
-  name: string,
-  size: number = 100,
-  bgColor?: string,
-  textColor: string = 'ffffff'
-): string {
-  // 이름에서 이니셜 추출 (영문 기준)
-  const initials = name
-    .split(' ')
-    .map((part) => part.charAt(0))
-    .join('')
-    .toUpperCase()
-    .substring(0, 2);
-
-  // 이름을 기반으로 일관된 색상 생성 (배경색 지정 안된 경우)
-  if (!bgColor) {
-    const colors = ['1976d2', '0097a7', '388e3c', 'fbc02d', 'e64a19', '7b1fa2', 'd32f2f'];
-    const nameHash = name.split('').reduce((acc, char) => acc + char.charCodeAt(0), 0);
-    bgColor = colors[nameHash % colors.length];
+export function getImageQualityByPriority(priority: ImagePriority): number {
+  switch (priority) {
+    case 'high':
+      return IMAGE_QUALITY.HIGH;
+    case 'medium':
+      return IMAGE_QUALITY.MEDIUM;
+    case 'low':
+      return IMAGE_QUALITY.LOW;
+    default:
+      return IMAGE_QUALITY.MEDIUM;
   }
+}
 
-  return getPlaceholderImage(size, size, bgColor, textColor, initials);
+/**
+ * 이미지 URL을 WebP 포맷으로 변환 (가능한 경우)
+ * 
+ * @param {string} url - 원본 이미지 URL
+ * @returns {string} WebP 포맷 URL 또는 원본 URL
+ */
+export function getOptimizedImageUrl(url: string): string {
+  // 실제 구현에서는 이미지 처리 서비스 URL로 변환하거나
+  // Next.js Image 컴포넌트가 자동 최적화하도록 원본 URL 반환
+  return url;
 }
