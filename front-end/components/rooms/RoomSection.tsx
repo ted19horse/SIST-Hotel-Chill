@@ -1,89 +1,65 @@
-'use client'; // 이 지시문은 Next.js에서 이 컴포넌트가 클라이언트 측에서 실행됨을 나타냅니다
+'use client'; // 클라이언트 컴포넌트 지시문
 
-import { Button } from '@/components/common/ui/Button'; // 버튼 UI 컴포넌트 가져오기
-// import { rooms } from '@/lib/data/rooms/types/rooms'; // 객실 데이터 가져오기
-import { useIntersectionObserver } from '@/lib/hooks/useIntersectionObserver'; // 요소가 화면에 보이는지 감지하는 커스텀 훅
-import { cn } from '@/lib/utils'; // 클래스 이름을 조건부로 결합하는 유틸리티 함수
-import { ChevronRight } from 'lucide-react'; // 오른쪽 화살표 아이콘 컴포넌트
-import Link from 'next/link'; // Next.js의 클라이언트 사이드 라우팅을 위한 링크 컴포넌트
-import { useEffect, useRef, useState } from 'react'; // React 훅
-import { RoomCarousel } from './carousel/RoomCarousel'; // 객실 캐러셀 컴포넌트
-import axios from 'axios';
+import { Button } from '@/components/common/ui/Button';
+import { useIntersectionObserver } from '@/lib/hooks/useIntersectionObserver';
+import { cn } from '@/lib/utils';
+import { ChevronRight } from 'lucide-react';
+import Link from 'next/link';
+import { useEffect, useRef, useState } from 'react';
+import { RoomCarousel } from './carousel/RoomCarousel';
+
+/**
+ * 객실 타입 인터페이스
+ * 서버에서 가져온 데이터 구조 정의
+ */
+interface RoomType {
+  id: number;
+  name: string;
+  description: string;
+  size: number;
+  maxAdults: number;
+  maxChildren: number;
+  weekdayPrice: number;
+  weekendPrice: number;
+  peakSeasonPrice: number;
+  building: string;
+  floorCount: number;
+  roomsPerFloor: number;
+  viewType: string;
+  imageUrl: string;
+  amenityGroups: any[];
+}
+
+/**
+ * RoomSection 컴포넌트 props 인터페이스
+ */
+interface RoomSectionProps {
+  rooms: RoomType[]; // 서버 컴포넌트에서 전달받은 객실 데이터
+}
 
 /**
  * RoomSection 컴포넌트
  *
  * 홈페이지의 객실 소개 섹션을 구현합니다.
- * 스크롤 시 애니메이션 효과가 적용되며, 객실 캐러셀과 '모든 객실 보기' 버튼을 포함합니다.
- * Intersection Observer API를 활용하여 컴포넌트가 화면에 보일 때 애니메이션을 트리거합니다.
+ * 성능 최적화:
+ * 1. 서버 컴포넌트에서 데이터를 미리 가져와 props로 받음
+ * 2. 불필요한 API 호출 제거
+ * 3. 인터섹션 옵저버를 통한 지연 로딩 적용
+ *
+ * @param {RoomSectionProps} props - 컴포넌트 속성
+ * @returns {JSX.Element} 렌더링된 컴포넌트
  */
-export default function RoomSection() {
-  // 섹션 요소에 대한 참조 생성 (DOM 요소에 접근하기 위함)
+export default function RoomSection({ rooms = [] }: RoomSectionProps) {
+  // 섹션 요소에 대한 참조 생성
   const sectionRef = useRef(null);
-  // 커스텀 훅을 사용하여 섹션이 화면에 보이는지 감지
-  const isVisible = useIntersectionObserver({ ref: sectionRef });
+  // 커스텀 훅을 사용하여 섹션이 화면에 보이는지 감지 (rootMargin 설정으로 더 빠른 로딩 시작)
+  const isVisible = useIntersectionObserver({ 
+    ref: sectionRef,
+    rootMargin: '200px', // 화면에 완전히 보이기 전에 미리 로딩 시작
+    threshold: 0.1 
+  });
   // 애니메이션이 이미 실행되었는지 추적하는 상태
   const [hasAnimated, setHasAnimated] = useState(false);
-
-  // DB에서 호출하는 객실 데이터 
-  const [rooms, setRooms] = useState([]);
-
-  // api 호출
-  useEffect(() => {
-    const getRoomsData = async () => {
-      const response = await axios.get('/api/rooms/getRoomTypes');
-      setRooms(response.data);
-      /*
-      response.Data = [
-        {
-            "id": 1,
-            "name": "Chill Comfort Room",
-            "description": "심플하고 편안한 기본형 객실로, 자연적 요소가 가미된 인테리어와 가든 뷰를 제공하는 30㎡ 크기의 객실입니다.",
-            "size": 30,
-            "maxAdults": 2,
-            "maxChildren": 1,
-            "weekdayPrice": 220000,
-            "weekendPrice": 270000,
-            "peakSeasonPrice": 320000,
-            "building": "F",
-            "floorCount": 4,
-            "roomsPerFloor": 30,
-            "viewType": "가든 뷰",
-            "imageUrl": "/images/rooms/placeholder.jpg",
-            "amenityGroups": [
-                {
-                    "amenityGroupsId": 1,
-                    "name": "공통 어메니티",
-                    "iconName": "Bed",
-                    "sortOrder": 1,
-                    "createdAt": "2025-04-19 05:38:33.0",
-                    "amenities": [
-                        {
-                            "amenityItemsId": 1,
-                            "amenityGroupsId": 1,
-                            "name": "고급 침구",
-                            "iconName": "Bed",
-                            "sortOrder": 1,
-                            "createdAt": "2025-04-19 05:38:33.0"
-                        },...,
-                        {
-                            "amenityItemsId": 10,
-                            "amenityGroupsId": 1,
-                            "name": "커피/차 메이커",
-                            "iconName": "Coffee",
-                            "sortOrder": 10,
-                            "createdAt": "2025-04-19 05:38:33.0"
-                        }
-                    ]
-                }
-            ]
-        },...
-      ]
-      */
-    };
-
-    getRoomsData();
-  }, []);
 
   /**
    * 섹션이 화면에 보일 때 애니메이션 효과 적용
@@ -93,14 +69,13 @@ export default function RoomSection() {
     if (isVisible && !hasAnimated) {
       setHasAnimated(true);
     }
-  }, [isVisible, hasAnimated]); // isVisible 또는 hasAnimated가 변경될 때마다 효과 재실행
+  }, [isVisible, hasAnimated]);
 
   return (
     <section
-      ref={sectionRef} // ref를 통해 DOM 요소 참조
+      ref={sectionRef}
       className={cn(
         'py-20 bg-neutral-50 transition-opacity duration-500 ease-in-out',
-        // 섹션이 화면에 보이거나 이미 애니메이션이 실행되었으면 완전히 표시, 아니면 투명하게 처리
         isVisible || hasAnimated ? 'opacity-100' : 'opacity-0'
       )}
     >
@@ -120,7 +95,7 @@ export default function RoomSection() {
         {/* '모든 객실 보기' 버튼 */}
         <div className="text-center mt-12">
           <Button
-            asChild // 버튼을 다른 컴포넌트(Link)로 렌더링하기 위한 속성
+            asChild
             variant="outline"
             className="border-primary text-primary hover:bg-primary hover:text-white"
           >
