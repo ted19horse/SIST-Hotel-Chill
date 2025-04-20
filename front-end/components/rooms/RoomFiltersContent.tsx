@@ -7,7 +7,7 @@
 
 'use client';
 
-import { useCallback, useState } from 'react';
+import { useCallback, useState, useEffect } from 'react';
 import { Filter, CalendarDays, Users, DollarSign, Mountain, Building2 } from 'lucide-react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { useRoomFilterStore } from '@/lib/stores/roomFilterStore';
@@ -28,6 +28,8 @@ export default function RoomFiltersContent() {
   const updateFilter = useRoomFilterStore(state => state.updateFilter);
   const resetFilters = useRoomFilterStore(state => state.resetFilters);
   const applyFilters = useRoomFilterStore(state => state.applyFilters);
+  const OCCUPANCY = useRoomFilterStore(state => state.OCCUPANCY);
+  const PRICE_RANGE = useRoomFilterStore(state => state.PRICE_RANGE);
 
   // 필터 섹션 확장/축소 상태만 로컬에서 관리
   const [expandedSections, setExpandedSections] = useState({
@@ -56,6 +58,41 @@ export default function RoomFiltersContent() {
     return `${yyyy}-${mm}-${dd}`;
   };
 
+  // 날짜를 YYYY-MM-DD 포맷으로 변환하는 함수
+  const formatDate = (date) => {
+    if (!date) return '';
+    const d = new Date(date);
+    const yyyy = d.getFullYear();
+    const mm = String(d.getMonth() + 1).padStart(2, '0');
+    const dd = String(d.getDate()).padStart(2, '0');
+    return `${yyyy}-${mm}-${dd}`;
+  };
+
+  // 체크인 날짜에 따른 체크아웃 날짜 최대값 계산
+  const getCheckOutMaxDate = () => {
+    if (!filters.checkIn) return '';
+    
+    const checkInDate = new Date(filters.checkIn);
+    const maxDate = new Date(checkInDate);
+    maxDate.setDate(maxDate.getDate() + 31); // 체크인 날짜로부터 31일 후
+    
+    return formatDate(maxDate);
+  };
+
+  // 체크아웃 날짜에 따른 체크인 날짜 최소값 계산
+  const getCheckInMinDate = () => {
+    if (!filters.checkOut) return getTodayString();
+    
+    const checkOutDate = new Date(filters.checkOut);
+    const minDate = new Date(checkOutDate);
+    minDate.setDate(minDate.getDate() - 31); // 체크아웃 날짜로부터 31일 전
+    
+    const today = new Date(getTodayString());
+    
+    // 계산된 최소 날짜와 오늘 날짜 중 더 나중 날짜를 반환
+    return formatDate(minDate > today ? minDate : today);
+  };
+
   /**
    * 필터 섹션 토글 처리
    */
@@ -71,7 +108,47 @@ export default function RoomFiltersContent() {
    */
   const handleFilterChange = useCallback((key, value) => {
     updateFilter(key, value);
-  }, [updateFilter]);
+    
+    // 체크인 날짜가 변경되고 체크아웃 날짜가 없으면 체크인 다음날로 자동 설정
+    if (key === 'checkIn' && value && !filters.checkOut) {
+      const nextDay = new Date(value);
+      nextDay.setDate(nextDay.getDate() + 1);
+      updateFilter('checkOut', nextDay);
+    }
+    
+    // 체크아웃 날짜가 변경되고 체크인 날짜가 없으면 현재 날짜로 자동 설정
+    if (key === 'checkOut' && value && !filters.checkIn) {
+      updateFilter('checkIn', new Date(getTodayString()));
+    }
+    
+    // 체크인/체크아웃 날짜가 변경되었을 때 유효성 검사
+    if (key === 'checkIn' && value && filters.checkOut) {
+      const checkIn = new Date(value);
+      const checkOut = new Date(filters.checkOut);
+      
+      // 체크인 날짜가 체크아웃 날짜보다 늦거나 같으면 체크아웃 날짜를 체크인 다음날로 설정
+      if (checkIn >= checkOut) {
+        const nextDay = new Date(checkIn);
+        nextDay.setDate(nextDay.getDate() + 1);
+        updateFilter('checkOut', nextDay);
+      }
+    }
+    
+    if (key === 'checkOut' && value && filters.checkIn) {
+      const checkIn = new Date(filters.checkIn);
+      const checkOut = new Date(value);
+      
+      // 체크아웃 날짜가 체크인 날짜보다 이르거나 같으면 체크인 날짜를 체크아웃 전날로 설정
+      if (checkOut <= checkIn) {
+        const prevDay = new Date(checkOut);
+        prevDay.setDate(prevDay.getDate() - 1);
+        const today = new Date(getTodayString());
+        
+        // 계산된 날짜가 오늘보다 이전이면 오늘 날짜로 설정
+        updateFilter('checkIn', prevDay < today ? today : prevDay);
+      }
+    }
+  }, [filters.checkIn, filters.checkOut, updateFilter]);
 
   /**
    * 체크박스 필터 변경 처리 (배열 값)
@@ -89,10 +166,17 @@ export default function RoomFiltersContent() {
    * 필터 적용 처리
    */
   const handleApplyFilters = useCallback(() => {
+    // 날짜 필수 확인
+    if (!filters.checkIn || !filters.checkOut) {
+      alert('체크인 및 체크아웃 날짜를 모두 선택해주세요.');
+      return;
+    }
+    
+    // 필터 적용
     applyFilters();
     // (예시) URL 쿼리 파라미터 동기화 등 추가 작업 가능
     // router.push(...)
-  }, [applyFilters]);
+  }, [applyFilters, filters.checkIn, filters.checkOut]);
 
   /**
    * 필터 초기화 처리
@@ -102,6 +186,16 @@ export default function RoomFiltersContent() {
     // (예시) URL 초기화 등 추가 작업 가능
     // router.push('/rooms');
   }, [resetFilters]);
+
+  // 인원 수 최대/최소 유효성 검사
+  const handleOccupancyChange = useCallback((key, value) => {
+    // 최소값/최대값 제한
+    const min = key === 'adults' ? OCCUPANCY.ADULTS_MIN : OCCUPANCY.CHILDREN_MIN;
+    const max = key === 'adults' ? OCCUPANCY.ADULTS_MAX : OCCUPANCY.CHILDREN_MAX;
+    
+    const newValue = Math.max(min, Math.min(max, value));
+    updateFilter(key, newValue);
+  }, [OCCUPANCY, updateFilter]);
 
   return (
     <div className="bg-white rounded-lg shadow p-6">
@@ -140,35 +234,44 @@ export default function RoomFiltersContent() {
           <div className="mt-3 space-y-3">
             <div>
               <label htmlFor="checkIn" className="block text-sm font-medium text-neutral-700 mb-1">
-                체크인
+                체크인 <span className="text-red-500">*</span>
               </label>
               <input
                 type="date"
                 id="checkIn"
-                value={filters.checkIn ? filters.checkIn.toISOString().split('T')[0] : ''}
-                min={getTodayString()} // 오늘 이전 날짜 선택 불가
+                value={filters.checkIn ? formatDate(filters.checkIn) : ''}
+                min={filters.checkOut ? getCheckInMinDate() : getTodayString()} // 오늘 또는 체크아웃 기준 최소 날짜
+                max={filters.checkOut ? formatDate(new Date(filters.checkOut).setDate(new Date(filters.checkOut).getDate() - 1)) : ''}
                 onChange={(e) => {
                   const date = e.target.value ? new Date(e.target.value) : undefined;
                   handleFilterChange('checkIn', date);
                 }}
                 className="w-full border border-neutral-300 rounded px-3 py-2 text-sm"
+                required
               />
             </div>
             
             <div>
               <label htmlFor="checkOut" className="block text-sm font-medium text-neutral-700 mb-1">
-                체크아웃
+                체크아웃 <span className="text-red-500">*</span>
               </label>
               <input
                 type="date"
                 id="checkOut"
-                value={filters.checkOut ? filters.checkOut.toISOString().split('T')[0] : ''}
+                value={filters.checkOut ? formatDate(filters.checkOut) : ''}
+                min={filters.checkIn ? formatDate(new Date(filters.checkIn).setDate(new Date(filters.checkIn).getDate() + 1)) : ''}
+                max={filters.checkIn ? getCheckOutMaxDate() : ''}
                 onChange={(e) => {
                   const date = e.target.value ? new Date(e.target.value) : undefined;
                   handleFilterChange('checkOut', date);
                 }}
                 className="w-full border border-neutral-300 rounded px-3 py-2 text-sm"
+                required
               />
+            </div>
+            
+            <div className="text-xs text-neutral-500 italic">
+              * 날짜 선택은 필수입니다.
             </div>
           </div>
         )}
@@ -199,21 +302,23 @@ export default function RoomFiltersContent() {
               <div className="flex items-center">
                 <button
                   type="button"
-                  onClick={() => handleFilterChange('adults', Math.max(1, (filters.adults || 1) - 1))}
+                  onClick={() => handleOccupancyChange('adults', (filters.adults || OCCUPANCY.ADULTS_MIN) - 1)}
                   className="border border-neutral-300 rounded-l px-3 py-2 hover:bg-neutral-100"
+                  disabled={(filters.adults || OCCUPANCY.ADULTS_MIN) <= OCCUPANCY.ADULTS_MIN}
                 >
                   -
                 </button>
                 <input
                   id="adults"
-                  value={filters.adults || 1}
+                  value={filters.adults || OCCUPANCY.ADULTS_MIN}
                   readOnly
                   className="w-12 border-y border-neutral-300 text-center py-2"
                 />
                 <button
                   type="button"
-                  onClick={() => handleFilterChange('adults', (filters.adults || 1) + 1)}
+                  onClick={() => handleOccupancyChange('adults', (filters.adults || OCCUPANCY.ADULTS_MIN) + 1)}
                   className="border border-neutral-300 rounded-r px-3 py-2 hover:bg-neutral-100"
+                  disabled={(filters.adults || OCCUPANCY.ADULTS_MIN) >= OCCUPANCY.ADULTS_MAX}
                 >
                   +
                 </button>
@@ -227,21 +332,23 @@ export default function RoomFiltersContent() {
               <div className="flex items-center">
                 <button
                   type="button"
-                  onClick={() => handleFilterChange('children', Math.max(0, (filters.children || 0) - 1))}
+                  onClick={() => handleOccupancyChange('children', (filters.children || OCCUPANCY.CHILDREN_MIN) - 1)}
                   className="border border-neutral-300 rounded-l px-3 py-2 hover:bg-neutral-100"
+                  disabled={(filters.children || OCCUPANCY.CHILDREN_MIN) <= OCCUPANCY.CHILDREN_MIN}
                 >
                   -
                 </button>
                 <input
                   id="children"
-                  value={filters.children || 0}
+                  value={filters.children || OCCUPANCY.CHILDREN_MIN}
                   readOnly
                   className="w-12 border-y border-neutral-300 text-center py-2"
                 />
                 <button
                   type="button"
-                  onClick={() => handleFilterChange('children', (filters.children || 0) + 1)}
+                  onClick={() => handleOccupancyChange('children', (filters.children || OCCUPANCY.CHILDREN_MIN) + 1)}
                   className="border border-neutral-300 rounded-r px-3 py-2 hover:bg-neutral-100"
+                  disabled={(filters.children || OCCUPANCY.CHILDREN_MIN) >= OCCUPANCY.CHILDREN_MAX}
                 >
                   +
                 </button>
@@ -282,7 +389,7 @@ export default function RoomFiltersContent() {
                     } else {
                       newGrades = newGrades.filter((g) => g !== grade.key);
                     }
-                    handleFilterChange('roomGrade', newGrades);
+                    updateFilter('roomGrade', newGrades);
                   }}
                   className="mr-2"
                 />
@@ -319,27 +426,29 @@ export default function RoomFiltersContent() {
             <div className="flex gap-2 items-center">
               <input
                 type="number"
-                value={filters.priceRange?.[0] || 100000}
+                value={filters.priceRange?.[0] || PRICE_RANGE.MIN}
                 onChange={(e) => {
                   const min = Number(e.target.value);
-                  const max = filters.priceRange?.[1] || 1000000;
-                  handleFilterChange('priceRange', [min, max]);
+                  const max = filters.priceRange?.[1] || PRICE_RANGE.MAX;
+                  updateFilter('priceRange', [min, max]);
                 }}
                 className="w-1/2 border border-neutral-300 rounded px-3 py-2 text-sm"
-                min="0"
+                min={PRICE_RANGE.MIN}
+                max={PRICE_RANGE.MAX}
                 step="10000"
               />
               <span>~</span>
               <input
                 type="number"
-                value={filters.priceRange?.[1] || 1000000}
+                value={filters.priceRange?.[1] || PRICE_RANGE.MAX}
                 onChange={(e) => {
-                  const min = filters.priceRange?.[0] || 100000;
+                  const min = filters.priceRange?.[0] || PRICE_RANGE.MIN;
                   const max = Number(e.target.value);
-                  handleFilterChange('priceRange', [min, max]);
+                  updateFilter('priceRange', [min, max]);
                 }}
                 className="w-1/2 border border-neutral-300 rounded px-3 py-2 text-sm"
-                min="0"
+                min={PRICE_RANGE.MIN}
+                max={PRICE_RANGE.MAX}
                 step="10000"
               />
             </div>
