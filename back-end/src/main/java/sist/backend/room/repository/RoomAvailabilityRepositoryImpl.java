@@ -40,7 +40,7 @@ public class RoomAvailabilityRepositoryImpl implements RoomAvailabilityRepositor
         // 해당 객실 타입에 속하고 사용 가능한 상태인 객실 수 조회
         return queryFactory
                 .selectFrom(rooms)
-                .where(rooms.roomTypes.id.eq(roomTypeId)
+                .where(rooms.roomTypes.roomTypesId.eq(roomTypeId)  // 스키마에 맞게 roomTypesId 사용
                         .and(rooms.status.eq("AVAILABLE")))
                 .fetchCount();
     }
@@ -66,7 +66,7 @@ public class RoomAvailabilityRepositoryImpl implements RoomAvailabilityRepositor
                 .distinct()
                 .from(rooms)
                 .join(reservations).on(rooms.roomsId.eq(reservations.rooms.roomsId))
-                .where(rooms.roomTypes.id.eq(roomTypeId)
+                .where(rooms.roomTypes.roomTypesId.eq(roomTypeId)  // 스키마에 맞게 roomTypesId 사용
                         .and(reservations.status.notIn("CANCELED", "COMPLETED"))
                         .and(reservations.checkInDate.loe(checkOut))
                         .and(reservations.checkOutDate.goe(checkIn)))
