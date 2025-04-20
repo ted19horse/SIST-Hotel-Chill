@@ -89,17 +89,15 @@ public class RoomService {
     private void addAvailabilityInfo(List<RoomTypeWithAmenitiesDto> roomTypes, LocalDate checkIn, LocalDate checkOut) {
         for (RoomTypeWithAmenitiesDto roomType : roomTypes) {
             // 해당 객실 타입의 총 객실 수를 조회합니다. (QueryDSL 사용)
-            // roomTypesId 필드명으로 통일
             long totalRooms = roomAvailabilityRepository.getTotalRoomCount(roomType.getRoomTypesId());
             
             // 해당 기간에 예약된 객실 수를 조회합니다. (QueryDSL 사용)
-            // roomTypesId 필드명으로 통일
             long bookedRooms = roomAvailabilityRepository.getBookedRoomCount(roomType.getRoomTypesId(), checkIn, checkOut);
             
             // 사용 가능한 객실 수를 계산합니다.
             int availableRooms = (int)(totalRooms - bookedRooms);
             
-            // 가용성 정보를 설정합니다. isBookable이 bookable로 변경되었습니다.
+            // 가용성 정보를 설정합니다.
             roomType.setAvailability(new AvailabilityDTO(
                 availableRooms,
                 availableRooms > 0  // 사용 가능한 객실이 1개 이상이면 예약 가능
@@ -129,35 +127,31 @@ public class RoomService {
                     return false; // 최대 아동 수용 인원보다 많으면 필터링
                 }
                 
-                // 3. 가격 범위 필터
+                // 3. 가격 범위 필터 - 성수기 가격과 비교하도록 변경 (요구사항 #7)
                 if (filter.getPriceRange() != null && filter.getPriceRange().length == 2) {
                     int minPrice = filter.getPriceRange()[0];
                     int maxPrice = filter.getPriceRange()[1];
                     
-                    // 평일 가격이 범위 밖이면 필터링
-                    if (roomType.getWeekdayPrice() < minPrice || roomType.getWeekdayPrice() > maxPrice) {
+                    // 성수기 가격이 범위 밖이면 필터링 (성수기 가격 기준)
+                    if (roomType.getPeakSeasonPrice() < minPrice || roomType.getPeakSeasonPrice() > maxPrice) {
                         return false;
                     }
                 }
                 
-                // 4. 객실 등급 필터
+                // 4. 객실 등급 필터 (요구사항 #6)
                 if (filter.getRoomGrade() != null && !filter.getRoomGrade().isEmpty()) {
-                    // 객실 등급 매핑 (frontend의 key -> 실제 객실 이름 패턴)
-                    boolean matchesGrade = filter.getRoomGrade().stream()
-                        .anyMatch(grade -> {
-                            String roomName = roomType.getName().toLowerCase();
-                            return (grade.equals("standard") && roomName.contains("스탠다드")) ||
-                                   (grade.equals("deluxe") && roomName.contains("디럭스")) ||
-                                   (grade.equals("premium") && roomName.contains("프리미엄")) ||
-                                   (grade.equals("presidential") && roomName.contains("프레지덴셜"));
-                        });
+                    // 어메니티 그룹에 포함되어 있는지 확인 (객실 등급과 어메니티 그룹 이름이 일치)
+                    boolean hasMatchingAmenityGroup = roomType.getAmenityGroups().stream()
+                        .anyMatch(amenityGroup -> 
+                            filter.getRoomGrade().contains(amenityGroup.getName().toLowerCase())
+                        );
                     
-                    if (!matchesGrade) {
-                        return false; // 등급이 일치하지 않으면 필터링
+                    if (!hasMatchingAmenityGroup) {
+                        return false; // 어메니티 그룹이 일치하지 않으면 필터링
                     }
                 }
                 
-                // 5. 전망 필터
+                // 5. 전망 필터 (요구사항 #8)
                 if (filter.getViewType() != null && !filter.getViewType().isEmpty() && 
                     !filter.getViewType().contains(roomType.getViewType())) {
                     return false; // 전망 타입이 일치하지 않으면 필터링
