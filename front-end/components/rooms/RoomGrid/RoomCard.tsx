@@ -1,16 +1,22 @@
 import Image from 'next/image';
 /**
- * 객실 카드 컴포넌트 (RoomCarousel.tsx와 변수명/구조 통일)
- * 버튼 영역은 그대로 유지, 나머지는 RoomCarousel.tsx 기준으로 리팩토링
+ * 객실 카드 컴포넌트 
+ * 객실 정보와 가용성 정보를 표시하는 카드 컴포넌트입니다.
+ * 
+ * 초보자 가이드:
+ * - 이 컴포넌트는 객실 목록에서 각 객실 정보를 표시하는 카드입니다.
+ * - 객실 이미지, 이름, 설명, 크기, 인원, 전망, 가격 정보를 표시합니다.
+ * - 가용성 정보(예약 가능 여부, 남은 객실 수)도 표시합니다.
+ * - 상세보기 및 예약하기 버튼을 제공합니다.
  */
 export default function RoomCard({
   room,
   onViewDetails,
   onBookNow,
 }) {
-  // RoomCarousel.tsx에서 사용한 placeholder 이미지 경로
+  // 객실 이미지가 없을 경우 사용할 플레이스홀더 이미지 생성
   const placeholderImg = `https://placehold.co/800x600/e2e8f0/64748b.png?text=${encodeURIComponent(
-    `${room.name ?? '이름없음'}\n${room.size ?? '정보없음'}㎡`
+    `${room.name ?? '이름없음'}\\n${room.size ?? '정보없음'}㎡`
   )}&font=montserrat`;
 
   return (
@@ -18,12 +24,13 @@ export default function RoomCard({
       {/* 객실 이미지 */}
       <div className="relative h-48 bg-neutral-100">
         <Image
-          src={room.images?.[0] || placeholderImg}
+          src={room.imageUrl || placeholderImg}
           alt={room.name ?? '이름없음'}
           fill
           className="object-cover"
         />
       </div>
+      
       {/* 객실 정보 */}
       <div className="p-4">
         {/* 객실 이름/건물 */}
@@ -33,8 +40,10 @@ export default function RoomCard({
             <span className="text-xs font-medium border border-blue-200 rounded-full px-2 py-0.5 bg-blue-50 text-blue-600">{room.building}</span>
           )}
         </div>
+        
         {/* 객실 설명 */}
         <p className="text-neutral-600 text-sm mb-2 line-clamp-2">{room.description || '\u00A0'}</p>
+        
         {/* 크기, 인원, 뷰 등 요약 */}
         <div className="grid grid-cols-2 gap-2 text-xs text-neutral-500 mb-2">
           <div className="flex items-center gap-1">
@@ -50,13 +59,30 @@ export default function RoomCard({
             <span>{room.viewType || '정보없음'}</span>
           </div>
         </div>
+        
         {/* 가격 정보 */}
         <div className="flex flex-col gap-1 text-sm mb-2">
           <span>평일: {room.weekdayPrice ? new Intl.NumberFormat('ko-KR').format(room.weekdayPrice) + '원' : '가격 정보 없음'}</span>
           <span>주말: {room.weekendPrice ? new Intl.NumberFormat('ko-KR').format(room.weekendPrice) + '원' : '가격 정보 없음'}</span>
           <span>시즌: {room.peakSeasonPrice ? new Intl.NumberFormat('ko-KR').format(room.peakSeasonPrice) + '원' : '가격 정보 없음'}</span>
         </div>
-        {/* 버튼 영역(기존 코드 유지) */}
+        
+        {/* 가용성 정보 (NEW!) */}
+        <div className="my-3">
+          <span 
+            className={`inline-block rounded-full px-3 py-1 text-sm font-medium ${
+              room.availability?.isBookable 
+                ? 'bg-green-100 text-green-800' 
+                : 'bg-red-100 text-red-800'
+            }`}
+          >
+            {room.availability?.isBookable 
+              ? `예약 가능 (남은 객실 ${room.availability.available}실)` 
+              : '예약 불가'}
+          </span>
+        </div>
+        
+        {/* 버튼 영역 */}
         <div className="flex gap-2 mt-3">
           <button
             onClick={() => onViewDetails(room.id)}
@@ -66,9 +92,9 @@ export default function RoomCard({
           </button>
           <button
             onClick={() => onBookNow(room.id)}
-            // disabled={room.availability?.available === 0}
+            disabled={!room.availability?.isBookable}
             className={`flex-1 py-2 rounded-md text-sm font-medium transition-colors ${
-              room.availability?.available > 0
+              room.availability?.isBookable
                 ? 'bg-blue-600 text-white hover:bg-blue-700'
                 : 'bg-neutral-300 text-neutral-500 cursor-not-allowed'
             }`}
@@ -83,7 +109,9 @@ export default function RoomCard({
 
 /*
 초보자용 상세 주석:
-- RoomCarousel.tsx의 변수명/구조와 100% 일치시켜야 프론트-백엔드 연동 오류를 방지할 수 있습니다.
-- placeholderImg는 객실명/크기를 포함한 임시 이미지로, 실제 이미지가 없을 때만 사용합니다.
-- 인원, 크기, 가격, 뷰 등 모든 정보는 RoomCarousel.tsx와 동일한 변수명만 사용해야 합니다.
+- 가용성 정보(availability)는 서버에서 계산되어 room 객체에 포함됩니다.
+- availability.isBookable: 예약 가능 여부 (boolean)
+- availability.available: 사용 가능한 객실 수 (number)
+- 가용성 정보에 따라 예약하기 버튼의 활성화 여부가 결정됩니다.
+- new Intl.NumberFormat('ko-KR').format()를 사용하여 가격을 3자리마다 콤마가 포함된 형식으로 표시합니다.
 */
