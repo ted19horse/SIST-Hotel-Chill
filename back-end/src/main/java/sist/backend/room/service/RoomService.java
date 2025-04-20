@@ -5,13 +5,10 @@ import org.springframework.stereotype.Service;
 import sist.backend.room.dto.AvailabilityDTO;
 import sist.backend.room.dto.RoomFilterDTO;
 import sist.backend.room.dto.RoomTypeWithAmenitiesDto;
+import sist.backend.room.repository.RoomAvailabilityRepository;
 import sist.backend.room.repository.RoomTypesRepositoryCustom;
 
-import jakarta.persistence.EntityManager;
-import jakarta.persistence.PersistenceContext;
-import jakarta.persistence.Query;
 import java.time.LocalDate;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -29,17 +26,14 @@ import java.util.stream.Collectors;
 public class RoomService {
     
     /**
-     * 커스텀 리포지토리를 주입받아 사용합니다.
-     * QueryDSL을 통해 복잡한 객실 타입과 어메니티 정보를 조회합니다.
+     * 객실 타입 및 어메니티 정보를 조회하는 커스텀 리포지토리
      */
     private final RoomTypesRepositoryCustom roomTypesRepositoryCustom;
     
     /**
-     * EntityManager를 주입받아 사용합니다.
-     * Native Query 등을 실행하기 위해 사용됩니다.
+     * 객실 가용성 정보를 조회하는 리포지토리
      */
-    @PersistenceContext
-    private EntityManager entityManager;
+    private final RoomAvailabilityRepository roomAvailabilityRepository;
 
     /**
      * 모든 객실 타입과 어메니티 정보를 반환합니다.
@@ -94,14 +88,14 @@ public class RoomService {
      */
     private void addAvailabilityInfo(List<RoomTypeWithAmenitiesDto> roomTypes, LocalDate checkIn, LocalDate checkOut) {
         for (RoomTypeWithAmenitiesDto roomType : roomTypes) {
-            // 해당 객실 타입의 총 객실 수를 조회합니다.
-            int totalRooms = getTotalRoomCount(roomType.getId());
+            // 해당 객실 타입의 총 객실 수를 조회합니다. (QueryDSL 사용)
+            long totalRooms = roomAvailabilityRepository.getTotalRoomCount(roomType.getId());
             
-            // 해당 기간에 예약된 객실 수를 조회합니다.
-            int bookedRooms = getBookedRoomCount(roomType.getId(), checkIn, checkOut);
+            // 해당 기간에 예약된 객실 수를 조회합니다. (QueryDSL 사용)
+            long bookedRooms = roomAvailabilityRepository.getBookedRoomCount(roomType.getId(), checkIn, checkOut);
             
             // 사용 가능한 객실 수를 계산합니다.
-            int availableRooms = totalRooms - bookedRooms;
+            int availableRooms = (int)(totalRooms - bookedRooms);
             
             // 가용성 정보를 설정합니다.
             roomType.setAvailability(new AvailabilityDTO(
@@ -109,48 +103,6 @@ public class RoomService {
                 availableRooms > 0  // 사용 가능한 객실이 1개 이상이면 예약 가능
             ));
         }
-    }
-    
-    /**
-     * 객실 타입별 총 객실 수를 조회합니다.
-     * 
-     * @param roomTypeId 객실 타입 ID
-     * @return 해당 객실 타입의 총 객실 수
-     */
-    private int getTotalRoomCount(Long roomTypeId) {
-        // Native SQL 쿼리를 사용하여 해당 객실 타입의 총 객실 수를 조회합니다.
-        Query query = entityManager.createNativeQuery(
-            "SELECT COUNT(*) FROM rooms WHERE room_types_id = :roomTypeId AND status = 'AVAILABLE'"
-        );
-        query.setParameter("roomTypeId", roomTypeId);
-        
-        Number result = (Number) query.getSingleResult();
-        return result != null ? result.intValue() : 0;
-    }
-    
-    /**
-     * 특정 기간에 예약된 객실 수를 조회합니다.
-     * 
-     * @param roomTypeId 객실 타입 ID
-     * @param checkIn 체크인 날짜
-     * @param checkOut 체크아웃 날짜
-     * @return 해당 기간에 예약된 객실 수
-     */
-    private int getBookedRoomCount(Long roomTypeId, LocalDate checkIn, LocalDate checkOut) {
-        // Native SQL 쿼리를 사용하여 해당 기간에 예약된 객실 수를 조회합니다.
-        Query query = entityManager.createNativeQuery(
-            "SELECT COUNT(DISTINCT r.rooms_id) FROM rooms r " +
-            "JOIN room_reservations rr ON r.rooms_id = rr.rooms_id " +
-            "WHERE r.room_types_id = :roomTypeId " +
-            "AND rr.status NOT IN ('CANCELED', 'COMPLETED') " +
-            "AND ((rr.check_in_date <= :checkOut AND rr.check_out_date >= :checkIn))"
-        );
-        query.setParameter("roomTypeId", roomTypeId);
-        query.setParameter("checkIn", checkIn);
-        query.setParameter("checkOut", checkOut);
-        
-        Number result = (Number) query.getSingleResult();
-        return result != null ? result.intValue() : 0;
     }
     
     /**
