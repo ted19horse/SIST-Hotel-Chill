@@ -99,7 +99,7 @@ public class RoomService {
             // 사용 가능한 객실 수를 계산합니다.
             int availableRooms = (int)(totalRooms - bookedRooms);
             
-            // 가용성 정보를 설정합니다.
+            // 가용성 정보를 설정합니다. isBookable이 bookable로 변경되었습니다.
             roomType.setAvailability(new AvailabilityDTO(
                 availableRooms,
                 availableRooms > 0  // 사용 가능한 객실이 1개 이상이면 예약 가능
