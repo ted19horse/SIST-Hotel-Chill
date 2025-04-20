@@ -18,18 +18,10 @@ import { getRooms } from '@/lib/data/rooms';
  * @param props 컴포넌트 속성
  * @returns JSX.Element
  */
-export default function RoomList({ rooms, isLoading, error }) {
-  // props로 받지 않았을 경우 데이터 직접 로드
-  // 백엔드 연결 후에는 fetch API 호출로 대체
-  const roomsData = rooms || getRooms();
-  
+export default function RoomList() {  
   return (
     <ClientComponentWrapper>
-      <RoomListContent 
-        rooms={roomsData} 
-        isLoading={isLoading} 
-        error={error} 
-      />
+      <RoomListContent />
     </ClientComponentWrapper>
   );
 }

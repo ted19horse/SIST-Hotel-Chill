@@ -18,6 +18,7 @@ export default function RoomCard({
   const placeholderImg = `https://placehold.co/800x600/e2e8f0/64748b.png?text=${encodeURIComponent(
     `${room.name ?? '이름없음'}\\n${room.size ?? '정보없음'}㎡`
   )}&font=montserrat`;
+  console.log(room);
 
   return (
     <div className="bg-white rounded-lg shadow-md overflow-hidden transition-shadow hover:shadow-lg">
@@ -80,6 +81,10 @@ export default function RoomCard({
               ? `예약 가능 (남은 객실 ${room.availability.available}실)` 
               : '예약 불가'}
           </span>
+          <span>{room.availability?.available}</span>
+          <span>{typeof room.availability?.available}</span>
+          <span>{room.availability?.isBookable ? "true" : "false"}</span>
+          <span>{typeof room.availability?.isBookable}</span>
         </div>
         
         {/* 버튼 영역 */}

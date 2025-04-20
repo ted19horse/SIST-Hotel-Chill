@@ -27,11 +27,7 @@ import { useRoomFilterStore } from '@/lib/stores/roomFilterStore';
  * @param {boolean} props.isLoading - 로딩 상태 (더 이상 사용하지 않음)
  * @param {string} props.error - 에러 메시지 (더 이상 사용하지 않음)
  */
-export default function RoomListContent({
-  rooms = [], // 기존 props는 더 이상 사용하지 않음
-  isLoading: _isLoading,
-  error: _error,
-}) {
+export default function RoomListContent() {
   const router = useRouter();
   // Zustand store에서 현재 필터 상태를 구독
   const filters = useRoomFilterStore(state => state.filters);
@@ -48,6 +44,7 @@ export default function RoomListContent({
   useEffect(() => {
     if (pathname !== '/rooms') {
       resetFilters();
+      setIsFirstLoad(true);
     }
   }, [pathname, resetFilters]);
 
