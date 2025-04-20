@@ -70,12 +70,12 @@ export default function RoomCard({
         <div className="my-3">
           <span 
             className={`inline-block rounded-full px-3 py-1 text-sm font-medium ${
-              room.availability?.isBookable 
+              room.availability?.bookable 
                 ? 'bg-green-100 text-green-800' 
                 : 'bg-red-100 text-red-800'
             }`}
           >
-            {room.availability?.isBookable 
+            {room.availability?.bookable 
               ? `예약 가능 (남은 객실 ${room.availability.available}실)` 
               : '예약 불가'}
           </span>
@@ -91,9 +91,9 @@ export default function RoomCard({
           </button>
           <button
             onClick={() => onBookNow(room.id)}
-            disabled={!room.availability?.isBookable}
+            disabled={!room.availability?.bookable}
             className={`flex-1 py-2 rounded-md text-sm font-medium transition-colors ${
-              room.availability?.isBookable
+              room.availability?.bookable
                 ? 'bg-blue-600 text-white hover:bg-blue-700'
                 : 'bg-neutral-300 text-neutral-500 cursor-not-allowed'
             }`}
@@ -109,7 +109,7 @@ export default function RoomCard({
 /*
 초보자용 상세 주석:
 - 가용성 정보(availability)는 서버에서 계산되어 room 객체에 포함됩니다.
-- 백엔드에서는 bookable 필드를 사용하지만, getter 메서드는 isBookable()입니다.
-- 따라서 프론트엔드에서는 room.availability.isBookable로 접근합니다.
+- 백엔드에서 필드명을 'bookable'로 사용하면 JSON 직렬화 시 그대로 'bookable' 속성명으로 전달됩니다.
+- 따라서 프론트엔드에서는 room.availability.bookable로 접근해야 합니다.
 - 가용성 정보에 따라 예약 버튼의 활성화 여부가 결정됩니다.
 */
