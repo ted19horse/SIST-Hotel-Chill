@@ -85,6 +85,7 @@ CREATE TABLE room_types (
     floor_count INT NOT NULL,
     rooms_per_floor INT NOT NULL,
     view_type VARCHAR(50) NOT NULL,
+    view_type_kor VARCHAR(50) NOT NULL,
     image_url VARCHAR(255) DEFAULT '/images/rooms/placeholder.jpg',
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
@@ -97,6 +98,7 @@ CREATE TABLE room_types (
 CREATE TABLE amenity_groups (
     amenity_groups_id BIGINT PRIMARY KEY AUTO_INCREMENT,
     name VARCHAR(50) NOT NULL,
+    name_kor VARCHAR(50) NOT NULL,
     icon_name VARCHAR(50) NOT NULL,
     sort_order INT NOT NULL DEFAULT 0,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,

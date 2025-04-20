@@ -52,11 +52,11 @@ INSERT INTO payment_methods (users_id, card_type, last_four_digits, is_default) 
 
 
 -- 어메니티 그룹 데이터 (수정된 아이콘 이름)
-INSERT INTO amenity_groups (name, icon_name, sort_order) VALUES
-('스탠다드 어메니티', 'Bed', 1),
-('디럭스 어메니티', 'CupSoda', 2),
-('프리미엄 어메니티', 'TabletSmartphone', 3),
-('프레지덴셜 어메니티', 'Crown', 4);
+INSERT INTO amenity_groups (name, name_kor, icon_name, sort_order) VALUES
+('standard', '스탠다드 어메니티', 'Bed', 1),
+('deluxe', '디럭스 어메니티', 'CupSoda', 2),
+('premium', '프리미엄 어메니티', 'TabletSmartphone', 3),
+('presidential', '프레지덴셜 어메니티', 'Crown', 4);
 
 -- 어메니티 아이템 데이터 (수정된 아이콘 이름)
 INSERT INTO amenity_items (amenity_groups_id, name, icon_name, sort_order) VALUES
@@ -102,31 +102,31 @@ INSERT INTO amenity_items (amenity_groups_id, name, icon_name, sort_order) VALUE
 INSERT INTO room_types (
     name, description, size, max_adults, max_children,
     weekday_price, weekend_price, peak_season_price,
-    building, floor_count, rooms_per_floor, view_type
+    building, floor_count, rooms_per_floor, view_type, view_type_kor
 ) VALUES
 ('Chill Comfort Room', 
  '심플하고 편안한 기본형 객실로, 자연적 요소가 가미된 인테리어와 가든 뷰를 제공하는 30㎡ 크기의 객실입니다.',
- 30, 2, 1, 220000, 270000, 320000, 'F', 4, 30, '가든 뷰'),
+ 30, 2, 1, 220000, 270000, 320000, 'F', 4, 30, 'GARDEN', '가든 뷰'),
 
 ('Chill Harmony Room',
  '넓은 공간과 고급스러운 인테리어, 휴식을 위한 전용 소파 공간이 있는 45㎡ 크기의 객실입니다.',
- 45, 2, 1, 280000, 350000, 400000, 'E', 4, 25, '가든 뷰'),
+ 45, 2, 1, 280000, 350000, 400000, 'E', 4, 25, 'GARDEN', '가든 뷰'),
 
 ('Chill Serenity Room',
  '고급 침구와 가구, 넓은 욕실, 일부 객실 테라스가 포함된 70㎡ 크기의 객실입니다.',
- 70, 2, 2, 380000, 450000, 520000, 'D', 4, 15, '가든 뷰'),
+ 70, 2, 2, 380000, 450000, 520000, 'D', 4, 15, 'GARDEN', '가든 뷰'),
 
 ('Chill Family Suite',
  '가족 단위 투숙객을 위한 분리된 거실과 침실, 울창한 숲과 아름다운 오솔길 전망을 제공하는 90㎡ 크기의 객실입니다.',
- 90, 4, 2, 520000, 650000, 750000, 'C', 4, 10, '숲 & 오솔길 뷰'),
+ 90, 4, 2, 520000, 650000, 750000, 'C', 4, 10, 'FOREST_TRAIL', '숲 & 오솔길 뷰'),
 
 ('Chill Lake Suite',
  '비즈니스와 휴식을 동시에, 넓은 업무공간과 휴식공간, 호수와 산이 어우러진 아름다운 전망을 제공하는 100㎡ 크기의 객실입니다.',
- 100, 2, 2, 680000, 820000, 950000, 'B', 4, 5, '호수 & 산 뷰'),
+ 100, 2, 2, 680000, 820000, 950000, 'B', 4, 5, 'LAKE_MOUNTAIN', '호수 & 산 뷰'),
 
 ('Ultimate Chill Suite',
  '최고급 시설과 개인 맞춤 서비스, 넓은 공간, 고객이 선호하는 프리미엄 전망 선택이 가능한 120㎡ 크기의 객실입니다.',
- 120, 4, 4, 950000, 1200000, 1500000, 'A', 2, 4, '선택 가능 프리미엄 뷰');
+ 120, 4, 4, 950000, 1200000, 1500000, 'A', 2, 4, 'PREMIUM_CHOICE', '선택 가능 프리미엄 뷰');
 
 
 
