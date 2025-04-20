@@ -110,6 +110,7 @@ public class RoomTypesRepositoryImpl implements RoomTypesRepositoryCustom {
                         rt.getFloorCount(),               // floorCount
                         rt.getRoomsPerFloor(),            // roomsPerFloor
                         rt.getViewType(),                 // viewType
+                        rt.getViewType_kor(),             // viewType_kor
                         rt.getImageUrl(),                 // imageUrl
                         new ArrayList<>()                 // amenityGroups
                     )
@@ -128,6 +129,7 @@ public class RoomTypesRepositoryImpl implements RoomTypesRepositoryCustom {
                             AmenityGroupDto newGroup = new AmenityGroupDto(
                                 group.getAmenityGroupsId(),
                                 group.getName(),
+                                group.getName_kor(),
                                 group.getIconName(),
                                 group.getSortOrder(),
                                 group.getCreatedAt() != null ? group.getCreatedAt().toString() : null,

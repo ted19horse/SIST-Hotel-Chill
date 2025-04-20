@@ -40,7 +40,7 @@ import {
 import React, { useState, useCallback } from 'react';
 
 export function AmenityGroupComponent({ group }: any) {
-  const { name, iconName, amenities } = group;
+  const { name, name_kor, iconName, amenities } = group;
 
   // 상세 목록 열림 상태만 관리
   const [isOpen, setIsOpen] = useState(false);
@@ -98,7 +98,7 @@ export function AmenityGroupComponent({ group }: any) {
       {/* 대표 아이콘 및 그룹명 */}
       <span className="flex items-center text-sm font-medium">
         {groupIcon}
-        {name}
+        {name_kor}
       </span>
       {/* Plus 버튼 클릭 시 상세 목록 토글 */}
       <button
@@ -134,7 +134,7 @@ export function AmenityGroupComponent({ group }: any) {
                 {ICON_MAP[item.iconName] ? (
                   React.createElement(ICON_MAP[item.iconName], { className: 'w-4 h-4 text-neutral-400' })
                 ) : null}
-                {item.name}
+                {item.name_kor}
               </li>
             ))}
           </ul>

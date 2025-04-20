@@ -34,6 +34,7 @@ public class RoomTypeWithAmenitiesDto {
     private Integer floorCount;      // 층수
     private Integer roomsPerFloor;   // 층별 객실 수
     private String viewType;         // 전망 타입
+    private String viewType_kor;     // 전망 타입(한글)
     private String imageUrl;         // 대표 이미지 URL
     private List<AmenityGroupDto> amenityGroups; // 객실 유형에 연결된 어메니티 그룹 리스트
     private AvailabilityDTO availability; // 객실 가용성 정보 (NEW!)
@@ -49,7 +50,7 @@ public class RoomTypeWithAmenitiesDto {
             Integer maxAdults, Integer maxChildren, Integer weekdayPrice, 
             Integer weekendPrice, Integer peakSeasonPrice, String building, 
             Integer floorCount, Integer roomsPerFloor, String viewType, 
-            String imageUrl, List<AmenityGroupDto> amenityGroups) {
+            String viewType_kor, String imageUrl, List<AmenityGroupDto> amenityGroups) {
         this.roomTypesId = roomTypesId; // ID 필드명 변경
         this.name = name;
         this.description = description;
@@ -63,6 +64,7 @@ public class RoomTypeWithAmenitiesDto {
         this.floorCount = floorCount;
         this.roomsPerFloor = roomsPerFloor;
         this.viewType = viewType;
+        this.viewType_kor = viewType_kor;
         this.imageUrl = imageUrl;
         this.amenityGroups = amenityGroups;
         this.availability = null; // 기본값은 null (나중에 서비스 레이어에서 설정)

@@ -31,6 +31,12 @@ public class AmenityGroups {
     private String name;
 
     /**
+     * 어메니티 그룹 이름(한글) (VARCHAR(50) NOT NULL)
+     */
+    @Column(name = "name_kor", length = 50, nullable = false)
+    private String name_kor;
+
+    /**
      * 어메니티 그룹 아이콘 이름 (VARCHAR(50) NOT NULL)
      */
     @Column(name = "icon_name", length = 50, nullable = false)

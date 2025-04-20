@@ -133,7 +133,7 @@ public class RoomService {
                     int maxPrice = filter.getPriceRange()[1];
                     
                     // 성수기 가격이 범위 밖이면 필터링 (성수기 가격 기준)
-                    if (roomType.getPeakSeasonPrice() < minPrice || roomType.getPeakSeasonPrice() > maxPrice) {
+                    if (roomType.getWeekdayPrice() < minPrice || roomType.getPeakSeasonPrice() > maxPrice) {
                         return false;
                     }
                 }

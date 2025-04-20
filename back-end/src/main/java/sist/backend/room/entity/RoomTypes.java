@@ -98,6 +98,12 @@ public class RoomTypes {
     private String viewType;
 
     /**
+     * 객실 전망 타입(한글) (VARCHAR(20) NOT NULL)
+     */
+    @Column(name = "view_type_kor", length = 20, nullable = false)
+    private String viewType_kor;
+
+    /**
      * 대표 이미지 URL (VARCHAR(255))
      */
     @Column(name = "image_url", length = 255)

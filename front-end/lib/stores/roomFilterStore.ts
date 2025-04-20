@@ -55,6 +55,10 @@ export const useRoomFilterStore = create((set) => ({
         isFiltering: false,
       },
     })),
+  // 가격 범위
+  PRICE_RANGE,
+  // 인원 수
+  OCCUPANCY,
 }));
 
 /*

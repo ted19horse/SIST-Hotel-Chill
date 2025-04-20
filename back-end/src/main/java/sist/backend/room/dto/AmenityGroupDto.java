@@ -20,6 +20,7 @@ import java.util.List;
 public class AmenityGroupDto {
     private Long amenityGroupsId; // 어메니티 그룹 PK
     private String name; // 그룹 이름
+    private String name_kor; // 그룹 이름(한글)
     private String iconName; // 아이콘 이름
     private Integer sortOrder; // 정렬 순서
     private String createdAt; // 생성일시(문자열로 반환, 필요시 Timestamp로 변경)

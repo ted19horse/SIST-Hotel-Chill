@@ -55,7 +55,7 @@ export default function RoomCard({
           </div>
           <div className="flex items-center gap-1 col-span-2">
             <span>전망:</span>
-            <span>{room.viewType || '정보없음'}</span>
+            <span>{room.viewType_kor || '정보없음'}</span>
           </div>
         </div>
         

@@ -186,7 +186,7 @@ export function RoomCarousel({ rooms }: any) {
                     </div>
                     <div className="flex items-center gap-2">
                       <Mountain className="h-4 w-4" />
-                      <span>{room.viewType}</span>
+                      <span>{room.viewType_kor}</span>
                     </div>
                   </div>
                   {/* 객실 어메니티(편의시설) 그룹 표시 */}
