@@ -89,10 +89,12 @@ public class RoomService {
     private void addAvailabilityInfo(List<RoomTypeWithAmenitiesDto> roomTypes, LocalDate checkIn, LocalDate checkOut) {
         for (RoomTypeWithAmenitiesDto roomType : roomTypes) {
             // 해당 객실 타입의 총 객실 수를 조회합니다. (QueryDSL 사용)
-            long totalRooms = roomAvailabilityRepository.getTotalRoomCount(roomType.getId());
+            // roomTypesId 필드명으로 통일
+            long totalRooms = roomAvailabilityRepository.getTotalRoomCount(roomType.getRoomTypesId());
             
             // 해당 기간에 예약된 객실 수를 조회합니다. (QueryDSL 사용)
-            long bookedRooms = roomAvailabilityRepository.getBookedRoomCount(roomType.getId(), checkIn, checkOut);
+            // roomTypesId 필드명으로 통일
+            long bookedRooms = roomAvailabilityRepository.getBookedRoomCount(roomType.getRoomTypesId(), checkIn, checkOut);
             
             // 사용 가능한 객실 수를 계산합니다.
             int availableRooms = (int)(totalRooms - bookedRooms);
