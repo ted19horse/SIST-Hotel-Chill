@@ -21,7 +21,7 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 public class RoomTypeWithAmenitiesDto {
-    private Long id;                 // 객실 유형 ID
+    private Long roomTypesId;         // 객실 유형 ID (DDL schema에 맞게 필드명 수정)
     private String name;             // 객실 유형 이름
     private String description;      // 객실 설명
     private Integer size;            // 객실 크기(㎡)
@@ -41,14 +41,16 @@ public class RoomTypeWithAmenitiesDto {
     /**
      * 기존 생성자 (가용성 정보 미포함)
      * 기존 코드와의 호환성을 위해 유지합니다.
+     * 
+     * @param roomTypesId 객실 타입 ID
      */
     public RoomTypeWithAmenitiesDto(
-            Long id, String name, String description, Integer size, 
+            Long roomTypesId, String name, String description, Integer size, 
             Integer maxAdults, Integer maxChildren, Integer weekdayPrice, 
             Integer weekendPrice, Integer peakSeasonPrice, String building, 
             Integer floorCount, Integer roomsPerFloor, String viewType, 
             String imageUrl, List<AmenityGroupDto> amenityGroups) {
-        this.id = id;
+        this.roomTypesId = roomTypesId; // ID 필드명 변경
         this.name = name;
         this.description = description;
         this.size = size;
@@ -64,5 +66,16 @@ public class RoomTypeWithAmenitiesDto {
         this.imageUrl = imageUrl;
         this.amenityGroups = amenityGroups;
         this.availability = null; // 기본값은 null (나중에 서비스 레이어에서 설정)
+    }
+    
+    /**
+     * 호환성을 위한 getId() 메소드 추가
+     * RoomService 코드에서 기존에 getId()를 호출하고 있었기 때문에
+     * roomTypesId를 반환하는 호환성 메소드를 제공합니다.
+     * 
+     * @return 객실 타입 ID (roomTypesId)
+     */
+    public Long getId() {
+        return this.roomTypesId;
     }
 }
