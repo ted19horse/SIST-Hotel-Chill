@@ -150,7 +150,7 @@ public class RoomService {
                     // 객실의 어메니티 그룹 중 가장 높은 등급을 찾음
                     // SortOrder 기준으로 정렬 (낮은 숫자가 높은 등급이라고 가정)
                     List<AmenityGroupDto> sortedGroups = roomType.getAmenityGroups().stream()
-                        .sorted(Comparator.comparing(AmenityGroupDto::getSortOrder))
+                        .sorted(Comparator.comparing(AmenityGroupDto::getSortOrder).reversed())
                         .collect(Collectors.toList());
 
                     // 가장 높은 등급의 어메니티 그룹 이름
