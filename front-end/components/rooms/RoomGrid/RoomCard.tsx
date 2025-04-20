@@ -7,7 +7,6 @@ import Image from 'next/image';
  * - 이 컴포넌트는 객실 목록에서 각 객실 정보를 표시하는 카드입니다.
  * - 객실 이미지, 이름, 설명, 크기, 인원, 전망, 가격 정보를 표시합니다.
  * - 가용성 정보(예약 가능 여부, 남은 객실 수)도 표시합니다.
- * - 상세보기 및 예약하기 버튼을 제공합니다.
  */
 export default function RoomCard({
   room,
@@ -18,7 +17,6 @@ export default function RoomCard({
   const placeholderImg = `https://placehold.co/800x600/e2e8f0/64748b.png?text=${encodeURIComponent(
     `${room.name ?? '이름없음'}\\n${room.size ?? '정보없음'}㎡`
   )}&font=montserrat`;
-  console.log(room);
 
   return (
     <div className="bg-white rounded-lg shadow-md overflow-hidden transition-shadow hover:shadow-lg">
@@ -68,7 +66,7 @@ export default function RoomCard({
           <span>시즌: {room.peakSeasonPrice ? new Intl.NumberFormat('ko-KR').format(room.peakSeasonPrice) + '원' : '가격 정보 없음'}</span>
         </div>
         
-        {/* 가용성 정보 (NEW!) */}
+        {/* 가용성 정보 (isBookable을 bookable로 변경) */}
         <div className="my-3">
           <span 
             className={`inline-block rounded-full px-3 py-1 text-sm font-medium ${
@@ -81,10 +79,6 @@ export default function RoomCard({
               ? `예약 가능 (남은 객실 ${room.availability.available}실)` 
               : '예약 불가'}
           </span>
-          <span>{room.availability?.available}</span>
-          <span>{typeof room.availability?.available}</span>
-          <span>{room.availability?.isBookable ? "true" : "false"}</span>
-          <span>{typeof room.availability?.isBookable}</span>
         </div>
         
         {/* 버튼 영역 */}
@@ -115,8 +109,7 @@ export default function RoomCard({
 /*
 초보자용 상세 주석:
 - 가용성 정보(availability)는 서버에서 계산되어 room 객체에 포함됩니다.
-- availability.isBookable: 예약 가능 여부 (boolean)
-- availability.available: 사용 가능한 객실 수 (number)
-- 가용성 정보에 따라 예약하기 버튼의 활성화 여부가 결정됩니다.
-- new Intl.NumberFormat('ko-KR').format()를 사용하여 가격을 3자리마다 콤마가 포함된 형식으로 표시합니다.
+- 백엔드에서는 bookable 필드를 사용하지만, getter 메서드는 isBookable()입니다.
+- 따라서 프론트엔드에서는 room.availability.isBookable로 접근합니다.
+- 가용성 정보에 따라 예약 버튼의 활성화 여부가 결정됩니다.
 */
