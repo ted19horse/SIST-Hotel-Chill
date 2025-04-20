@@ -2,6 +2,7 @@ package sist.backend.room.service;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import sist.backend.room.dto.AmenityGroupDto;
 import sist.backend.room.dto.AvailabilityDTO;
 import sist.backend.room.dto.RoomFilterDTO;
 import sist.backend.room.dto.RoomTypeWithAmenitiesDto;
@@ -9,6 +10,7 @@ import sist.backend.room.repository.RoomAvailabilityRepository;
 import sist.backend.room.repository.RoomTypesRepositoryCustom;
 
 import java.time.LocalDate;
+import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -138,16 +140,32 @@ public class RoomService {
                     }
                 }
                 
-                // 4. 객실 등급 필터 (요구사항 #6)
+                // 4. 객실 등급 필터 - 변경된 로직
                 if (filter.getRoomGrade() != null && !filter.getRoomGrade().isEmpty()) {
-                    // 어메니티 그룹에 포함되어 있는지 확인 (객실 등급과 어메니티 그룹 이름이 일치)
-                    boolean hasMatchingAmenityGroup = roomType.getAmenityGroups().stream()
-                        .anyMatch(amenityGroup -> 
-                            filter.getRoomGrade().contains(amenityGroup.getName().toLowerCase())
-                        );
-                    
-                    if (!hasMatchingAmenityGroup) {
-                        return false; // 어메니티 그룹이 일치하지 않으면 필터링
+                    // 객실에 어메니티 그룹이 없으면 필터링
+                    if (roomType.getAmenityGroups() == null || roomType.getAmenityGroups().isEmpty()) {
+                        return false;
+                    }
+
+                    // 객실의 어메니티 그룹 중 가장 높은 등급을 찾음
+                    // SortOrder 기준으로 정렬 (낮은 숫자가 높은 등급이라고 가정)
+                    List<AmenityGroupDto> sortedGroups = roomType.getAmenityGroups().stream()
+                        .sorted(Comparator.comparing(AmenityGroupDto::getSortOrder))
+                        .collect(Collectors.toList());
+
+                    // 가장 높은 등급의 어메니티 그룹 이름
+                    if (!sortedGroups.isEmpty()) {
+                        AmenityGroupDto highestGroup = sortedGroups.get(0);
+                        String highestGroupName = highestGroup.getName().toLowerCase();
+                        
+                        // 선택한 객실 등급이 해당 객실 타입의 가장 높은 등급인지 확인
+                        boolean isHighestGradeMatch = filter.getRoomGrade().contains(highestGroupName);
+                        
+                        if (!isHighestGradeMatch) {
+                            return false; // 선택한 등급이 가장 높은 등급이 아니면 필터링
+                        }
+                    } else {
+                        return false; // 정렬된 어메니티 그룹이 없으면 필터링
                     }
                 }
                 
