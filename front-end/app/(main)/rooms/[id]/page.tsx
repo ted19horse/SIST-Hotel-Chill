@@ -53,7 +53,6 @@ export default function RoomDetailPage({ params }: RoomDetailPageProps) {
   // 배너, 객실 상세 정보 등 주요 UI를 렌더링합니다.
   return (
     <main className="min-h-screen">
-      <ScrollToTop /> {/* 페이지 상단 이동 버튼 */}
       {/* [배너 영역] */}
       <PageBanner 
         title={room.name} 

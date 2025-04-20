@@ -7,10 +7,10 @@
 
 'use client';
 
-// import { ROOM_GRADE_DISPLAY } from '@/lib/types/room';
 import { useCallback, useState } from 'react';
 import { Filter, CalendarDays, Users, DollarSign, Mountain, Building2 } from 'lucide-react';
 import { useRouter, useSearchParams } from 'next/navigation';
+import { useRoomFilterStore } from '@/lib/stores/roomFilterStore';
 
 /**
  * 객실 필터 내용 컴포넌트
@@ -23,22 +23,13 @@ export default function RoomFiltersContent() {
   const router = useRouter();
   const searchParams = useSearchParams();
   
-  // 기본 필터 상태 설정 (URL 쿼리 파라미터에서 초기값 가져오기)
-  const [filters, setFilters] = useState({
-    checkIn: searchParams.get('checkIn') ? new Date(searchParams.get('checkIn')) : undefined,
-    checkOut: searchParams.get('checkOut') ? new Date(searchParams.get('checkOut')) : undefined,
-    adults: searchParams.get('adults') ? Number(searchParams.get('adults')) : 2,
-    children: searchParams.get('children') ? Number(searchParams.get('children')) : 0,
-    roomGrade: parseQueryArray(searchParams.get('roomGrade')),
-    priceRange: parseQueryPriceRange(searchParams.get('priceRange')),
-    viewType: parseQueryArray(searchParams.get('viewType')),
-    building: parseQueryArray(searchParams.get('building')),
-  });
-  
-  // 필터 적용 상태
-  const [isFilterApplied, setIsFilterApplied] = useState(false);
-  
-  // 필터 섹션 확장/축소 상태
+  // Zustand store에서 상태와 변경 함수 가져오기
+  const filters = useRoomFilterStore(state => state.filters);
+  const updateFilter = useRoomFilterStore(state => state.updateFilter);
+  const resetFilters = useRoomFilterStore(state => state.resetFilters);
+  const applyFilters = useRoomFilterStore(state => state.applyFilters);
+
+  // 필터 섹션 확장/축소 상태만 로컬에서 관리
   const [expandedSections, setExpandedSections] = useState({
     dates: true,     // 날짜 섹션 기본 확장
     occupancy: true, // 인원 섹션 기본 확장
@@ -48,23 +39,22 @@ export default function RoomFiltersContent() {
     building: false,
   });
 
-  /**
-   * 쿼리 파라미터 배열 파싱 헬퍼 함수
-   */
-  function parseQueryArray(param) {
-    if (!param) return undefined;
-    return param.split(',');
-  }
+  // 객실 등급 상수 선언 (어메니티 이름 차용)
+  const ROOM_GRADES = [
+    { key: 'standard', label: '스탠다드' },
+    { key: 'deluxe', label: '디럭스' },
+    { key: 'premium', label: '프리미엄' },
+    { key: 'presidential', label: '프레지덴셜' },
+  ];
 
-  /**
-   * 가격 범위 쿼리 파라미터 파싱 헬퍼 함수
-   */
-  function parseQueryPriceRange(param) {
-    if (!param) return undefined;
-    const [min, max] = param.split(',').map(Number);
-    if (isNaN(min) || isNaN(max)) return undefined;
-    return [min, max];
-  }
+  // 오늘 날짜를 YYYY-MM-DD 포맷으로 변환하는 함수
+  const getTodayString = () => {
+    const today = new Date();
+    const yyyy = today.getFullYear();
+    const mm = String(today.getMonth() + 1).padStart(2, '0');
+    const dd = String(today.getDate()).padStart(2, '0');
+    return `${yyyy}-${mm}-${dd}`;
+  };
 
   /**
    * 필터 섹션 토글 처리
@@ -77,70 +67,41 @@ export default function RoomFiltersContent() {
   }, []);
 
   /**
-   * 필터 변경 처리
+   * 필터 변경 처리 (단일 값)
    */
   const handleFilterChange = useCallback((key, value) => {
-    setFilters(prev => ({
-      ...prev,
-      [key]: value
-    }));
-  }, []);
+    updateFilter(key, value);
+  }, [updateFilter]);
 
   /**
    * 체크박스 필터 변경 처리 (배열 값)
    */
   const handleArrayFilterChange = useCallback((key, value, checked) => {
-    setFilters(prev => {
-      const currentValues = prev[key] || [];
-      
-      if (checked) {
-        return {
-          ...prev,
-          [key]: [...currentValues, value]
-        };
-      } else {
-        return {
-          ...prev,
-          [key]: currentValues.filter(v => v !== value)
-        };
-      }
-    });
-  }, []);
+    const currentValues = filters[key] || [];
+    if (checked) {
+      updateFilter(key, [...currentValues, value]);
+    } else {
+      updateFilter(key, currentValues.filter(v => v !== value));
+    }
+  }, [filters, updateFilter]);
 
   /**
    * 필터 적용 처리
    */
-  const applyFilters = useCallback(() => {
-    // 필터를 URL 쿼리 파라미터로 변환
-    const params = new URLSearchParams();
-    
-    if (filters.checkIn) params.set('checkIn', filters.checkIn.toISOString().split('T')[0]);
-    if (filters.checkOut) params.set('checkOut', filters.checkOut.toISOString().split('T')[0]);
-    if (filters.adults !== undefined) params.set('adults', filters.adults.toString());
-    if (filters.children !== undefined) params.set('children', filters.children.toString());
-    if (filters.roomGrade?.length) params.set('roomGrade', filters.roomGrade.join(','));
-    if (filters.priceRange) params.set('priceRange', filters.priceRange.join(','));
-    if (filters.viewType?.length) params.set('viewType', filters.viewType.join(','));
-    if (filters.building?.length) params.set('building', filters.building.join(','));
-    
-    // 필터 적용 상태 업데이트
-    setIsFilterApplied(true);
-    
-    // URL 업데이트
-    router.push(`/rooms?${params.toString()}`);
-  }, [filters, router]);
+  const handleApplyFilters = useCallback(() => {
+    applyFilters();
+    // (예시) URL 쿼리 파라미터 동기화 등 추가 작업 가능
+    // router.push(...)
+  }, [applyFilters]);
 
   /**
    * 필터 초기화 처리
    */
-  const resetFilters = useCallback(() => {
-    setFilters({
-      adults: 2,
-      children: 0
-    });
-    setIsFilterApplied(false);
-    router.push('/rooms');
-  }, [router]);
+  const handleResetFilters = useCallback(() => {
+    resetFilters();
+    // (예시) URL 초기화 등 추가 작업 가능
+    // router.push('/rooms');
+  }, [resetFilters]);
 
   return (
     <div className="bg-white rounded-lg shadow p-6">
@@ -149,9 +110,9 @@ export default function RoomFiltersContent() {
           <Filter className="mr-2 h-5 w-5" />
           검색 필터
         </h2>
-        {isFilterApplied && (
+        {filters && (
           <button
-            onClick={resetFilters}
+            onClick={handleResetFilters}
             className="text-sm text-blue-600 hover:text-blue-800"
           >
             필터 초기화
@@ -185,6 +146,7 @@ export default function RoomFiltersContent() {
                 type="date"
                 id="checkIn"
                 value={filters.checkIn ? filters.checkIn.toISOString().split('T')[0] : ''}
+                min={getTodayString()} // 오늘 이전 날짜 선택 불가
                 onChange={(e) => {
                   const date = e.target.value ? new Date(e.target.value) : undefined;
                   handleFilterChange('checkIn', date);
@@ -243,7 +205,6 @@ export default function RoomFiltersContent() {
                   -
                 </button>
                 <input
-                  type="number"
                   id="adults"
                   value={filters.adults || 1}
                   readOnly
@@ -272,7 +233,6 @@ export default function RoomFiltersContent() {
                   -
                 </button>
                 <input
-                  type="number"
                   id="children"
                   value={filters.children || 0}
                   readOnly
@@ -299,7 +259,7 @@ export default function RoomFiltersContent() {
           aria-expanded={expandedSections.roomGrade}
         >
           <span className="flex items-center">
-            <span className="mr-2 h-5 w-5 text-neutral-500 flex items-center justify-center">★</span>
+            {/* 등급 아이콘 등 추가 가능 */}
             객실 등급
           </span>
           <span className="text-neutral-500">
@@ -307,24 +267,30 @@ export default function RoomFiltersContent() {
           </span>
         </button>
         
-        {/* {expandedSections.roomGrade && (
-          <div className="mt-3 space-y-2">
-            {Object.entries(ROOM_GRADE_DISPLAY).map(([grade, info]) => (
-              <div key={grade} className="flex items-center">
+        {expandedSections.roomGrade && (
+          <div className="mt-3 grid grid-cols-2 gap-2">
+            {ROOM_GRADES.map((grade) => (
+              <label key={grade.key} className="flex items-center">
                 <input
                   type="checkbox"
-                  id={`grade-${grade}`}
-                  checked={filters.roomGrade?.includes(grade) || false}
-                  onChange={(e) => handleArrayFilterChange('roomGrade', grade, e.target.checked)}
-                  className="h-4 w-4 text-blue-600 rounded"
+                  checked={filters.roomGrade?.includes(grade.key) || false}
+                  onChange={(e) => {
+                    const checked = e.target.checked;
+                    let newGrades = filters.roomGrade ? [...filters.roomGrade] : [];
+                    if (checked) {
+                      newGrades.push(grade.key);
+                    } else {
+                      newGrades = newGrades.filter((g) => g !== grade.key);
+                    }
+                    handleFilterChange('roomGrade', newGrades);
+                  }}
+                  className="mr-2"
                 />
-                <label htmlFor={`grade-${grade}`} className="ml-2 text-sm text-neutral-700">
-                  {info.name}
-                </label>
-              </div>
+                {grade.label}
+              </label>
             ))}
           </div>
-        )} */}
+        )}
       </div>
 
       {/* 가격 범위 필터 섹션 */}
@@ -422,45 +388,9 @@ export default function RoomFiltersContent() {
         )}
       </div>
 
-      {/* 건물 필터 섹션 */}
-      <div className="mb-6">
-        <button
-          className="flex items-center justify-between w-full text-left font-medium"
-          onClick={() => toggleSection('building')}
-          aria-expanded={expandedSections.building}
-        >
-          <span className="flex items-center">
-            <Building2 className="mr-2 h-5 w-5 text-neutral-500" />
-            건물
-          </span>
-          <span className="text-neutral-500">
-            {expandedSections.building ? '−' : '+'}
-          </span>
-        </button>
-        
-        {expandedSections.building && (
-          <div className="mt-3 space-y-2">
-            {['A', 'B', 'C', 'D', 'E', 'F'].map((building) => (
-              <div key={building} className="flex items-center">
-                <input
-                  type="checkbox"
-                  id={`building-${building}`}
-                  checked={filters.building?.includes(building) || false}
-                  onChange={(e) => handleArrayFilterChange('building', building, e.target.checked)}
-                  className="h-4 w-4 text-blue-600 rounded"
-                />
-                <label htmlFor={`building-${building}`} className="ml-2 text-sm text-neutral-700">
-                  {building}동
-                </label>
-              </div>
-            ))}
-          </div>
-        )}
-      </div>
-
       {/* 필터 적용 버튼 */}
       <button
-        onClick={applyFilters}
+        onClick={handleApplyFilters}
         className="w-full bg-blue-600 text-white rounded py-3 font-medium hover:bg-blue-700 transition-colors"
       >
         검색 필터 적용

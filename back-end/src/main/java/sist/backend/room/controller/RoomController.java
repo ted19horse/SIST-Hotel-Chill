@@ -2,11 +2,14 @@ package sist.backend.room.controller;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import sist.backend.room.dto.RoomTypeWithAmenitiesDto;
 import sist.backend.room.service.RoomService;
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/api/rooms")
@@ -22,7 +25,12 @@ public class RoomController {
      */
     @GetMapping("/getRoomTypes")
     public List<RoomTypeWithAmenitiesDto> getRoomTypes() {
-        System.out.println("Enter /api/rooms/getRoomTypes");
+        return roomService.getAllRoomTypesWithAmenities();
+    }
+
+    @PostMapping("/search")
+    public List<RoomTypeWithAmenitiesDto> searchRooms(@RequestBody Map<String, Object> request) {
+        request.forEach((key, value) -> System.out.println(key + ": " + value));
         return roomService.getAllRoomTypesWithAmenities();
     }
 }

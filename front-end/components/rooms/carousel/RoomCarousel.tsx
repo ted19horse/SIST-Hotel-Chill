@@ -5,7 +5,6 @@
 'use client'; // Next.js에서 클라이언트 컴포넌트임을 명시합니다.
 
 import { Badge } from '@/components/common/ui/Badge'; // 객실의 건물 정보 등을 뱃지 형태로 표시하는 UI 컴포넌트
-import { amenityGroups, roomAmenityGroups } from '@/lib/data/rooms/constants/amenities'; // 객실별 어메니티(편의시설) 그룹 정보 상수
 import { cn } from '@/lib/utils'; // 조건부로 CSS 클래스를 합칠 때 사용하는 유틸 함수
 import { ChevronLeft, ChevronRight, Maximize2, Mountain, Users } from 'lucide-react'; // 다양한 아이콘 컴포넌트(좌우 화살표, 인원, 뷰 등)
 import Image from 'next/image'; // Next.js의 최적화된 이미지 컴포넌트
@@ -207,7 +206,7 @@ export function RoomCarousel({ rooms }: any) {
                         주말: {new Intl.NumberFormat('ko-KR').format(room.weekendPrice)}원
                       </span>
                       <span>
-                        극성수기: {new Intl.NumberFormat('ko-KR').format(room.peakSeasonPrice)}원
+                        시즌: {new Intl.NumberFormat('ko-KR').format(room.peakSeasonPrice)}원
                       </span>
                     </div>
                     <Link

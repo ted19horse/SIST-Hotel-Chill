@@ -53,14 +53,14 @@ INSERT INTO payment_methods (users_id, card_type, last_four_digits, is_default) 
 
 -- 어메니티 그룹 데이터 (수정된 아이콘 이름)
 INSERT INTO amenity_groups (name, icon_name, sort_order) VALUES
-('공통 어메니티', 'Bed', 1),
+('스탠다드 어메니티', 'Bed', 1),
 ('디럭스 어메니티', 'CupSoda', 2),
 ('프리미엄 어메니티', 'TabletSmartphone', 3),
 ('프레지덴셜 어메니티', 'Crown', 4);
 
 -- 어메니티 아이템 데이터 (수정된 아이콘 이름)
 INSERT INTO amenity_items (amenity_groups_id, name, icon_name, sort_order) VALUES
--- 공통 어메니티
+-- 스탠다드 어메니티
 (1, '고급 침구', 'Bed', 1),
 (1, '43인치 스마트 TV', 'Tv', 2),
 (1, '고속 무선 인터넷', 'Wifi', 3),
@@ -136,12 +136,12 @@ SELECT rt.room_types_id, ag.amenity_groups_id
 FROM room_types rt
 CROSS JOIN amenity_groups ag
 WHERE 
-    (rt.name = 'Chill Comfort Room' AND ag.name = '공통 어메니티')
-    OR (rt.name = 'Chill Harmony Room' AND ag.name IN ('공통 어메니티', '디럭스 어메니티'))
+    (rt.name = 'Chill Comfort Room' AND ag.name = '스탠다드 어메니티')
+    OR (rt.name = 'Chill Harmony Room' AND ag.name IN ('스탠다드 어메니티', '디럭스 어메니티'))
     OR (rt.name IN ('Chill Serenity Room', 'Chill Family Suite', 'Chill Lake Suite') 
-        AND ag.name IN ('공통 어메니티', '디럭스 어메니티', '프리미엄 어메니티'))
+        AND ag.name IN ('스탠다드 어메니티', '디럭스 어메니티', '프리미엄 어메니티'))
     OR (rt.name = 'Ultimate Chill Suite' 
-        AND ag.name IN ('공통 어메니티', '디럭스 어메니티', '프리미엄 어메니티', '프레지덴셜 어메니티'));
+        AND ag.name IN ('스탠다드 어메니티', '디럭스 어메니티', '프리미엄 어메니티', '프레지덴셜 어메니티'));
 
 
 
