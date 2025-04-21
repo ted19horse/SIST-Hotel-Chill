@@ -25,6 +25,8 @@ import Image from 'next/image';
 
 interface RoomDetailContentProps {
   room: any;
+  isModal?: boolean; // 모달에서 사용할 경우 true
+  onBookNowOverride?: () => void; // 모달에서 예약 버튼 클릭 시 사용할 함수
 }
 
 /**
@@ -35,7 +37,7 @@ interface RoomDetailContentProps {
  * @param props 컴포넌트 속성
  * @returns JSX.Element
  */
-export default function RoomDetailContent({ room }: RoomDetailContentProps) {
+export default function RoomDetailContent({ room, isModal = false, onBookNowOverride }: RoomDetailContentProps) {
   const router = useRouter();
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
   
@@ -46,8 +48,13 @@ export default function RoomDetailContent({ room }: RoomDetailContentProps) {
    * 예약 페이지로 이동
    */
   const handleBookNow = useCallback(() => {
-    router.push(`/rooms/booking?roomId=${room.id}`);
-  }, [router, room.id]);
+    // 모달에서 오버라이드 함수가 제공된 경우 사용
+    if (onBookNowOverride) {
+      onBookNowOverride();
+    } else {
+      router.push(`/rooms/booking?roomId=${room.id}`);
+    }
+  }, [router, room.id, onBookNowOverride]);
   
   /**
    * 이전 이미지 표시
@@ -64,9 +71,9 @@ export default function RoomDetailContent({ room }: RoomDetailContentProps) {
   }, [room.images.length]);
 
   return (
-    <div className="flex flex-col lg:flex-row gap-8">
+    <div className={`flex flex-col ${isModal ? '' : 'lg:flex-row'} gap-8`}>
       {/* 왼쪽 섹션: 이미지 갤러리 및 객실 정보 */}
-      <div className="lg:w-2/3">
+      <div className={isModal ? 'w-full' : 'lg:w-2/3'}>
         {/* 이미지 갤러리 */}
         <div className="relative mb-6 rounded-lg overflow-hidden group">
           <div 
@@ -124,11 +131,12 @@ export default function RoomDetailContent({ room }: RoomDetailContentProps) {
           </div>
         </div>
 
-        {/* 객실 정보 */}
-        <div className="mb-8">
-          <h1 className="text-3xl font-bold mb-2">{room.name}</h1>
-          {/* <p className="text-neutral-600 text-lg mb-4">{gradeInfo.description}</p> */}
-        </div>
+        {isModal ? null : (
+          <div className="mb-8">
+            <h1 className="text-3xl font-bold mb-2">{room.name}</h1>
+            {/* <p className="text-neutral-600 text-lg mb-4">{gradeInfo.description}</p> */}
+          </div>
+        )}
 
         {/* 객실 특징 */}
         <div className="mb-8">
@@ -209,8 +217,8 @@ export default function RoomDetailContent({ room }: RoomDetailContentProps) {
       </div>
 
       {/* 오른쪽 섹션: 예약 정보 및 버튼 */}
-      <div className="lg:w-1/3">
-        <div className="bg-white rounded-lg shadow-md p-6 sticky top-24">
+      <div className={isModal ? 'w-full' : 'lg:w-1/3'}>
+        <div className={`bg-white ${isModal ? '' : 'rounded-lg shadow-md'} p-6 ${isModal ? '' : 'sticky top-24'}`}>
           <h2 className="text-2xl font-bold mb-4">요금 정보</h2>
           
           <div className="space-y-4 mb-6">
