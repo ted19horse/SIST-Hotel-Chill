@@ -4,17 +4,16 @@
  * 객실 상세 정보 모달 컴포넌트
  * 
  * 객실 상세 정보를 모달 형태로 표시하는 컴포넌트입니다.
- * 객실 ID를 받아 해당 객실의 상세 정보를 표시합니다.
+ * 객실 데이터를 직접 받아 해당 객실의 상세 정보를 표시합니다.
  */
 
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useRef } from 'react';
 import { X } from 'lucide-react';
 import { useRouter } from 'next/navigation';
-import { getRoomById } from '@/lib/data/rooms';
 import RoomDetailContent from './RoomDetailContent';
 
 interface RoomDetailModalProps {
-  roomId: string;
+  room: any; // 객실 데이터 직접 전달
   isOpen: boolean;
   onClose: () => void;
 }
@@ -22,23 +21,14 @@ interface RoomDetailModalProps {
 /**
  * 객실 상세 정보 모달 컴포넌트
  * 
- * @param roomId 객실 ID
+ * @param room 객실 데이터 객체
  * @param isOpen 모달 열림 여부
  * @param onClose 모달 닫기 콜백 함수
  * @returns JSX.Element
  */
-export default function RoomDetailModal({ roomId, isOpen, onClose }: RoomDetailModalProps) {
+export default function RoomDetailModal({ room, isOpen, onClose }: RoomDetailModalProps) {
   const router = useRouter();
   const modalRef = useRef<HTMLDivElement>(null);
-  const [room, setRoom] = useState<any>(null);
-
-  // 객실 데이터 가져오기
-  useEffect(() => {
-    if (isOpen && roomId) {
-      const roomData = getRoomById(roomId);
-      setRoom(roomData);
-    }
-  }, [isOpen, roomId]);
 
   // 모달 외부 클릭 시 닫기
   useEffect(() => {
