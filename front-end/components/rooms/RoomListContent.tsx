@@ -15,6 +15,7 @@ import axios from 'axios';
 import RoomCard from './RoomGrid/RoomCard';
 import RoomCardSkeleton from './RoomGrid/RoomCardSkeleton';
 import { useRoomFilterStore } from '@/lib/stores/roomFilterStore';
+import RoomDetailModal from './detail/RoomDetailModal';
 
 /**
  * 객실 목록 컴포넌트
@@ -39,6 +40,10 @@ export default function RoomListContent() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
   const [isFirstLoad, setIsFirstLoad] = useState(true); // 최초 진입 여부
+  
+  // 모달 상태 관리
+  const [selectedRoomId, setSelectedRoomId] = useState<string | null>(null);
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
   // /rooms에서만 필터 유지, 그 외 이동 시 자동 초기화
   useEffect(() => {
@@ -107,11 +112,19 @@ export default function RoomListContent() {
     }
   }, [filters, resetFiltering]);
 
-  // 상세보기/예약 이동 함수
+  // 상세보기 모달 열기
   const handleViewDetails = useCallback((roomId) => {
-    router.push(`/rooms/${roomId}`);
-  }, [router]);
+    setSelectedRoomId(roomId);
+    setIsModalOpen(true);
+  }, []);
   
+  // 모달 닫기
+  const handleCloseModal = useCallback(() => {
+    setIsModalOpen(false);
+    setSelectedRoomId(null);
+  }, []);
+  
+  // 예약 페이지로 이동
   const handleBookNow = useCallback((roomId) => {
     router.push(`/rooms/booking?roomId=${roomId}`);
   }, [router]);
@@ -154,16 +167,27 @@ export default function RoomListContent() {
 
   // 객실 목록 그리드 표시
   return (
-    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6" aria-label="객실 목록">
-      {roomData.map(room => (
-        <RoomCard
-          key={room.id}
-          room={room}
-          onViewDetails={() => handleViewDetails(room.id)}
-          onBookNow={() => handleBookNow(room.id)}
+    <>
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6" aria-label="객실 목록">
+        {roomData.map(room => (
+          <RoomCard
+            key={room.id}
+            room={room}
+            onViewDetails={() => handleViewDetails(room.id)}
+            onBookNow={() => handleBookNow(room.id)}
+          />
+        ))}
+      </div>
+
+      {/* 객실 상세 모달 */}
+      {selectedRoomId && (
+        <RoomDetailModal
+          roomId={selectedRoomId}
+          isOpen={isModalOpen}
+          onClose={handleCloseModal}
         />
-      ))}
-    </div>
+      )}
+    </>
   );
 }
 
