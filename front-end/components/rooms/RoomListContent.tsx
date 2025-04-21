@@ -22,11 +22,6 @@ import RoomDetailModal from './detail/RoomDetailModal';
  * 
  * 객실 정보를 서버에서 가져와 목록으로 표시하는 클라이언트 컴포넌트입니다.
  * 초기 로딩 및 필터 변경 시 API를 호출하여 데이터를 가져옵니다.
- * 
- * @param {object} props - 컴포넌트 프로퍼티
- * @param {Array} props.rooms - 기존 객실 데이터 (더 이상 사용하지 않음)
- * @param {boolean} props.isLoading - 로딩 상태 (더 이상 사용하지 않음)
- * @param {string} props.error - 에러 메시지 (더 이상 사용하지 않음)
  */
 export default function RoomListContent() {
   const router = useRouter();
@@ -42,7 +37,7 @@ export default function RoomListContent() {
   const [isFirstLoad, setIsFirstLoad] = useState(true); // 최초 진입 여부
   
   // 모달 상태 관리
-  const [selectedRoomId, setSelectedRoomId] = useState<string | null>(null);
+  const [selectedRoom, setSelectedRoom] = useState(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
 
   // /rooms에서만 필터 유지, 그 외 이동 시 자동 초기화
@@ -114,14 +109,18 @@ export default function RoomListContent() {
 
   // 상세보기 모달 열기
   const handleViewDetails = useCallback((roomId) => {
-    setSelectedRoomId(roomId);
-    setIsModalOpen(true);
-  }, []);
+    // roomId를 기반으로 전체 객실 데이터 찾기
+    const room = roomData.find(room => room.id === roomId);
+    if (room) {
+      setSelectedRoom(room);
+      setIsModalOpen(true);
+    }
+  }, [roomData]);
   
   // 모달 닫기
   const handleCloseModal = useCallback(() => {
     setIsModalOpen(false);
-    setSelectedRoomId(null);
+    setSelectedRoom(null);
   }, []);
   
   // 예약 페이지로 이동
@@ -180,9 +179,9 @@ export default function RoomListContent() {
       </div>
 
       {/* 객실 상세 모달 */}
-      {selectedRoomId && (
+      {selectedRoom && (
         <RoomDetailModal
-          roomId={selectedRoomId}
+          room={selectedRoom}
           isOpen={isModalOpen}
           onClose={handleCloseModal}
         />
@@ -190,13 +189,3 @@ export default function RoomListContent() {
     </>
   );
 }
-
-/*
-초보자용 상세 주석:
-- 이 컴포넌트는 객실 정보를 서버에서 가져와 목록으로 표시합니다.
-- API 통신은 axios 라이브러리를 사용합니다.
-- 초기 로딩 시 '/api/rooms/getRoomTypes' API를 호출하여 모든 객실 정보를 가져옵니다.
-- 사용자가 필터 적용 버튼을 누르면 '/api/rooms/search' API를 호출하여 필터링된 객실 정보를 가져옵니다.
-- 로딩/에러/빈 결과에 대한 처리도 포함되어 있습니다.
-- 객실 가용성 정보는 RoomCard 컴포넌트에서 표시됩니다.
-*/
