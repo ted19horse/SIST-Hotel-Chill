@@ -8,6 +8,7 @@ import { ChevronRight } from 'lucide-react'; // 오른쪽 화살표 아이콘 �
 import Link from 'next/link'; // Next.js의 클라이언트 사이드 라우팅을 위한 링크 컴포넌트
 import { useEffect, useRef, useState } from 'react'; // React 훅
 import { RoomCarousel } from './carousel/RoomCarousel'; // 객실 캐러셀 컴포넌트
+import RoomDetailModal from './detail/RoomDetailModal'; // 객실 상세 모달 컴포넌트
 import axios from 'axios';
 
 /**
@@ -27,6 +28,10 @@ export default function RoomSection() {
 
   // DB에서 호출하는 객실 데이터 
   const [rooms, setRooms] = useState([]);
+  
+  // 모달 상태 관리
+  const [selectedRoomId, setSelectedRoomId] = useState<string | null>(null);
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
   // api 호출
   useEffect(() => {
@@ -94,6 +99,18 @@ export default function RoomSection() {
       setHasAnimated(true);
     }
   }, [isVisible, hasAnimated]); // isVisible 또는 hasAnimated가 변경될 때마다 효과 재실행
+  
+  // 객실 상세 모달 열기
+  const handleOpenRoomDetail = (roomId) => {
+    setSelectedRoomId(roomId);
+    setIsModalOpen(true);
+  };
+  
+  // 모달 닫기
+  const handleCloseModal = () => {
+    setIsModalOpen(false);
+    setSelectedRoomId(null);
+  };
 
   return (
     <section
@@ -115,7 +132,10 @@ export default function RoomSection() {
         </div>
 
         {/* 객실 캐러셀 컴포넌트 */}
-        <RoomCarousel rooms={rooms} />
+        <RoomCarousel 
+          rooms={rooms} 
+          onViewDetail={handleOpenRoomDetail}
+        />
 
         {/* '모든 객실 보기' 버튼 */}
         <div className="text-center mt-12">
@@ -131,6 +151,15 @@ export default function RoomSection() {
           </Button>
         </div>
       </div>
+      
+      {/* 객실 상세 모달 */}
+      {selectedRoomId && (
+        <RoomDetailModal
+          roomId={selectedRoomId}
+          isOpen={isModalOpen}
+          onClose={handleCloseModal}
+        />
+      )}
     </section>
   );
 }
