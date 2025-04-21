@@ -8,7 +8,6 @@ import { Badge } from '@/components/common/ui/Badge'; // 객실의 건물 정보
 import { cn } from '@/lib/utils'; // 조건부로 CSS 클래스를 합칠 때 사용하는 유틸 함수
 import { ChevronLeft, ChevronRight, Maximize2, Mountain, Users } from 'lucide-react'; // 다양한 아이콘 컴포넌트(좌우 화살표, 인원, 뷰 등)
 import Image from 'next/image'; // Next.js의 최적화된 이미지 컴포넌트
-import Link from 'next/link'; // 페이지 이동을 위한 Next.js 라우팅 컴포넌트
 import { useEffect, useRef, useState } from 'react'; // React의 주요 훅: 상태 관리, 참조, 생명주기 제어
 import { AmenityGroupComponent } from './AmenityGroupComponent'; // 객실 어메니티 그룹을 보여주는 하위 컴포넌트
 
@@ -18,53 +17,6 @@ interface RoomCarouselProps {
 }
 
 export function RoomCarousel({ rooms, onViewDetail }: RoomCarouselProps) {
-  /*
-  rooms = [
-    {
-        "id": 1,
-        "name": "Chill Comfort Room",
-        "description": "심플하고 편안한 기본형 객실로, 자연적 요소가 가미된 인테리어와 가든 뷰를 제공하는 30㎡ 크기의 객실입니다.",
-        "size": 30,
-        "maxAdults": 2,
-        "maxChildren": 1,
-        "weekdayPrice": 220000,
-        "weekendPrice": 270000,
-        "peakSeasonPrice": 320000,
-        "building": "F",
-        "floorCount": 4,
-        "roomsPerFloor": 30,
-        "viewType": "가든 뷰",
-        "imageUrl": "/images/rooms/placeholder.jpg",
-        "amenityGroups": [
-            {
-                "amenityGroupsId": 1,
-                "name": "공통 어메니티",
-                "iconName": "Bed",
-                "sortOrder": 1,
-                "createdAt": "2025-04-19 05:38:33.0",
-                "amenities": [
-                    {
-                        "amenityItemsId": 1,
-                        "amenityGroupsId": 1,
-                        "name": "고급 침구",
-                        "iconName": "Bed",
-                        "sortOrder": 1,
-                        "createdAt": "2025-04-19 05:38:33.0"
-                    },...,
-                    {
-                        "amenityItemsId": 10,
-                        "amenityGroupsId": 1,
-                        "name": "커피/차 메이커",
-                        "iconName": "Coffee",
-                        "sortOrder": 10,
-                        "createdAt": "2025-04-19 05:38:33.0"
-                    }
-                ]
-            }
-        ]
-    },...
-  ]
-  */
   // 현재 보여주고 있는 첫 번째 객실의 인덱스(슬라이드 위치)
   const [currentIndex, setCurrentIndex] = useState(0);
   // 마우스 오버 시 자동 슬라이드 일시정지 여부를 저장
@@ -75,7 +27,7 @@ export function RoomCarousel({ rooms, onViewDetail }: RoomCarouselProps) {
   // 한 번에 보여줄 객실 카드 개수(예: 3개)
   const visibleRooms = 3;
   // 슬라이드 가능한 최대 인덱스(마지막 카드가 오른쪽 끝에 맞춰질 때)
-  const maxIndex = rooms.length - visibleRooms;
+  const maxIndex = Math.max(0, rooms.length - visibleRooms);
 
   // 다음 슬라이드로 이동하는 함수(최대 인덱스를 넘지 않도록 제한)
   const nextSlide = () => {
@@ -91,15 +43,13 @@ export function RoomCarousel({ rooms, onViewDetail }: RoomCarouselProps) {
   const handleViewDetail = (roomId: string) => {
     if (onViewDetail) {
       onViewDetail(roomId);
-    } else {
-      // 모달 기능이 없을 경우 객실 페이지로 이동 (기존 동작)
-      window.location.href = `/rooms#room-${roomId}`;
     }
   };
 
   // 자동 슬라이드 효과: 5초마다 다음 슬라이드로 이동, 마지막이면 처음으로 돌아감
   useEffect(() => {
-    if (isPaused) return; // 일시정지 상태면 자동 슬라이드 중단
+    if (isPaused || rooms.length <= visibleRooms) return; // 일시정지 상태거나 객실이 적으면 자동 슬라이드 중단
+    
     const interval = setInterval(() => {
       if (currentIndex < maxIndex) {
         nextSlide();
@@ -107,35 +57,48 @@ export function RoomCarousel({ rooms, onViewDetail }: RoomCarouselProps) {
         setCurrentIndex(0); // 마지막까지 갔으면 처음으로
       }
     }, 5000); // 5초 간격
+    
     return () => clearInterval(interval); // 언마운트 시 interval 해제
-  }, [currentIndex, isPaused, maxIndex]);
+  }, [currentIndex, isPaused, maxIndex, rooms.length]);
+
+  // 객실 데이터가 없거나 비어있으면 로딩 표시
+  if (!rooms || rooms.length === 0) {
+    return (
+      <div className="flex justify-center items-center h-64">
+        <p className="text-neutral-500">객실 정보를 불러오는 중...</p>
+      </div>
+    );
+  }
 
   return (
     <div className="relative">
-      {/* 좌우 이동 네비게이션 버튼 */}
-      {/* currentIndex가 0이면 이전 버튼 비활성화, 마지막 인덱스면 다음 버튼 비활성화 */}
-      <button
-        onClick={prevSlide}
-        disabled={currentIndex === 0}
-        className={cn(
-          'absolute left-0 top-1/2 -translate-y-1/2 z-10 bg-white/80 hover:bg-white text-primary p-2 rounded-full shadow-md transition-all -ml-4',
-          currentIndex === 0 ? 'opacity-50 cursor-not-allowed' : 'opacity-100'
-        )}
-        aria-label="이전 객실"
-      >
-        <ChevronLeft className="h-6 w-6" />
-      </button>
-      <button
-        onClick={nextSlide}
-        disabled={currentIndex === maxIndex}
-        className={cn(
-          'absolute right-0 top-1/2 -translate-y-1/2 z-10 bg-white/80 hover:bg-white text-primary p-2 rounded-full shadow-md transition-all -mr-4',
-          currentIndex === maxIndex ? 'opacity-50 cursor-not-allowed' : 'opacity-100'
-        )}
-        aria-label="다음 객실"
-      >
-        <ChevronRight className="h-6 w-6" />
-      </button>
+      {/* 좌우 이동 네비게이션 버튼 - 객실이 visibleRooms보다 많을 때만 표시 */}
+      {rooms.length > visibleRooms && (
+        <>
+          <button
+            onClick={prevSlide}
+            disabled={currentIndex === 0}
+            className={cn(
+              'absolute left-0 top-1/2 -translate-y-1/2 z-10 bg-white/80 hover:bg-white text-primary p-2 rounded-full shadow-md transition-all -ml-4',
+              currentIndex === 0 ? 'opacity-50 cursor-not-allowed' : 'opacity-100'
+            )}
+            aria-label="이전 객실"
+          >
+            <ChevronLeft className="h-6 w-6" />
+          </button>
+          <button
+            onClick={nextSlide}
+            disabled={currentIndex === maxIndex}
+            className={cn(
+              'absolute right-0 top-1/2 -translate-y-1/2 z-10 bg-white/80 hover:bg-white text-primary p-2 rounded-full shadow-md transition-all -mr-4',
+              currentIndex === maxIndex ? 'opacity-50 cursor-not-allowed' : 'opacity-100'
+            )}
+            aria-label="다음 객실"
+          >
+            <ChevronRight className="h-6 w-6" />
+          </button>
+        </>
+      )}
 
       {/* 캐러셀 전체를 감싸는 컨테이너: 마우스 오버 시 자동 슬라이드 일시정지 */}
       <div
@@ -151,14 +114,13 @@ export function RoomCarousel({ rooms, onViewDetail }: RoomCarouselProps) {
           style={{ transform: `translateX(-${currentIndex * (100 / visibleRooms)}%)` }}
         >
           {/* 객실(room) 배열을 순회하며 각 객실 카드 렌더링 */}
-          {rooms.map((room: any) => (
+          {rooms.map((room) => (
             <div key={room.id} className="w-full md:w-1/3 flex-shrink-0 px-4">
               <div className="bg-white rounded-lg overflow-hidden shadow-md hover:shadow-lg transition-shadow h-full flex flex-col">
                 {/* 객실 이미지 영역 */}
                 <div className="relative h-64 bg-neutral-100">
                   <Image
                     // room.images가 없거나 비어있으면 onError에서 대체 이미지로 변경
-                    // src={room.images?.[0]}
                     src={`https://placehold.co/800x600/e2e8f0/64748b.png?text=${encodeURIComponent(
                       `${room.name ?? "이름없음"}\\n${room.size ?? "정보없음"}㎡`
                     )}&font=montserrat`}
@@ -206,8 +168,8 @@ export function RoomCarousel({ rooms, onViewDetail }: RoomCarouselProps) {
                   </div>
                   {/* 객실 어메니티(편의시설) 그룹 표시 */}
                   <div className="flex flex-col gap-2 mb-4">
-                    {/* any 타입 지정으로 린트 에러 방지 */}
-                    {room.amenityGroups && room.amenityGroups.map((group: any) => (
+                    {/* 어메니티 그룹이 있을 경우만 표시 */}
+                    {room.amenityGroups && room.amenityGroups.map((group) => (
                       <AmenityGroupComponent key={group.amenityGroupsId || group.id} group={group} />
                     ))}
                   </div>
