@@ -12,7 +12,12 @@ import Link from 'next/link'; // 페이지 이동을 위한 Next.js 라우팅 �
 import { useEffect, useRef, useState } from 'react'; // React의 주요 훅: 상태 관리, 참조, 생명주기 제어
 import { AmenityGroupComponent } from './AmenityGroupComponent'; // 객실 어메니티 그룹을 보여주는 하위 컴포넌트
 
-export function RoomCarousel({ rooms }: any) {
+interface RoomCarouselProps {
+  rooms: any[];
+  onViewDetail?: (roomId: string) => void;
+}
+
+export function RoomCarousel({ rooms, onViewDetail }: RoomCarouselProps) {
   /*
   rooms = [
     {
@@ -82,6 +87,16 @@ export function RoomCarousel({ rooms }: any) {
     setCurrentIndex((prev) => Math.max(prev - 1, 0));
   };
 
+  // 상세 정보 보기 핸들러
+  const handleViewDetail = (roomId: string) => {
+    if (onViewDetail) {
+      onViewDetail(roomId);
+    } else {
+      // 모달 기능이 없을 경우 객실 페이지로 이동 (기존 동작)
+      window.location.href = `/rooms#room-${roomId}`;
+    }
+  };
+
   // 자동 슬라이드 효과: 5초마다 다음 슬라이드로 이동, 마지막이면 처음으로 돌아감
   useEffect(() => {
     if (isPaused) return; // 일시정지 상태면 자동 슬라이드 중단
@@ -145,7 +160,7 @@ export function RoomCarousel({ rooms }: any) {
                     // room.images가 없거나 비어있으면 onError에서 대체 이미지로 변경
                     // src={room.images?.[0]}
                     src={`https://placehold.co/800x600/e2e8f0/64748b.png?text=${encodeURIComponent(
-                      `${room.name ?? "이름없음"}\n${room.size ?? "정보없음"}㎡`
+                      `${room.name ?? "이름없음"}\\n${room.size ?? "정보없음"}㎡`
                     )}&font=montserrat`}
                     alt={room.name ?? "이름없음"}
                     fill
@@ -154,7 +169,7 @@ export function RoomCarousel({ rooms }: any) {
                       const target = e.target as HTMLImageElement;
                       // 이미지가 없을 때 대체 이미지를 표시 (객실명과 크기 포함)
                       target.src = `https://placehold.co/800x600/e2e8f0/64748b.png?text=${encodeURIComponent(
-                        `${room.name ?? "이름없음"}\n${room.size ?? "정보없음"}㎡`
+                        `${room.name ?? "이름없음"}\\n${room.size ?? "정보없음"}㎡`
                       )}&font=montserrat`;
                     }}
                   />
@@ -209,13 +224,13 @@ export function RoomCarousel({ rooms }: any) {
                         시즌: {new Intl.NumberFormat('ko-KR').format(room.peakSeasonPrice)}원
                       </span>
                     </div>
-                    <Link
-                      href={`/rooms#room-${room.id}`}
+                    <button
+                      onClick={() => handleViewDetail(room.id)}
                       className="inline-flex items-center text-primary font-medium hover:underline"
                     >
                       자세히 보기
                       <ChevronRight className="h-4 w-4 ml-1" />
-                    </Link>
+                    </button>
                   </div>
                 </div>
               </div>
