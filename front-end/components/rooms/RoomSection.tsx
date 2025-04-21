@@ -1,7 +1,6 @@
 'use client'; // 이 지시문은 Next.js에서 이 컴포넌트가 클라이언트 측에서 실행됨을 나타냅니다
 
 import { Button } from '@/components/common/ui/Button'; // 버튼 UI 컴포넌트 가져오기
-// import { rooms } from '@/lib/data/rooms/types/rooms'; // 객실 데이터 가져오기
 import { useIntersectionObserver } from '@/lib/hooks/useIntersectionObserver'; // 요소가 화면에 보이는지 감지하는 커스텀 훅
 import { cn } from '@/lib/utils'; // 클래스 이름을 조건부로 결합하는 유틸리티 함수
 import { ChevronRight } from 'lucide-react'; // 오른쪽 화살표 아이콘 컴포넌트
@@ -30,61 +29,20 @@ export default function RoomSection() {
   const [rooms, setRooms] = useState([]);
   
   // 모달 상태 관리
-  const [selectedRoomId, setSelectedRoomId] = useState<string | null>(null);
+  const [selectedRoomId, setSelectedRoomId] = useState(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  // 선택된 객실의 전체 데이터를 저장
+  const [selectedRoom, setSelectedRoom] = useState(null);
 
   // api 호출
   useEffect(() => {
     const getRoomsData = async () => {
-      const response = await axios.get('/api/rooms/getRoomTypes');
-      setRooms(response.data);
-      /*
-      response.Data = [
-        {
-            "id": 1,
-            "name": "Chill Comfort Room",
-            "description": "심플하고 편안한 기본형 객실로, 자연적 요소가 가미된 인테리어와 가든 뷰를 제공하는 30㎡ 크기의 객실입니다.",
-            "size": 30,
-            "maxAdults": 2,
-            "maxChildren": 1,
-            "weekdayPrice": 220000,
-            "weekendPrice": 270000,
-            "peakSeasonPrice": 320000,
-            "building": "F",
-            "floorCount": 4,
-            "roomsPerFloor": 30,
-            "viewType": "가든 뷰",
-            "imageUrl": "/images/rooms/placeholder.jpg",
-            "amenityGroups": [
-                {
-                    "amenityGroupsId": 1,
-                    "name": "공통 어메니티",
-                    "iconName": "Bed",
-                    "sortOrder": 1,
-                    "createdAt": "2025-04-19 05:38:33.0",
-                    "amenities": [
-                        {
-                            "amenityItemsId": 1,
-                            "amenityGroupsId": 1,
-                            "name": "고급 침구",
-                            "iconName": "Bed",
-                            "sortOrder": 1,
-                            "createdAt": "2025-04-19 05:38:33.0"
-                        },...,
-                        {
-                            "amenityItemsId": 10,
-                            "amenityGroupsId": 1,
-                            "name": "커피/차 메이커",
-                            "iconName": "Coffee",
-                            "sortOrder": 10,
-                            "createdAt": "2025-04-19 05:38:33.0"
-                        }
-                    ]
-                }
-            ]
-        },...
-      ]
-      */
+      try {
+        const response = await axios.get('/api/rooms/getRoomTypes');
+        setRooms(response.data);
+      } catch (error) {
+        console.error('객실 데이터 로드 오류:', error);
+      }
     };
 
     getRoomsData();
@@ -102,14 +60,20 @@ export default function RoomSection() {
   
   // 객실 상세 모달 열기
   const handleOpenRoomDetail = (roomId) => {
-    setSelectedRoomId(roomId);
-    setIsModalOpen(true);
+    // roomId를 기반으로 전체 객실 데이터 찾기
+    const room = rooms.find(r => r.id === roomId);
+    if (room) {
+      setSelectedRoom(room);
+      setSelectedRoomId(roomId);
+      setIsModalOpen(true);
+    }
   };
   
   // 모달 닫기
   const handleCloseModal = () => {
     setIsModalOpen(false);
     setSelectedRoomId(null);
+    setSelectedRoom(null);
   };
 
   return (
@@ -153,9 +117,9 @@ export default function RoomSection() {
       </div>
       
       {/* 객실 상세 모달 */}
-      {selectedRoomId && (
+      {selectedRoom && (
         <RoomDetailModal
-          roomId={selectedRoomId}
+          room={selectedRoom}
           isOpen={isModalOpen}
           onClose={handleCloseModal}
         />
